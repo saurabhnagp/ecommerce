@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/ProductService/">
+    <Project Path="ProductService/ProductService.csproj" />
+  </Folder>
+  <Folder Name="/UserService/">
+    <Project Path="UserService/UserService.csproj" />
+  </Folder>
+</Solution>

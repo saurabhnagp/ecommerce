@@ -38,3 +38,6 @@ obj/
 # Cache
 .cache/
 *.cache
+
+# ignore the .vs folder
+.vs/

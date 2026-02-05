@@ -1,0 +1,8 @@
+services:
+  login-app:
+    build: .
+    ports:
+      - "3000:80"
+    # Optional: use same port as Vite dev for consistency
+    # ports:
+    #   - "5173:80"
