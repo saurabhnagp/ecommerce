@@ -1,0 +1,9 @@
+# For local Kubernetes (Docker Desktop, minikube, kind).
+# Uses default StorageClass; no storageClassName patch needed.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: amcart-databases
+
+resources:
+  - ../../base

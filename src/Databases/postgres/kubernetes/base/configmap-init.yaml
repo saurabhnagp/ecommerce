@@ -1,0 +1,16 @@
+# Init script for creating amcart_products (amcart_users is created via POSTGRES_DB).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-scripts
+  namespace: amcart-databases
+  labels:
+    app: postgres
+data:
+  init-multiple-dbs.sh: |
+    #!/bin/bash
+    set -e
+    set -u
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "postgres" <<-EOSQL
+      CREATE DATABASE amcart_products OWNER $POSTGRES_USER;
+    EOSQL

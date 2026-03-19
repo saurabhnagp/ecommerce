@@ -1,0 +1,268 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="System Architecture" id="system-arch">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Frontend Layer -->
+        <mxCell id="frontend" value="Nuxt.js 3 Frontend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="600" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- API Gateway -->
+        <mxCell id="nginx" value="Nginx API Gateway&#xa;(Reverse Proxy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="140" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Connection Frontend to Nginx -->
+        <mxCell id="edge1" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="frontend" target="nginx">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="200" as="sourcePoint" />
+            <mxPoint x="750" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Microservices Container -->
+        <mxCell id="services-container" value="Microservices (.NET 8)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="80" y="240" width="1240" height="480" as="geometry" />
+        </mxCell>
+        
+        <!-- User Service -->
+        <mxCell id="user-service" value="User Service&#xa;Port: 5001" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="40" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Product Service -->
+        <mxCell id="product-service" value="Product Service&#xa;Port: 5002" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="200" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Cart Service -->
+        <mxCell id="cart-service" value="Cart Service&#xa;Port: 5003" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="360" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Order Service -->
+        <mxCell id="order-service" value="Order Service&#xa;Port: 5004" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="520" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Payment Service -->
+        <mxCell id="payment-service" value="Payment Service&#xa;Port: 5005" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="680" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Inventory Service -->
+        <mxCell id="inventory-service" value="Inventory Service&#xa;Port: 5006" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="840" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Search Service -->
+        <mxCell id="search-service" value="Search Service&#xa;Port: 5007" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="1000" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Notification Service -->
+        <mxCell id="notification-service" value="Notification Service&#xa;Port: 5008" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="200" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Review Service -->
+        <mxCell id="review-service" value="Review Service&#xa;Port: 5009" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="services-container">
+          <mxGeometry x="360" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Message Queue -->
+        <mxCell id="rabbitmq" value="RabbitMQ&#xa;(Message Queue)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="760" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Databases Container -->
+        <mxCell id="db-container" value="Databases" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="80" y="860" width="1240" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- PostgreSQL -->
+        <mxCell id="postgresql" value="PostgreSQL&#xa;(RDS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="db-container">
+          <mxGeometry x="40" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- MongoDB -->
+        <mxCell id="mongodb" value="MongoDB&#xa;(DocumentDB)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="db-container">
+          <mxGeometry x="220" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Redis -->
+        <mxCell id="redis" value="Redis&#xa;(ElastiCache)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="db-container">
+          <mxGeometry x="400" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- OpenSearch -->
+        <mxCell id="opensearch" value="OpenSearch&#xa;(Elasticsearch)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="db-container">
+          <mxGeometry x="580" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- External Services -->
+        <mxCell id="external-container" value="External Services" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="440" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- Razorpay -->
+        <mxCell id="razorpay" value="Razorpay&#xa;(Payment Gateway)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="external-container">
+          <mxGeometry x="40" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Email Service -->
+        <mxCell id="email-service" value="Email Service&#xa;(SMTP/SES)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="external-container">
+          <mxGeometry x="200" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- OAuth Providers -->
+        <mxCell id="oauth" value="OAuth Providers&#xa;(Google, Facebook)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="external-container">
+          <mxGeometry x="120" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Connections: Nginx to Services -->
+        <mxCell id="edge-nginx-user" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="nginx" target="user-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="300" as="sourcePoint" />
+            <mxPoint x="750" y="250" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="500" y="170" />
+              <mxPoint x="500" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-nginx-product" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="nginx" target="product-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="300" as="sourcePoint" />
+            <mxPoint x="750" y="250" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="660" y="170" />
+              <mxPoint x="660" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-nginx-cart" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="nginx" target="cart-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="300" as="sourcePoint" />
+            <mxPoint x="750" y="250" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="820" y="170" />
+              <mxPoint x="820" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Connections: Services to Databases -->
+        <mxCell id="edge-user-postgres" value="User, Order, Payment, Inventory" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="user-service" target="postgresql">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100" y="720" />
+              <mxPoint x="100" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-notif-mongo" value="Notifications" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="notification-service" target="mongodb">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="720" />
+              <mxPoint x="260" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-review-mongo" value="Reviews" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="review-service" target="mongodb">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="420" y="720" />
+              <mxPoint x="420" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-cart-redis" value="Cart Data" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="cart-service" target="redis">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="420" y="720" />
+              <mxPoint x="420" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge-search-opensearch" value="Search Index" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="search-service" target="opensearch">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1060" y="720" />
+              <mxPoint x="1060" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Connections: Services to RabbitMQ -->
+        <mxCell id="edge-order-rabbitmq" value="Events" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="order-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="580" y="720" />
+              <mxPoint x="580" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Connections: Payment to Razorpay -->
+        <mxCell id="edge-payment-razorpay" value="Payment API" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="payment-service" target="razorpay">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="740" y="720" />
+              <mxPoint x="740" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Connections: Notification to Email -->
+        <mxCell id="edge-notif-email" value="Send Email" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="notification-service" target="email-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="720" />
+              <mxPoint x="260" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Connections: User Service to OAuth -->
+        <mxCell id="edge-user-oauth" value="OAuth Callback" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="user-service" target="oauth">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="500" as="sourcePoint" />
+            <mxPoint x="750" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100" y="720" />
+              <mxPoint x="100" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

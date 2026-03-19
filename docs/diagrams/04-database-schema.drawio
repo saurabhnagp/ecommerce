@@ -1,0 +1,381 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Database Schema" id="db-schema">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="AmCart Database Schema - Entity Relationship Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- PostgreSQL Container -->
+        <mxCell id="postgres-container" value="PostgreSQL (RDS)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=16;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="700" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- Users Table -->
+        <mxCell id="users-table" value="users" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="20" y="70" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-email" value="email: VARCHAR(255) UNIQUE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-password" value="password_hash: VARCHAR(255)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-name" value="first_name, last_name: VARCHAR(100)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-phone" value="phone: VARCHAR(20)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users-verified" value="is_email_verified: BOOLEAN" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="users-table">
+          <mxGeometry x="10" y="150" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Addresses Table -->
+        <mxCell id="addresses-table" value="addresses" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="360" y="70" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="addresses-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="addresses-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="addresses-user" value="user_id: UUID (FK → users)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="addresses-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="addresses-street" value="street, city, state, zip: VARCHAR" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="addresses-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="addresses-type" value="address_type: ENUM (billing, shipping)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="addresses-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Products Table -->
+        <mxCell id="products-table" value="products" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="20" y="290" width="300" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-sku" value="sku: VARCHAR(50) UNIQUE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-name" value="name, slug: VARCHAR(255)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-price" value="base_price, sale_price: DECIMAL(10,2)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-category" value="category_id: UUID (FK → categories)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-brand" value="brand_id: UUID (FK → brands)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="150" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products-attributes" value="attributes: JSONB" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="products-table">
+          <mxGeometry x="10" y="170" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Categories Table -->
+        <mxCell id="categories-table" value="categories" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="360" y="290" width="300" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="categories-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="categories-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="categories-name" value="name, slug: VARCHAR(255)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="categories-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="categories-parent" value="parent_id: UUID (FK → categories)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="categories-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Orders Table -->
+        <mxCell id="orders-table" value="orders" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="20" y="550" width="300" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-number" value="order_number: VARCHAR(20) UNIQUE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-user" value="user_id: UUID (FK → users)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-status" value="status: ENUM (pending, confirmed, shipped, delivered, cancelled)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-total" value="subtotal, discount, shipping, tax, total: DECIMAL(10,2)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders-dates" value="placed_at, shipped_at, delivered_at: TIMESTAMP" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="orders-table">
+          <mxGeometry x="10" y="150" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Order Items Table -->
+        <mxCell id="order-items-table" value="order_items" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="360" y="550" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="order-items-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="order-items-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="order-items-order" value="order_id: UUID (FK → orders)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="order-items-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="order-items-product" value="product_id: UUID (FK → products)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="order-items-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="order-items-qty" value="quantity: INTEGER" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="order-items-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="order-items-price" value="unit_price, total_price: DECIMAL(10,2)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="order-items-table">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Payments Table -->
+        <mxCell id="payments-table" value="payments" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="20" y="770" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payments-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="payments-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payments-order" value="order_id: UUID (FK → orders)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="payments-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payments-amount" value="amount: DECIMAL(10,2)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="payments-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payments-status" value="status: ENUM (pending, completed, failed, refunded)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="payments-table">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payments-razorpay" value="razorpay_payment_id: VARCHAR(255)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="payments-table">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Inventory Table -->
+        <mxCell id="inventory-table" value="inventory" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="postgres-container">
+          <mxGeometry x="360" y="770" width="300" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="inventory-id" value="id: UUID (PK)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="inventory-table">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="inventory-product" value="product_id: UUID (FK → products)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="inventory-table">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="inventory-stock" value="quantity_available: INTEGER" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="inventory-table">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- MongoDB Container -->
+        <mxCell id="mongo-container" value="MongoDB (DocumentDB)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=16;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="700" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Reviews Collection -->
+        <mxCell id="reviews-collection" value="reviews" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="mongo-container">
+          <mxGeometry x="20" y="70" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reviews-id" value="_id: ObjectId" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="reviews-collection">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reviews-product" value="product_id: UUID" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="reviews-collection">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reviews-user" value="user_id: UUID" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="reviews-collection">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reviews-rating" value="rating: INTEGER (1-5)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="reviews-collection">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reviews-comment" value="comment: TEXT" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="reviews-collection">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Notifications Collection -->
+        <mxCell id="notifications-collection" value="notifications" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="mongo-container">
+          <mxGeometry x="360" y="70" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notifications-id" value="_id: ObjectId" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="notifications-collection">
+          <mxGeometry x="10" y="50" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notifications-user" value="user_id: UUID" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="notifications-collection">
+          <mxGeometry x="10" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notifications-type" value="type: ENUM (email, sms, push)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="notifications-collection">
+          <mxGeometry x="10" y="90" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notifications-content" value="subject, body: TEXT" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="notifications-collection">
+          <mxGeometry x="10" y="110" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notifications-status" value="status: ENUM (pending, sent, failed)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="notifications-collection">
+          <mxGeometry x="10" y="130" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Redis Container -->
+        <mxCell id="redis-container" value="Redis (ElastiCache)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=16;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="800" y="650" width="700" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="redis-cart" value="cart:{user_id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="redis-container">
+          <mxGeometry x="40" y="70" width="200" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="redis-session" value="session:{session_id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="redis-container">
+          <mxGeometry x="280" y="70" width="200" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="redis-cache" value="cache:{key}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="redis-container">
+          <mxGeometry x="520" y="70" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- OpenSearch Container -->
+        <mxCell id="opensearch-container" value="OpenSearch (Elasticsearch)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=16;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="800" y="900" width="700" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="opensearch-index" value="products_index" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="opensearch-container">
+          <mxGeometry x="40" y="70" width="300" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="opensearch-fields" value="Fields: name, description, category,&#xa;brand, price, attributes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="opensearch-index">
+          <mxGeometry x="10" y="30" width="280" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Relationships -->
+        <mxCell id="rel-users-addresses" value="1:N" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="users-table" target="addresses-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="340" y="160" />
+              <mxPoint x="510" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-users-orders" value="1:N" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="users-table" target="orders-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="170" y="280" />
+              <mxPoint x="170" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-orders-items" value="1:N" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="orders-table" target="order-items-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="340" y="660" />
+              <mxPoint x="510" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-products-items" value="1:N" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="products-table" target="order-items-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="170" y="400" />
+              <mxPoint x="170" y="640" />
+              <mxPoint x="510" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-orders-payments" value="1:1" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="orders-table" target="payments-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="170" y="770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-products-inventory" value="1:1" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="products-table" target="inventory-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="340" y="400" />
+              <mxPoint x="510" y="840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel-categories-products" value="1:N" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="categories-table" target="products-table">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+            <mxPoint x="450" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="510" y="360" />
+              <mxPoint x="340" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

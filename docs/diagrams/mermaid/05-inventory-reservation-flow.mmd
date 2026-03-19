@@ -1,0 +1,25 @@
+flowchart TB
+    subgraph OrderCreation["Order Creation"]
+        A[Order Received] --> B{Check Stock}
+        B -->|Stock >= Quantity| C[Soft Reserve]
+        B -->|Stock < Quantity| D[❌ Reject Order]
+        C --> E[Create Reservation Record]
+        E --> F[Set Expiry: 15 mins]
+    end
+
+    subgraph PaymentOutcome["Payment Outcome"]
+        F --> G{Payment Result}
+        G -->|Success| H[✅ Confirm Reservation]
+        G -->|Failed| I[❌ Release Reservation]
+        G -->|Timeout| J[⏰ Auto-Release]
+    end
+
+    subgraph StockUpdate["Stock Update"]
+        H --> K[Decrease Available Stock]
+        K --> L[Update Reserved Stock]
+        
+        I --> M[Restore Available Stock]
+        J --> M
+        M --> N[Delete Reservation Record]
+    end
+

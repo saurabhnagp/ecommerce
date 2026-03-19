@@ -1,0 +1,12 @@
+flowchart LR
+    A[Validate Cart] --> B{Price Changed?}
+    B -->|Yes| C[Show Price Update Warning]
+    C --> D{User Accepts?}
+    D -->|Yes| E[Continue]
+    D -->|No| F[Return to Cart]
+    
+    B -->|No| G{Item Removed?}
+    G -->|Yes| H[Show Item Unavailable]
+    H --> F
+    G -->|No| E
+

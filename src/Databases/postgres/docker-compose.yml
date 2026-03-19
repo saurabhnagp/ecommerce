@@ -1,0 +1,28 @@
+# PostgreSQL for AmCart (UserService + ProductService)
+# Use with: docker compose up -d
+# Data is persisted in a named volume or bind mount.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: amcart-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-amcart}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-amcart_password}
+      POSTGRES_DB: ${POSTGRES_DB:-amcart_users}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-amcart} -d ${POSTGRES_DB:-amcart_users}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:
+    name: amcart-postgres-data

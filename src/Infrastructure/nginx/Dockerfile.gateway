@@ -1,0 +1,7 @@
+# API-only nginx gateway. Build context: repo `src` directory.
+# cd src && docker build -f Infrastructure/nginx/Dockerfile.gateway -t amcart-gateway:latest .
+FROM nginx:1.27-alpine
+COPY Infrastructure/nginx/nginx-main.conf /etc/nginx/nginx.conf
+COPY Infrastructure/nginx/server-gateway.conf /etc/nginx/conf.d/default.conf
+COPY Infrastructure/nginx/snippets /etc/nginx/snippets
+EXPOSE 80

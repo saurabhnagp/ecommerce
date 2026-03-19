@@ -1,0 +1,102 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-greet {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.btn-outline,
+.btn-primary {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.875rem;
+  border-radius: 2px;
+}
+
+.btn-outline {
+  background: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.btn-primary {
+  background: #c9a962;
+  border: 1px solid #b08d4a;
+  color: #fff;
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem 1.25rem;
+}
+
+.placeholder {
+  color: #888;
+  max-width: 32rem;
+}
+
+.profile-page .profile-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1.25rem;
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.profile-page .profile-dl dt {
+  margin: 0;
+  font-weight: 600;
+  color: #565959;
+  font-size: 0.85rem;
+}
+
+.profile-page .profile-dl dd {
+  margin: 0;
+  color: #0f1111;
+}
+
+.profile-actions {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.profile-actions a {
+  color: #007185;
+}
