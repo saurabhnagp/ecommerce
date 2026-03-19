@@ -1,0 +1,50 @@
+flowchart TB
+    subgraph Customer["👤 Customer"]
+        A[Browse Products] --> B[Add to Cart]
+        B --> C[View Cart]
+        C --> D[Proceed to Checkout]
+        D --> E[Enter Shipping/Billing]
+        E --> F[Select Payment Method]
+        F --> G[Place Order]
+    end
+
+    subgraph OrderProcessing["📦 Order Processing"]
+        G --> H{Validate Cart}
+        H -->|Valid| I[Create Order - PENDING]
+        H -->|Invalid| Z1[❌ Show Error]
+        
+        I --> J{Check Inventory}
+        J -->|Available| K[Reserve Inventory]
+        J -->|Not Available| Z2[❌ Out of Stock Error]
+        
+        K --> L[Initiate Payment]
+    end
+
+    subgraph PaymentProcessing["💳 Payment Processing"]
+        L --> M[Redirect to Razorpay]
+        M --> N{Payment Status}
+        N -->|Success| O[✅ Payment Completed]
+        N -->|Failed| P[❌ Payment Failed]
+        N -->|Cancelled| Q[⚠️ Payment Cancelled]
+    end
+
+    subgraph SuccessPath["✅ Success Path"]
+        O --> R[Update Order - CONFIRMED]
+        R --> S[Confirm Inventory Reservation]
+        S --> T[Send Order Confirmation Email]
+        T --> U[Send SMS Notification]
+        U --> V[Show Order Success Page]
+    end
+
+    subgraph FailurePath["❌ Failure Path"]
+        P --> W[Update Order - FAILED]
+        Q --> W
+        W --> X[Release Inventory]
+        X --> Y[Send Failure Notification]
+        Y --> Z3[Show Retry Payment Option]
+    end
+
+    Z1 --> C
+    Z2 --> C
+    Z3 --> F
+

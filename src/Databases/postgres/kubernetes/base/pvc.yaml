@@ -1,0 +1,17 @@
+# Persistent volume for PostgreSQL data.
+# On EKS overlay, storageClassName is set to gp3 (or gp2).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+  namespace: amcart-databases
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  # storageClassName set in overlay (e.g. gp3 for EKS, standard for local)
+  # storageClassName: gp3

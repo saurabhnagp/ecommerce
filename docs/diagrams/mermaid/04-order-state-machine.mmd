@@ -1,0 +1,36 @@
+stateDiagram-v2
+    [*] --> PENDING: Order Created
+
+    PENDING --> PAYMENT_INITIATED: Payment Started
+    PENDING --> CANCELLED: User Cancelled
+    
+    PAYMENT_INITIATED --> CONFIRMED: Payment Success
+    PAYMENT_INITIATED --> PAYMENT_FAILED: Payment Failed
+    PAYMENT_INITIATED --> CANCELLED: Payment Timeout
+    
+    PAYMENT_FAILED --> PAYMENT_INITIATED: Retry Payment
+    PAYMENT_FAILED --> CANCELLED: Max Retries Reached
+    
+    CONFIRMED --> PROCESSING: Start Processing
+    CONFIRMED --> CANCELLED: Admin Cancelled
+    
+    PROCESSING --> SHIPPED: Order Shipped
+    PROCESSING --> CANCELLED: Admin Cancelled
+    
+    SHIPPED --> OUT_FOR_DELIVERY: Out for Delivery
+    SHIPPED --> RETURNED: Return Initiated
+    
+    OUT_FOR_DELIVERY --> DELIVERED: Delivery Confirmed
+    OUT_FOR_DELIVERY --> RETURNED: Delivery Failed
+    
+    DELIVERED --> COMPLETED: Order Complete
+    DELIVERED --> REFUND_REQUESTED: Refund Requested
+    
+    REFUND_REQUESTED --> REFUNDED: Refund Processed
+    REFUNDED --> [*]
+    
+    RETURNED --> REFUNDED: Refund Processed
+    
+    CANCELLED --> [*]
+    COMPLETED --> [*]
+

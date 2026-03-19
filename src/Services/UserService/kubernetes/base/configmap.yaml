@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: amcart-services
+  labels:
+    app: user-service
+data:
+  ASPNETCORE_URLS: "http://+:8080"
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Jwt__Issuer: "amcart"
+  Jwt__Audience: "amcart-api"
+  Jwt__AccessTokenExpiryMinutes: "15"
+  Jwt__RefreshTokenExpiryDays: "7"
+  App__BaseUrl: "http://localhost:3000"

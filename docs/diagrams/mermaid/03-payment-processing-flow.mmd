@@ -1,0 +1,57 @@
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant FE as 🖥️ Frontend
+    participant PS as 💳 Payment Service
+    participant RZ as 🏦 Razorpay
+    participant OS as 📦 Order Service
+    participant IS as 📊 Inventory Service
+    participant NS as 📧 Notification Service
+    participant MQ as 📨 RabbitMQ
+
+    FE->>PS: POST /payments/initiate
+    PS->>RZ: Create Payment Order
+    RZ-->>PS: Payment Order ID
+    PS-->>FE: Razorpay Checkout URL
+    
+    FE->>RZ: Open Razorpay Checkout
+    U->>RZ: Enter Payment Details
+    U->>RZ: Confirm Payment
+    
+    alt Payment Successful
+        RZ->>PS: Webhook: payment.captured
+        PS->>PS: Verify Signature
+        PS->>PS: Update Payment Status: SUCCESS
+        PS->>MQ: Publish PaymentCompleted Event
+        
+        MQ->>OS: PaymentCompleted
+        OS->>OS: Update Order: CONFIRMED
+        
+        MQ->>IS: PaymentCompleted
+        IS->>IS: Confirm Reservation
+        
+        MQ->>NS: PaymentCompleted
+        NS->>NS: Send Order Confirmation Email
+        NS->>NS: Send SMS
+        
+        PS-->>FE: Payment Success
+        FE-->>U: Show Order Confirmation
+        
+    else Payment Failed
+        RZ->>PS: Webhook: payment.failed
+        PS->>PS: Update Payment Status: FAILED
+        PS->>MQ: Publish PaymentFailed Event
+        
+        MQ->>OS: PaymentFailed
+        OS->>OS: Update Order: FAILED
+        
+        MQ->>IS: PaymentFailed
+        IS->>IS: Release Reserved Stock
+        
+        MQ->>NS: PaymentFailed
+        NS->>NS: Send Payment Failure Email
+        
+        PS-->>FE: Payment Failed
+        FE-->>U: Show Retry Option
+    end
+

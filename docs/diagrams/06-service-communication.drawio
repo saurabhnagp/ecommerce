@@ -1,0 +1,364 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Service Communication" id="service-comm">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="AmCart Service Communication Patterns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Legend -->
+        <mxCell id="legend" value="Legend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="300" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-rest" value="REST/HTTP (Synchronous)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="legend">
+          <mxGeometry x="20" y="50" width="260" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-rest-line" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="legend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="20" y="80" as="sourcePoint" />
+            <mxPoint x="260" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="legend-event" value="RabbitMQ Event (Asynchronous)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="legend">
+          <mxGeometry x="20" y="100" width="260" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-event-line" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="legend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="20" y="130" as="sourcePoint" />
+            <mxPoint x="260" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="legend-request" value="Request/Response" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="legend">
+          <mxGeometry x="20" y="150" width="260" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Services Container -->
+        <mxCell id="services-container" value="Microservices" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=16;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="400" y="80" width="1160" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- User Service -->
+        <mxCell id="user-service" value="User Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="40" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Product Service -->
+        <mxCell id="product-service" value="Product Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="280" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Cart Service -->
+        <mxCell id="cart-service" value="Cart Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="520" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Order Service -->
+        <mxCell id="order-service" value="Order Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="760" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Payment Service -->
+        <mxCell id="payment-service" value="Payment Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="1000" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Inventory Service -->
+        <mxCell id="inventory-service" value="Inventory Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="40" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Search Service -->
+        <mxCell id="search-service" value="Search Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="280" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Notification Service -->
+        <mxCell id="notification-service" value="Notification Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="520" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Review Service -->
+        <mxCell id="review-service" value="Review Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="760" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- RabbitMQ -->
+        <mxCell id="rabbitmq" value="RabbitMQ&#xa;(Message Broker)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=16;fontStyle=1;" vertex="1" parent="services-container">
+          <mxGeometry x="480" y="300" width="240" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- REST Connections -->
+        <!-- Cart to Product -->
+        <mxCell id="rest-cart-product" value="GET /products/{id}" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="services-container" source="cart-service" target="product-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Order to User -->
+        <mxCell id="rest-order-user" value="GET /users/{id}" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="services-container" source="order-service" target="user-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="860" y="130" />
+              <mxPoint x="140" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Order to Product -->
+        <mxCell id="rest-order-product" value="GET /products/{id}" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="services-container" source="order-service" target="product-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="860" y="150" />
+              <mxPoint x="380" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Order to Inventory -->
+        <mxCell id="rest-order-inventory" value="POST /inventory/reserve" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="services-container" source="order-service" target="inventory-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="860" y="170" />
+              <mxPoint x="140" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Payment to Order -->
+        <mxCell id="rest-payment-order" value="GET /orders/{id}" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#82b366;" edge="1" parent="services-container" source="payment-service" target="order-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Event Connections -->
+        <!-- Order Created Event -->
+        <mxCell id="event-order-created" value="OrderCreated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="order-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="860" y="250" />
+              <mxPoint x="600" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-order-created-inventory" value="OrderCreated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="inventory-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="350" />
+              <mxPoint x="140" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-order-created-notification" value="OrderCreated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="notification-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="370" />
+              <mxPoint x="620" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-order-created-payment" value="OrderCreated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="payment-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="390" />
+              <mxPoint x="1100" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Payment Completed Event -->
+        <mxCell id="event-payment-completed" value="PaymentCompleted" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="payment-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1100" y="250" />
+              <mxPoint x="720" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-payment-completed-order" value="PaymentCompleted" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="order-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="410" />
+              <mxPoint x="860" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-payment-completed-notification" value="PaymentCompleted" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="notification-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="430" />
+              <mxPoint x="620" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-payment-completed-inventory" value="PaymentCompleted" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="inventory-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="450" />
+              <mxPoint x="140" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Payment Failed Event -->
+        <mxCell id="event-payment-failed" value="PaymentFailed" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="payment-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1100" y="270" />
+              <mxPoint x="720" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-payment-failed-order" value="PaymentFailed" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="order-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="470" />
+              <mxPoint x="860" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-payment-failed-inventory" value="PaymentFailed" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="inventory-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="490" />
+              <mxPoint x="140" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Product Updated Event -->
+        <mxCell id="event-product-updated" value="ProductUpdated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="product-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="380" y="250" />
+              <mxPoint x="600" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-product-updated-search" value="ProductUpdated" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="search-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="510" />
+              <mxPoint x="380" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- User Registered Event -->
+        <mxCell id="event-user-registered" value="UserRegistered" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="user-service" target="rabbitmq">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="140" y="250" />
+              <mxPoint x="600" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="event-user-registered-notification" value="UserRegistered" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;strokeColor=#d79b00;dashed=1;" edge="1" parent="services-container" source="rabbitmq" target="notification-service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="400" as="sourcePoint" />
+            <mxPoint x="750" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="530" />
+              <mxPoint x="620" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Event Labels Section -->
+        <mxCell id="events-section" value="Key Events" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="services-container">
+          <mxGeometry x="40" y="450" width="1080" height="500" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-list-title" value="Event Types and Subscribers" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="50" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-order-created-desc" value="OrderCreated → Inventory (Reserve), Notification (Email), Payment (Await)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="100" width="1040" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-payment-completed-desc" value="PaymentCompleted → Order (Confirm), Notification (Receipt), Inventory (Confirm Reserve)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="150" width="1040" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-payment-failed-desc" value="PaymentFailed → Order (Cancel), Inventory (Release Stock), Notification (Failure Email)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="200" width="1040" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-product-updated-desc" value="ProductUpdated → Search (Update Index)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="250" width="1040" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event-user-registered-desc" value="UserRegistered → Notification (Welcome Email)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="300" width="1040" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rest-notes" value="REST API Notes:" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="370" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rest-notes-desc" value="• Used for real-time queries (GET) and commands (POST/PUT/DELETE)&#xa;• Synchronous communication for immediate responses&#xa;• Direct service-to-service calls via Nginx API Gateway" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="events-section">
+          <mxGeometry x="20" y="400" width="1040" height="60" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

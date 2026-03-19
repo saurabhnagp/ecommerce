@@ -1,0 +1,13 @@
+flowchart TB
+    A[Payment Failed] --> B{Retry Count < 3?}
+    B -->|Yes| C[Show Retry Option]
+    C --> D{User Retries?}
+    D -->|Yes| E[Extend Reservation]
+    E --> F[Initiate New Payment]
+    D -->|No| G[Cancel Order]
+    
+    B -->|No| H[Max Retries Exceeded]
+    H --> G
+    G --> I[Release Inventory]
+    I --> J[Send Cancellation Email]
+

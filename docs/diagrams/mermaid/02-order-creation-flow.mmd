@@ -1,0 +1,40 @@
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant FE as 🖥️ Frontend (Nuxt.js)
+    participant NG as 🔀 Nginx Gateway
+    participant OS as 📦 Order Service
+    participant CS as 🛒 Cart Service
+    participant PS as 📝 Product Service
+    participant IS as 📊 Inventory Service
+    participant DB as 🗄️ PostgreSQL
+
+    U->>FE: Click "Place Order"
+    FE->>NG: POST /api/v1/orders
+    NG->>OS: Forward Request
+    
+    OS->>CS: GET /cart/{userId}
+    CS-->>OS: Cart Items
+    
+    loop For each cart item
+        OS->>PS: GET /products/{id}
+        PS-->>OS: Product Details
+        OS->>IS: GET /inventory/{productId}
+        IS-->>OS: Stock Available
+    end
+    
+    alt All Items Available
+        OS->>DB: INSERT Order (status: PENDING)
+        DB-->>OS: Order Created
+        OS->>IS: POST /inventory/reserve
+        IS->>DB: Reserve Stock
+        IS-->>OS: Reservation Confirmed
+        OS-->>NG: 201 Created + Order Details
+        NG-->>FE: Order Response
+        FE-->>U: Redirect to Payment
+    else Items Not Available
+        OS-->>NG: 422 Unprocessable Entity
+        NG-->>FE: Error Response
+        FE-->>U: Show "Out of Stock" Error
+    end
+

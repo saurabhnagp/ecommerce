@@ -1,0 +1,36 @@
+flowchart TB
+    subgraph Events["Events Published"]
+        E1[OrderCreated]
+        E2[PaymentCompleted]
+        E3[PaymentFailed]
+        E4[OrderConfirmed]
+        E5[OrderShipped]
+        E6[OrderDelivered]
+    end
+
+    subgraph Subscribers["Event Subscribers"]
+        S1[Inventory Service]
+        S2[Notification Service]
+        S3[Analytics Service]
+        S4[Audit Service]
+    end
+
+    E1 -->|Reserve Stock| S1
+    E1 -->|Log Event| S4
+    
+    E2 -->|Confirm Stock| S1
+    E2 -->|Send Receipt| S2
+    E2 -->|Track Conversion| S3
+    
+    E3 -->|Release Stock| S1
+    E3 -->|Send Failure Email| S2
+    E3 -->|Track Failure| S3
+    
+    E4 -->|Update Analytics| S3
+    
+    E5 -->|Send Tracking Email| S2
+    E5 -->|Update Analytics| S3
+    
+    E6 -->|Send Delivery Confirmation| S2
+    E6 -->|Request Review| S2
+

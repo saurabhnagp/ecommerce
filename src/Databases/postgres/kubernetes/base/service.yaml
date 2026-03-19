@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: amcart-databases
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+      name: postgres
+      protocol: TCP
+  selector:
+    app: postgres
+---
+# Optional: headless for StatefulSet-style DNS (if you switch to StatefulSet later)
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: postgres-headless
+#   namespace: amcart-databases
+# spec:
+#   clusterIP: None
+#   selector:
+#     app: postgres
+#   ports:
+#     - port: 5432
+#       name: postgres

@@ -1,0 +1,261 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Purchase Flow" id="purchase-flow">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="AmCart Purchase Flow - User Journey" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="600" y="20" width="400" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- User -->
+        <mxCell id="user" value="User" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="200" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend -->
+        <mxCell id="frontend" value="Nuxt.js Frontend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="300" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend Services -->
+        <mxCell id="backend" value="Backend Services (.NET)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="660" y="100" width="300" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- Payment Gateway -->
+        <mxCell id="payment-gw" value="Razorpay" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=14;startSize=50;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="100" width="200" height="1000" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 1: Browse Products -->
+        <mxCell id="step1-user" value="1. Browse Products" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="80" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1-frontend" value="Display Product Catalog&#xa;GET /api/v1/products" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="80" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge1" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-user" target="step1-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 2: View Product -->
+        <mxCell id="step2-user" value="2. View Product Details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="160" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2-frontend" value="GET /api/v1/products/{id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="160" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge2" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step2-user" target="step2-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="300" as="sourcePoint" />
+            <mxPoint x="350" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 3: Add to Cart -->
+        <mxCell id="step3-user" value="3. Add to Cart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="240" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3-frontend" value="POST /api/v1/cart/items" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="240" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3-backend" value="Cart Service&#xa;Add Item to Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="240" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge3a" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step3-user" target="step3-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="400" as="sourcePoint" />
+            <mxPoint x="350" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge3b" value="HTTP POST" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step3-frontend" target="step3-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="400" as="sourcePoint" />
+            <mxPoint x="650" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 4: View Cart -->
+        <mxCell id="step4-user" value="4. View Cart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="320" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4-frontend" value="GET /api/v1/cart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="320" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge4" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step4-user" target="step4-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="500" as="sourcePoint" />
+            <mxPoint x="350" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 5: Proceed to Checkout -->
+        <mxCell id="step5-user" value="5. Proceed to Checkout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="400" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5-frontend" value="Display Checkout Form" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="400" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge5" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step5-user" target="step5-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="600" as="sourcePoint" />
+            <mxPoint x="350" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 6: Enter Billing/Shipping -->
+        <mxCell id="step6-user" value="6. Enter Billing &amp; Shipping Address" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="480" width="160" height="70" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step6-frontend" value="Validate Form Data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="480" width="260" height="70" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge6" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step6-user" target="step6-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="700" as="sourcePoint" />
+            <mxPoint x="350" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 7: Create Order -->
+        <mxCell id="step7-user" value="7. Place Order" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="580" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step7-frontend" value="POST /api/v1/orders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="580" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step7-backend" value="Order Service&#xa;Create Order (Pending)&#xa;Validate Inventory" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="580" width="260" height="70" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge7a" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step7-user" target="step7-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="800" as="sourcePoint" />
+            <mxPoint x="350" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge7b" value="HTTP POST" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step7-frontend" target="step7-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="800" as="sourcePoint" />
+            <mxPoint x="650" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 8: Initiate Payment -->
+        <mxCell id="step8-backend" value="Payment Service&#xa;Create Payment Request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="680" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step8-frontend" value="Redirect to Payment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="680" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step8-payment" value="Razorpay Checkout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="payment-gw">
+          <mxGeometry x="20" y="680" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge8a" value="Payment Link" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step8-backend" target="step8-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="900" as="sourcePoint" />
+            <mxPoint x="650" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge8b" value="Redirect" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step8-frontend" target="step8-payment">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="900" as="sourcePoint" />
+            <mxPoint x="1070" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 9: Complete Payment -->
+        <mxCell id="step9-user" value="9. Complete Payment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="760" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step9-payment" value="Process Payment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="payment-gw">
+          <mxGeometry x="20" y="760" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge9" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step9-user" target="step9-payment">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="1000" as="sourcePoint" />
+            <mxPoint x="350" y="950" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100" y="785" />
+              <mxPoint x="1120" y="785" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 10: Payment Callback -->
+        <mxCell id="step10-payment" value="Payment Webhook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="payment-gw">
+          <mxGeometry x="20" y="840" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step10-backend" value="Payment Service&#xa;Verify Payment&#xa;Update Order Status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="840" width="260" height="70" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge10" value="Webhook" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step10-payment" target="step10-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="1000" as="sourcePoint" />
+            <mxPoint x="1070" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 11: Order Confirmation -->
+        <mxCell id="step11-backend" value="Order Service&#xa;Confirm Order&#xa;Reserve Inventory&#xa;Send Notification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="940" width="260" height="90" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step11-frontend" value="Display Order Confirmation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="940" width="260" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step11-user" value="11. View Order Confirmation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="user">
+          <mxGeometry x="20" y="960" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge11a" value="HTTP Response" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step11-backend" target="step11-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="1200" as="sourcePoint" />
+            <mxPoint x="650" y="1150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge11b" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step11-frontend" target="step11-user">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="1200" as="sourcePoint" />
+            <mxPoint x="350" y="1150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

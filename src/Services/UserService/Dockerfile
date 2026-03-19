@@ -1,21 +1,24 @@
-# Build from repo root so Directory.Packages.props and Directory.Build.props are available:
-#   docker build -f src/Services/UserService/Dockerfile -t user-service .
-
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-
-# Copy entire Services folder so Directory.Packages.props and Directory.Build.props are found
-COPY src/Services ./src/Services
-WORKDIR /app/src/Services
-
-RUN dotnet restore UserService/UserService.csproj && \
-    dotnet publish UserService/UserService.csproj -c Release -o /app/publish --no-restore
-
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
-WORKDIR /app
-
-COPY --from=build /app/publish .
 EXPOSE 8080
 
-ENV ASPNETCORE_URLS=http://+:8080
-ENTRYPOINT ["dotnet", "UserService.dll"]
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["Services/UserService/UserService.Api/UserService.Api.csproj", "Services/UserService/UserService.Api/"]
+COPY ["Services/UserService/UserService.Application/UserService.Application.csproj", "Services/UserService/UserService.Application/"]
+COPY ["Services/UserService/UserService.Domain/UserService.Domain.csproj", "Services/UserService/UserService.Domain/"]
+COPY ["Services/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj", "Services/UserService/UserService.Infrastructure/"]
+
+RUN dotnet restore "Services/UserService/UserService.Api/UserService.Api.csproj"
+COPY . .
+WORKDIR "/src/Services/UserService/UserService.Api"
+RUN dotnet build "UserService.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "UserService.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "AmCart.UserService.Api.dll"]

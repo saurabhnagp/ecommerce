@@ -1,0 +1,484 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Email Registration" id="email-reg">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Email/Password Registration Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- User -->
+        <mxCell id="user" value="User" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="200" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend -->
+        <mxCell id="frontend" value="Nuxt.js Frontend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="200" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend -->
+        <mxCell id="backend" value="User Service (.NET)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="200" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- Email Service -->
+        <mxCell id="email" value="Email Service" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="820" y="80" width="200" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 1: Fill Form -->
+        <mxCell id="step1-user" value="1. Fill Registration Form" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1-frontend" value="Display Registration Form" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge1" value="Submit Form" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-user" target="step1-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 2: POST Register -->
+        <mxCell id="step2-frontend" value="2. POST /api/v1/auth/register" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="140" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2-backend" value="Receive Registration Request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="140" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge2" value="HTTP POST" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step2-frontend" target="step2-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="200" as="sourcePoint" />
+            <mxPoint x="550" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 3: Create User -->
+        <mxCell id="step3-backend" value="3. Create User Record&#xa;IsEmailVerified = false&#xa;Generate Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="220" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 4: Send Email -->
+        <mxCell id="step4-backend" value="4. Request Email Send" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="320" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4-email" value="Send Verification Email" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="email">
+          <mxGeometry x="20" y="320" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge3" value="Send Email" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step4-backend" target="step4-email">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="400" as="sourcePoint" />
+            <mxPoint x="830" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 5: Response -->
+        <mxCell id="step5-backend" value="5. Return Success" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="400" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5-frontend" value="Show Success Message" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="400" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge4" value="HTTP 200" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step5-backend" target="step5-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="500" as="sourcePoint" />
+            <mxPoint x="550" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 6: Click Link -->
+        <mxCell id="step6-user" value="6. Click Verification Link" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="480" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step6-frontend" value="GET /verify-email?token=xxx" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="480" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge5" value="Click Link" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step6-user" target="step6-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="600" as="sourcePoint" />
+            <mxPoint x="350" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 7: Verify -->
+        <mxCell id="step7-backend" value="7. Verify Token&#xa;Activate Account" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="560" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge6" value="HTTP GET" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step6-frontend" target="step7-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="600" as="sourcePoint" />
+            <mxPoint x="550" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <diagram name="Email Login" id="email-login">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Email/Password Login Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- User -->
+        <mxCell id="user" value="User" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="200" height="400" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend -->
+        <mxCell id="frontend" value="Nuxt.js Frontend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="200" height="400" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend -->
+        <mxCell id="backend" value="User Service (.NET)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="200" height="400" as="geometry" />
+        </mxCell>
+        
+        <!-- Redis -->
+        <mxCell id="redis" value="Redis Cache" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="820" y="80" width="200" height="400" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 1: Submit Credentials -->
+        <mxCell id="step1-user" value="1. Enter Email &amp; Password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1-frontend" value="POST /api/v1/auth/login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge1" value="Submit" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-user" target="step1-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 2: Validate -->
+        <mxCell id="step2-backend" value="2. Validate Credentials&#xa;Check IsEmailVerified" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge2" value="HTTP POST" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-frontend" target="step2-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="200" as="sourcePoint" />
+            <mxPoint x="550" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 3: Generate Tokens -->
+        <mxCell id="step3-backend" value="3. Generate JWT Tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="240" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 4: Store Refresh Token -->
+        <mxCell id="step4-backend" value="4. Store Refresh Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="320" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4-redis" value="Store in Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="redis">
+          <mxGeometry x="20" y="320" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge3" value="Store" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step4-backend" target="step4-redis">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="400" as="sourcePoint" />
+            <mxPoint x="830" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 5: Return Tokens -->
+        <mxCell id="step5-backend" value="5. Return Tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="400" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5-frontend" value="Store Access Token&#xa;Set Refresh Cookie" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="400" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge4" value="HTTP 200 + Tokens" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step5-backend" target="step5-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="500" as="sourcePoint" />
+            <mxPoint x="550" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <diagram name="Google OAuth" id="google-oauth">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Google OAuth 2.0 Login Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- User -->
+        <mxCell id="user" value="User" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend -->
+        <mxCell id="frontend" value="Nuxt.js Frontend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend -->
+        <mxCell id="backend" value="User Service (.NET)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Google -->
+        <mxCell id="google" value="Google OAuth" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="820" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 1: Click Google -->
+        <mxCell id="step1-user" value="1. Click 'Sign in with Google'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1-frontend" value="Redirect to Google" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge1" value="Click" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-user" target="step1-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 2: Redirect -->
+        <mxCell id="step2-google" value="2. OAuth Consent Screen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="google">
+          <mxGeometry x="20" y="140" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge2" value="Redirect" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-frontend" target="step2-google">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="820" y="200" as="sourcePoint" />
+            <mxPoint x="870" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 3: Authorize -->
+        <mxCell id="step3-user" value="3. Authorize AmCart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="220" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge3" value="Authorize" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step3-user" target="step2-google">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="400" as="sourcePoint" />
+            <mxPoint x="350" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100" y="240" />
+              <mxPoint x="1000" y="240" />
+              <mxPoint x="1000" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 4: Callback -->
+        <mxCell id="step4-google" value="4. Redirect with Code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="google">
+          <mxGeometry x="20" y="300" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4-backend" value="GET /auth/google/callback?code=xxx" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="300" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge4" value="Callback" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step4-google" target="step4-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="400" as="sourcePoint" />
+            <mxPoint x="830" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 5: Exchange Code -->
+        <mxCell id="step5-backend" value="5. Exchange Code for Tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="380" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5-google" value="Return ID Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="google">
+          <mxGeometry x="20" y="380" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge5" value="POST /token" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step5-backend" target="step5-google">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="500" as="sourcePoint" />
+            <mxPoint x="830" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 6: Create/Link User -->
+        <mxCell id="step6-backend" value="6. Create or Link User&#xa;Generate JWT Tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="460" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <diagram name="Facebook OAuth" id="facebook-oauth">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Facebook OAuth 2.0 Login Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- User -->
+        <mxCell id="user" value="User" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend -->
+        <mxCell id="frontend" value="Nuxt.js Frontend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend -->
+        <mxCell id="backend" value="User Service (.NET)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Facebook -->
+        <mxCell id="facebook" value="Facebook OAuth" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;startSize=40;" vertex="1" parent="1">
+          <mxGeometry x="820" y="80" width="200" height="500" as="geometry" />
+        </mxCell>
+        
+        <!-- Step 1: Click Facebook -->
+        <mxCell id="step1-user" value="1. Click 'Sign in with Facebook'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1-frontend" value="Redirect to Facebook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="frontend">
+          <mxGeometry x="20" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge1" value="Click" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-user" target="step1-frontend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 2: OAuth Dialog -->
+        <mxCell id="step2-facebook" value="2. OAuth Dialog" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="facebook">
+          <mxGeometry x="20" y="140" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge2" value="Redirect" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step1-frontend" target="step2-facebook">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="820" y="200" as="sourcePoint" />
+            <mxPoint x="870" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 3: Authorize -->
+        <mxCell id="step3-user" value="3. Authorize AmCart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="user">
+          <mxGeometry x="20" y="220" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge3" value="Authorize" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step3-user" target="step2-facebook">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="400" as="sourcePoint" />
+            <mxPoint x="350" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100" y="240" />
+              <mxPoint x="1000" y="240" />
+              <mxPoint x="1000" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 4: Callback -->
+        <mxCell id="step4-facebook" value="4. Redirect with Code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="facebook">
+          <mxGeometry x="20" y="300" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4-backend" value="GET /auth/facebook/callback?code=xxx" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="300" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge4" value="Callback" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step4-facebook" target="step4-backend">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="400" as="sourcePoint" />
+            <mxPoint x="830" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 5: Exchange Code -->
+        <mxCell id="step5-backend" value="5. Exchange Code for Access Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="380" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5-facebook" value="Return Access Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="facebook">
+          <mxGeometry x="20" y="380" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge5" value="GET /oauth/access_token" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step5-backend" target="step5-facebook">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="500" as="sourcePoint" />
+            <mxPoint x="830" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 6: Get Profile -->
+        <mxCell id="step6-backend" value="6. Get User Profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="460" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step6-facebook" value="Return Profile Data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="facebook">
+          <mxGeometry x="20" y="460" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge6" value="GET /me" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="step6-backend" target="step6-facebook">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="600" as="sourcePoint" />
+            <mxPoint x="830" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Step 7: Create/Link User -->
+        <mxCell id="step7-backend" value="7. Create or Link User&#xa;Generate JWT Tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="backend">
+          <mxGeometry x="20" y="540" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
