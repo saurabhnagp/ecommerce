@@ -55,7 +55,7 @@ export default function App() {
           ) : (
             <>
               <Link to="/login" className="btn-outline link-btn">
-                Sign in
+                Saurabh Log in
               </Link>
               <Link to="/register" className="btn-primary link-btn">
                 Register
