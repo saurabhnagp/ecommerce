@@ -1,0 +1,34 @@
+<mxfile host="app.diagrams.net" modified="2026-01-29T00:00:00.000Z" type="device">
+  <diagram id="pg-sale-domain" name="PostgreSQL — Sale Domain">
+    <mxGraphModel dx="1422" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="db_label" value="PostgreSQL" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;strokeColor=#6c8ebf;fillColor=#dae8fc;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="300" y="-30" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_Sale" value="Sale" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=0;shadow=0;strokeColor=#6c8ebf;fillColor=#dae8fc;swimlaneLine=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="260" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_Sale_a" value="&lt;u&gt;SaleId&lt;/u&gt; : UUID [PK]&lt;br&gt;Name : string&lt;br&gt;DiscountPercent : decimal&lt;br&gt;StartDate : datetime&lt;br&gt;EndDate : datetime&lt;br&gt;IsActive : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="e_Sale">
+          <mxGeometry y="28" width="260" height="132" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_SaleRule" value="SaleRule" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=0;shadow=0;strokeColor=#6c8ebf;fillColor=#dae8fc;swimlaneLine=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="420" y="40" width="300" height="165" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_SaleRule_a" value="&lt;u&gt;SaleRuleId&lt;/u&gt; : UUID [PK]&lt;br&gt;&lt;i&gt;SaleId&lt;/i&gt; : UUID [FK]&lt;br&gt;CategoryId : string? &lt;b&gt;(→ MongoDB)&lt;/b&gt;&lt;br&gt;SubCategoryId : string? &lt;b&gt;(→ MongoDB)&lt;/b&gt;&lt;br&gt;ConditionType : enum&lt;br&gt;ConditionJson : jsonb?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="e_SaleRule">
+          <mxGeometry y="28" width="300" height="137" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_Sale_SaleRule" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="e_Sale_a" target="e_SaleRule_a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_Sale_SaleRule_l" value="1 : N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#6c8ebf;" vertex="1" connectable="0" parent="r_Sale_SaleRule">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="note_xdb" value="CategoryId and SubCategoryId are &lt;b&gt;cross-database&lt;br&gt;references&lt;/b&gt; to MongoDB categories collection.&lt;br&gt;No FK constraint — consistency maintained at&lt;br&gt;application level. ConditionJson uses PostgreSQL&lt;br&gt;jsonb for flexible combo-discount rules." style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=4;strokeColor=#d6b656;fillColor=#fff2cc;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="260" width="310" height="100" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

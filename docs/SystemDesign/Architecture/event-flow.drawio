@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net" modified="2026-01-29T00:00:00.000Z" type="device">
+  <diagram id="event-flow" name="Event-Driven Flow">
+    <mxGraphModel dx="1500" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ===== SECTION LABELS ===== -->
+        <mxCell id="lbl_pub" value="Publishers" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=3;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="120" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl_topics" value="SNS Topics" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=3;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="330" y="20" width="120" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl_queues" value="SQS Queues" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=3;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="660" y="20" width="140" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl_consumers" value="Consumers" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=3;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="20" width="120" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== PUBLISHERS ===== -->
+        <mxCell id="pub_order" value="OrderService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="pub_payment" value="PaymentService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="150" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="pub_product" value="ProductService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="230" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="pub_user" value="UserService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="310" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="pub_sale" value="SaleService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="390" width="130" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== SNS TOPICS ===== -->
+        <mxCell id="topic_order" value="order-events" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="65" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="topic_payment" value="payment-events" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="145" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="topic_product" value="product-events" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="225" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="topic_user" value="user-events" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="305" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="topic_sale" value="sale-events" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="385" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== SQS QUEUES ===== -->
+        <mxCell id="q_notif" value="notification-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="65" width="150" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="q_stock" value="stock-update-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="130" width="150" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="q_order_status" value="order-status-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="195" width="150" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="q_reindex" value="search-reindex-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="260" width="150" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="q_cache" value="cache-invalidation-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="325" width="160" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== CONSUMERS ===== -->
+        <mxCell id="con_notif" value="NotificationService&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;→ Amazon SES&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="60" width="160" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="con_product" value="ProductService&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;stock DECR/INCR&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="130" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="con_order" value="OrderService&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;status update&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="200" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="con_search" value="SearchService&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;reindex OpenSearch&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="270" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="con_cart" value="CartService&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;invalidate Redis cache&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="340" width="160" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Publishers → Topics ===== -->
+        <mxCell id="e_p1" value="OrderPlaced&lt;br&gt;OrderCancelled" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=9;fontColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="pub_order" target="topic_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_p2" value="PaymentCompleted&lt;br&gt;PaymentFailed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=9;fontColor=#333333;" edge="1" source="pub_payment" target="topic_payment" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_p3" value="ProductUpdated&lt;br&gt;StockChanged&lt;br&gt;BackInStock" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=9;fontColor=#333333;" edge="1" source="pub_product" target="topic_product" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_p4" value="UserRegistered" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=9;fontColor=#333333;" edge="1" source="pub_user" target="topic_user" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_p5" value="SaleActivated&lt;br&gt;SaleExpired" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=9;fontColor=#333333;" edge="1" source="pub_sale" target="topic_sale" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ===== ARROWS: Topics → Queues (fan-out) ===== -->
+        <mxCell id="e_t1a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_order" target="q_notif" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t1b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_order" target="q_stock" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_payment" target="q_order_status" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t3a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_product" target="q_reindex" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t3b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_product" target="q_cache" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_user" target="q_notif" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t5a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_sale" target="q_reindex" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_t5b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;" edge="1" source="topic_sale" target="q_cache" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ===== ARROWS: Queues → Consumers ===== -->
+        <mxCell id="e_q1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" source="q_notif" target="con_notif" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_q2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" source="q_stock" target="con_product" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_q3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" source="q_order_status" target="con_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_q4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" source="q_reindex" target="con_search" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_q5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" source="q_cache" target="con_cart" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ===== LEGEND ===== -->
+        <mxCell id="legend" value="&lt;b&gt;Pattern&lt;/b&gt;: Publisher → SNS Topic → SQS Queue(s) → Consumer&lt;br&gt;&lt;br&gt;SNS &lt;b&gt;fans out&lt;/b&gt; each event to multiple SQS queues.&lt;br&gt;Each consumer reads from its &lt;b&gt;own dedicated queue&lt;/b&gt;.&lt;br&gt;Failed messages go to a &lt;b&gt;Dead Letter Queue&lt;/b&gt; (DLQ)." style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fillColor=#f5f5f5;strokeColor=#999999;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="400" width="360" height="80" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

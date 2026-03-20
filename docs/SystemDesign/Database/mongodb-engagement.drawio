@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" modified="2026-01-29T00:00:00.000Z" type="device">
+  <diagram id="mongo-engagement" name="MongoDB — Engagement Domain">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="db_label" value="MongoDB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;strokeColor=#82b366;fillColor=#d5e8d4;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="310" y="-30" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_reviews" value="reviews (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="280" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_reviews_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;productId : string &lt;b&gt;(→ products)&lt;/b&gt;&lt;br&gt;userId : string &lt;b&gt;(→ PostgreSQL)&lt;/b&gt;&lt;br&gt;comment : string&lt;br&gt;likes : int&lt;br&gt;dislikes : int&lt;br&gt;createdAt : Date&lt;br&gt;&lt;br&gt;Index: { productId: 1, createdAt: -1 }" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_reviews">
+          <mxGeometry y="28" width="280" height="162" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_wishlists" value="wishlists (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="280" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_wishlists_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;userId : string &lt;b&gt;(→ PostgreSQL)&lt;/b&gt; [unique]&lt;br&gt;items : [&lt;br&gt;&amp;nbsp;&amp;nbsp;{ productId, name, image, addedAt }&lt;br&gt;]&lt;br&gt;&lt;br&gt;Embedded array — one doc per user" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_wishlists">
+          <mxGeometry y="28" width="280" height="142" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_compare" value="compare_sessions (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="400" y="260" width="280" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_compare_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;sessionId : string [unique]&lt;br&gt;productIds : [ string ]&lt;br&gt;createdAt : Date&lt;br&gt;&lt;br&gt;TTL index on createdAt (24h)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_compare">
+          <mxGeometry y="28" width="280" height="112" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_testimonials" value="testimonials (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="280" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_testimonials_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;customerName : string&lt;br&gt;photoUrl : string?&lt;br&gt;comment : string&lt;br&gt;sortOrder : int&lt;br&gt;isActive : boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_testimonials">
+          <mxGeometry y="28" width="280" height="132" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_contact" value="contact_messages (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="500" width="280" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_contact_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;name : string&lt;br&gt;email : string&lt;br&gt;subject : string&lt;br&gt;comment : string&lt;br&gt;createdAt : Date" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_contact">
+          <mxGeometry y="28" width="280" height="132" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_newsletter" value="newsletter_subscriptions (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="400" y="450" width="280" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_newsletter_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;email : string [unique]&lt;br&gt;subscribedAt : Date&lt;br&gt;isActive : boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_newsletter">
+          <mxGeometry y="28" width="280" height="102" as="geometry"/>
+        </mxCell>
+        <mxCell id="note_xdb" value="&lt;b&gt;Cross-database references&lt;/b&gt;&lt;br&gt;&lt;br&gt;• reviews.userId → PostgreSQL User&lt;br&gt;• reviews.productId → MongoDB products&lt;br&gt;• wishlists.userId → PostgreSQL User&lt;br&gt;• wishlists.items[].productId → MongoDB products&lt;br&gt;&lt;br&gt;Maintained at application level (no FK)." style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=4;strokeColor=#d6b656;fillColor=#fff2cc;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="40" width="290" height="140" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

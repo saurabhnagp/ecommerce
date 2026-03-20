@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" modified="2026-01-29T00:00:00.000Z" type="device">
+  <diagram id="pg-user-domain" name="PostgreSQL — User Domain">
+    <mxGraphModel dx="1422" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="db_label" value="PostgreSQL" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;strokeColor=#6c8ebf;fillColor=#dae8fc;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="310" y="-30" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_User" value="User" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=0;shadow=0;strokeColor=#6c8ebf;fillColor=#dae8fc;swimlaneLine=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="260" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_User_a" value="&lt;u&gt;UserId&lt;/u&gt; : UUID [PK]&lt;br&gt;Gender : enum&lt;br&gt;FirstName : string&lt;br&gt;LastName : string&lt;br&gt;Email : string [unique]&lt;br&gt;PasswordHash : string&lt;br&gt;Mobile : string&lt;br&gt;Phone : string?&lt;br&gt;ZipCode : string&lt;br&gt;Role : enum&lt;br&gt;SocialProvider : string?&lt;br&gt;SocialProviderId : string?&lt;br&gt;RememberMe : bool&lt;br&gt;CreatedAt : datetime&lt;br&gt;UpdatedAt : datetime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="e_User">
+          <mxGeometry y="28" width="260" height="272" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_Address" value="Address" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=0;shadow=0;strokeColor=#6c8ebf;fillColor=#dae8fc;swimlaneLine=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="260" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_Address_a" value="&lt;u&gt;AddressId&lt;/u&gt; : UUID [PK]&lt;br&gt;&lt;i&gt;UserId&lt;/i&gt; : UUID [FK]&lt;br&gt;Type : enum&lt;br&gt;FirstName : string&lt;br&gt;LastName : string&lt;br&gt;Company : string?&lt;br&gt;Country : string&lt;br&gt;StreetAddress : string&lt;br&gt;Apartment : string?&lt;br&gt;City : string&lt;br&gt;State : string&lt;br&gt;ZipCode : string&lt;br&gt;Phone : string&lt;br&gt;Email : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="e_Address">
+          <mxGeometry y="28" width="260" height="252" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_PRT" value="PasswordResetToken" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=0;shadow=0;strokeColor=#6c8ebf;fillColor=#dae8fc;swimlaneLine=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="440" y="380" width="260" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_PRT_a" value="&lt;u&gt;TokenId&lt;/u&gt; : UUID [PK]&lt;br&gt;&lt;i&gt;UserId&lt;/i&gt; : UUID [FK]&lt;br&gt;Token : string&lt;br&gt;ExpiresAt : datetime&lt;br&gt;UsedAt : datetime?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="e_PRT">
+          <mxGeometry y="28" width="260" height="102" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_User_Address" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="e_User_a" target="e_Address_a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_User_Address_l" value="1 : N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#6c8ebf;" vertex="1" connectable="0" parent="r_User_Address">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r_User_PRT" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="e_User_a" target="e_PRT_a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_User_PRT_l" value="1 : N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#6c8ebf;" vertex="1" connectable="0" parent="r_User_PRT">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
