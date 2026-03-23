@@ -1,19 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { subscribeNewsletter } from "../api/newsletter";
 import "./Footer.css";
 
-const PRODUCT_TAGS = [
-  "Men",
-  "Women",
-  "Watches",
-  "Shoes",
-  "Jackets",
-  "Shirts",
-  "Jeans",
-  "Accessories",
-  "Sunglasses",
-];
+// Re-add when "Lower Footer" section is uncommented:
+// import { Link } from "react-router-dom";
+// const PRODUCT_TAGS = ["Men","Women","Watches","Shoes","Jackets","Shirts","Jeans","Accessories","Sunglasses"];
 
 const PAYMENT_LABELS = ["VISA", "RUPAY", "UPI", "MASTER", "PAYPAL"];
 
