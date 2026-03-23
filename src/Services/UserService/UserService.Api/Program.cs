@@ -12,6 +12,19 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// builder.Services.AddCors(options =>
+// {
+//     options.AddDefaultPolicy(policy =>
+//     {
+//         var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+//                       ?? new[] { "http://localhost:5173" };
+//         policy.WithOrigins(origins)
+//               .AllowAnyHeader()
+//               .AllowAnyMethod()
+//               .AllowCredentials();
+//     });
+// });
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<UserDbContext>("database", failureStatus: HealthStatus.Unhealthy);
 
@@ -51,6 +64,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+// app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

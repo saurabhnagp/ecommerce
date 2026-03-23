@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
 import { notifyAuthChange } from "../auth/notify";
 import { saveSession } from "../auth/storage";
+import { PasswordInput } from "../components/PasswordInput";
 import "./auth-pages.css";
 
 export function LoginPage() {
@@ -71,19 +72,13 @@ export function LoginPage() {
               ✉
             </span>
           </label>
-          <label className="field-wrap">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-            <span className="field-icon" aria-hidden>
-              🔒
-            </span>
-          </label>
+          <PasswordInput
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+          />
           <label className="remember">
             <input
               type="checkbox"

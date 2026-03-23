@@ -31,6 +31,11 @@ public static class DependencyInjection
         services.AddScoped<IUserService, Application.Services.UserService>();
         services.AddScoped<IAddressService, AddressService>();
 
+        // Engagement services
+        services.AddScoped<ITestimonialService, Services.TestimonialService>();
+        services.AddScoped<IContactMessageService, Services.ContactMessageService>();
+        services.AddScoped<INewsletterService, Services.NewsletterService>();
+
         return services;
     }
 }

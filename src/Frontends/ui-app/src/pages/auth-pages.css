@@ -106,6 +106,24 @@
   pointer-events: none;
 }
 
+.field-toggle {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.82rem;
+  opacity: 0.5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.15rem;
+  line-height: 1;
+}
+
+.field-toggle:hover {
+  opacity: 0.9;
+}
+
 .remember {
   display: flex;
   align-items: center;
@@ -183,25 +201,55 @@ a.link-auth {
   border: 1px solid #ddd;
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.register-fields > input {
+.register-fields > input,
+.register-name-row > input {
   display: block;
   width: 100%;
   padding: 0.75rem 0.85rem;
   border: none;
   border-bottom: 1px solid #e5e5e5;
   box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.9rem;
 }
 
-.register-fields > input:last-of-type {
-  border-bottom: none;
-}
-
-.register-fields > input:focus {
+.register-fields > input:focus,
+.register-name-row > input:focus {
   outline: none;
   background: #fafafa;
+}
+
+.register-name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.register-name-row > input:first-child {
+  border-right: 1px solid #e5e5e5;
+}
+
+.register-card .field-wrap {
+  display: block;
+  position: relative;
+  margin-bottom: 0.65rem;
+}
+
+.register-card .field-wrap input {
+  width: 100%;
+  padding: 0.7rem 2.2rem 0.7rem 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.register-card .field-wrap input:focus {
+  outline: none;
+  border-color: #c9a962;
 }
 
 .gender-row {

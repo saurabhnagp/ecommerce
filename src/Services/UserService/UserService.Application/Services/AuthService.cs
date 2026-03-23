@@ -31,6 +31,9 @@ public class AuthService : IAuthService
 
     public async Task<AuthResult> RegisterAsync(RegisterRequest request, string baseUrl, CancellationToken ct = default)
     {
+        if (request.Password != request.ConfirmPassword)
+            return AuthResult.Fail("PASSWORD_MISMATCH", "Password and confirmation do not match.");
+
         var passwordError = ValidatePassword(request.Password);
         if (passwordError != null)
             return AuthResult.Fail("INVALID_PASSWORD", passwordError);
@@ -39,16 +42,12 @@ public class AuthService : IAuthService
         if (existing != null)
             return AuthResult.Fail("EMAIL_EXISTS", "Email already registered.");
 
-        var nameParts = request.Name.Trim().Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-        var firstName = nameParts.Length > 0 ? nameParts[0] : request.Email;
-        var lastName = nameParts.Length > 1 ? nameParts[1] : string.Empty;
-
         var user = new User
         {
             Id = Guid.NewGuid(),
             Email = request.Email.Trim().ToLowerInvariant(),
-            FirstName = firstName,
-            LastName = lastName,
+            FirstName = request.FirstName.Trim(),
+            LastName = request.LastName.Trim(),
             Phone = request.Phone?.Trim(),
             Gender = request.Gender,
             AuthProvider = "email",

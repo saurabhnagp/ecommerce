@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { resetPassword } from "../api/auth";
+import { PasswordInput } from "../components/PasswordInput";
 import "./auth-pages.css";
 
 export function ResetPasswordPage() {
@@ -48,34 +49,22 @@ export function ResetPasswordPage() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <p className="form-error">{error}</p>}
-          <label className="field-wrap">
-            <input
-              type="password"
-              placeholder="New password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-            <span className="field-icon" aria-hidden>
-              🔒
-            </span>
-          </label>
-          <label className="field-wrap">
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-            <span className="field-icon" aria-hidden>
-              🔒
-            </span>
-          </label>
+          <PasswordInput
+            placeholder="New password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+          <PasswordInput
+            placeholder="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
           <button type="submit" className="btn-login" disabled={loading || !token}>
             {loading ? "…" : "UPDATE PASSWORD"}
           </button>

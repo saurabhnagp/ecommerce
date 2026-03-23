@@ -4,6 +4,7 @@ import { changePassword } from "../api/auth";
 import { isSessionExpiredError } from "../api/errors";
 import { endSessionDueToUnauthorized } from "../auth/endSession";
 import { clearSession, getAccessToken } from "../auth/storage";
+import { PasswordInput } from "../components/PasswordInput";
 import "./auth-pages.css";
 
 export function ChangePasswordPage() {
@@ -61,47 +62,29 @@ export function ChangePasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="auth-form">
             {error && <p className="form-error">{error}</p>}
-            <label className="field-wrap">
-              <input
-                type="password"
-                placeholder="Current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-              />
-              <span className="field-icon" aria-hidden>
-                🔒
-              </span>
-            </label>
-            <label className="field-wrap">
-              <input
-                type="password"
-                placeholder="New password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-                minLength={8}
-                autoComplete="new-password"
-              />
-              <span className="field-icon" aria-hidden>
-                🔒
-              </span>
-            </label>
-            <label className="field-wrap">
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                required
-                minLength={8}
-                autoComplete="new-password"
-              />
-              <span className="field-icon" aria-hidden>
-                🔒
-              </span>
-            </label>
+            <PasswordInput
+              placeholder="Current password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+            <PasswordInput
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              minLength={8}
+              autoComplete="new-password"
+            />
+            <PasswordInput
+              placeholder="Confirm new password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              required
+              minLength={8}
+              autoComplete="new-password"
+            />
             <button type="submit" className="btn-login" disabled={loading}>
               {loading ? "…" : "UPDATE PASSWORD"}
             </button>

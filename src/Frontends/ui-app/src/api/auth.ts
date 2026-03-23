@@ -11,6 +11,7 @@ export type UserSummary = {
   id: string;
   email: string;
   name: string;
+  phone?: string;
   role?: string;
 };
 
@@ -42,8 +43,11 @@ export async function login(email: string, password: string, rememberMe: boolean
 }
 
 export async function register(payload: {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   name: string;
   phone?: string;
   gender?: string;

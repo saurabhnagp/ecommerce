@@ -1,7 +1,10 @@
+import { TestimonialsSection } from "../components/TestimonialsSection";
+
 export function HomePage() {
   return (
-    <main className="app-main">
+    <div>
       <p className="placeholder">Product and cart modules will live here later.</p>
-    </main>
+      <TestimonialsSection />
+    </div>
   );
 }

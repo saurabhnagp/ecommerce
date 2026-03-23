@@ -3,18 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { register } from "../api/auth";
 import { notifyAuthChange } from "../auth/notify";
 import { saveSession } from "../auth/storage";
+import { PasswordInput } from "../components/PasswordInput";
 import "./auth-pages.css";
-
-function defaultNameFromEmail(email: string) {
-  const local = email.split("@")[0] ?? "User";
-  return local.replace(/[._-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "User";
-}
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [mobile, setMobile] = useState("");
   const [gender, setGender] = useState<"Male" | "Female" | "">("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,14 +21,21 @@ export function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
     setLoading(true);
     try {
-      const name = defaultNameFromEmail(email.trim());
+      const name = `${firstName.trim()} ${lastName.trim()}`.trim();
       const res = await register({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         email: email.trim(),
         password,
+        confirmPassword,
         name,
-        phone: phone.trim() || undefined,
+        phone: mobile.trim() || undefined,
         gender: gender || undefined,
       });
       if (res.data?.tokens && res.data.user) {
@@ -48,41 +54,51 @@ export function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card register-card">
         <div className="auth-page-header">
-          <span>Register</span>
+          <span>Create Account</span>
           <Link to="/" aria-label="Home">
-            ×
+            &times;
           </Link>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <p className="form-error">{error}</p>}
           <div className="register-fields">
+            <div className="register-name-row">
+              <input
+                type="text"
+                placeholder="First Name *"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                autoComplete="given-name"
+              />
+              <input
+                type="text"
+                placeholder="Last Name *"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                autoComplete="family-name"
+              />
+            </div>
             <input
               type="email"
-              placeholder="Your Email Address"
+              placeholder="Email Address *"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
             />
             <input
-              type="password"
-              placeholder="Choose Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-            <input
               type="tel"
-              placeholder="Mobile Number (For order status updates)"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Mobile Number *"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              required
               autoComplete="tel"
             />
             <div className="gender-row">
-              <span className="gender-label">I&apos;m a</span>
+              <span className="gender-label">Gender</span>
               <label>
                 <input
                   type="radio"
@@ -104,8 +120,25 @@ export function RegisterPage() {
             </div>
           </div>
 
+          <PasswordInput
+            placeholder="Password (min 8 characters) *"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+          <PasswordInput
+            placeholder="Confirm Password *"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+
           <button type="submit" className="btn-register-submit" disabled={loading}>
-            {loading ? "…" : "REGISTER"}
+            {loading ? "Creating account\u2026" : "REGISTER"}
           </button>
 
           <p className="auth-footer">
