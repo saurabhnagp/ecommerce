@@ -13,6 +13,14 @@ public class NewsletterController : ControllerBase
 
     public NewsletterController(INewsletterService service) => _service = service;
 
+    [Authorize(Roles = "admin")]
+    [HttpGet("subscribers")]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var items = await _service.GetAllAsync(ct);
+        return Ok(new { success = true, data = items });
+    }
+
     [AllowAnonymous]
     [HttpPost("subscribe")]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeNewsletterRequest request, CancellationToken ct)

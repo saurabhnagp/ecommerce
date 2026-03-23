@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: amcart-services
+  labels:
+    app: product-service
+data:
+  ASPNETCORE_URLS: "http://+:8080"
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Jwt__Issuer: "amcart"
+  Jwt__Audience: "amcart-api"

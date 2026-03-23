@@ -1,5 +1,6 @@
 using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmCart.ProductService.Api.Controllers;
@@ -61,6 +62,7 @@ public class ProductReviewsController : ControllerBase
         return Ok(new { success = true, data = review });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPost("{id:guid}/approve")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,6 +74,7 @@ public class ProductReviewsController : ControllerBase
         return Ok(new { success = true, message = "Review approved." });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

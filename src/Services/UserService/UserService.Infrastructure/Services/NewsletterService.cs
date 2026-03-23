@@ -12,6 +12,14 @@ public class NewsletterService : INewsletterService
 
     public NewsletterService(UserDbContext db) => _db = db;
 
+    public async Task<IReadOnlyList<NewsletterSubscriptionDto>> GetAllAsync(CancellationToken ct = default)
+    {
+        var items = await _db.NewsletterSubscriptions
+            .OrderByDescending(n => n.SubscribedAt)
+            .ToListAsync(ct);
+        return items.Select(ToDto).ToList();
+    }
+
     public async Task<NewsletterSubscriptionDto> SubscribeAsync(string email, CancellationToken ct = default)
     {
         var normalised = email.Trim().ToLowerInvariant();

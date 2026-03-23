@@ -6,7 +6,11 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Same-origin /api in dev → UserService (no browser CORS)
+      "/product-api": {
+        target: process.env.VITE_DEV_PRODUCT_API_PROXY ?? "http://localhost:5002",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/product-api/, "/api"),
+      },
       "/api": {
         target: process.env.VITE_DEV_API_PROXY ?? "http://localhost:5001",
         changeOrigin: true,

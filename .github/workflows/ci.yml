@@ -69,6 +69,14 @@ jobs:
           push: false
           tags: user-service:ci
 
+      - name: Build ProductService image
+        uses: docker/build-push-action@v6
+        with:
+          context: src
+          file: src/Services/ProductService/Dockerfile
+          push: false
+          tags: product-service:ci
+
       - name: Build UI image
         uses: docker/build-push-action@v6
         with:

@@ -1,5 +1,6 @@
 using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmCart.ProductService.Api.Controllers;
@@ -45,6 +46,7 @@ public class BrandsController : ControllerBase
         return Ok(new { success = true, data = brand });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPost]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,6 +63,7 @@ public class BrandsController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +83,7 @@ public class BrandsController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,5 +1,6 @@
 using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmCart.ProductService.Api.Controllers;
@@ -65,6 +66,7 @@ public class ProductsController : ControllerBase
         return Ok(new { success = true, data = product });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPost]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,6 +83,7 @@ public class ProductsController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,6 +103,7 @@ public class ProductsController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPost("{id:guid}/publish")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -111,6 +115,7 @@ public class ProductsController : ControllerBase
         return Ok(new { success = true, data = product, message = "Product published." });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

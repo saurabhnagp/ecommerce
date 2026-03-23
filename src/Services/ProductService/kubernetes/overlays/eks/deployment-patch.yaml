@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  namespace: amcart-services
+spec:
+  replicas: 2
+  template:
+    spec:
+      imagePullPolicy: Always
+      containers:
+        - name: product-service
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      # For private ECR, add: imagePullSecrets: [{ name: ecr-registry-secret }]

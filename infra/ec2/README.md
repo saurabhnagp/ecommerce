@@ -107,14 +107,49 @@ docker compose --env-file .env up -d
 
 **Logs:** `docker compose -f /opt/amcart/docker-compose.yml logs -f`
 
-## 3. CI/CD
+## 3. Stop / Start to save costs (recommended over terminate)
+
+**Stop** the instance when idle instead of **terminating** it. When stopped:
+- **No compute charges** (you only pay ~$1.60/month for the 20 GiB EBS volume)
+- Docker, configs, Postgres data, `.env` — **everything is preserved**
+- Just start again when needed; containers auto-restart (`restart: unless-stopped`)
+
+**Caveat**: The public IP changes on each start (unless you have an Elastic IP). The management script handles this automatically.
+
+### Using the management script (from your laptop)
+
+Edit the variables at the top of [`scripts/ec2-manage.sh`](scripts/ec2-manage.sh) to match your instance, then:
+
+```bash
+# Stop when done for the day (no compute bill)
+bash infra/ec2/scripts/ec2-manage.sh stop
+
+# Start next morning (updates GitHub secret EC2_HOST automatically)
+bash infra/ec2/scripts/ec2-manage.sh start
+
+# Check status
+bash infra/ec2/scripts/ec2-manage.sh status
+
+# SSH in
+bash infra/ec2/scripts/ec2-manage.sh ssh
+```
+
+The `start` command waits for the instance to be running, gets the new IP, and updates the **`EC2_HOST`** GitHub secret via `gh` CLI (install: https://cli.github.com/).
+
+### If you must terminate and recreate
+
+1. When launching, paste [`scripts/user-data-bootstrap.sh`](scripts/user-data-bootstrap.sh) into **Advanced details → User data**. This auto-installs Docker + Compose on first boot.
+2. After launch, SCP files and create `.env` as in section 2 above.
+3. Update `INSTANCE_ID` in `ec2-manage.sh` and `EC2_HOST` in GitHub secrets.
+
+## 4. CI/CD
 
 - **CI:** [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — `dotnet test` + UI `npm run build` on PR/push.
 - **Deploy:** [`.github/workflows/deploy-ec2.yml`](../../.github/workflows/deploy-ec2.yml) — on push to `main`, build/push images to ECR, SSH to EC2, `docker compose pull` + `up -d` with **`GITHUB_SHA`** image tags.
 
 Ensure ECR repositories exist before the first deploy run.
 
-## 4. Local Docker build commands (from repo root)
+## 5. Local Docker build commands (from repo root)
 
 ```bash
 docker build -f src/Services/UserService/Dockerfile -t user-service:local src

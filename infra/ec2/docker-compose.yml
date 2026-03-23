@@ -44,12 +44,33 @@ services:
     networks:
       - amcart
 
+  product-service:
+    image: ${PRODUCT_SERVICE_IMAGE:?PRODUCT_SERVICE_IMAGE is required}
+    container_name: amcart-product-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: >-
+        Host=postgres;Port=5432;Database=${PRODUCT_DB:-amcart_products};Username=${POSTGRES_USER:-amcart};Password=${POSTGRES_PASSWORD}
+      Jwt__Secret: ${JWT_SECRET:?JWT_SECRET is required}
+      Jwt__Issuer: ${JWT_ISSUER:-amcart}
+      Jwt__Audience: ${JWT_AUDIENCE:-amcart-api}
+    expose:
+      - "8080"
+    networks:
+      - amcart
+
   ui:
     image: ${UI_IMAGE:?UI_IMAGE is required}
     container_name: amcart-ui
     restart: unless-stopped
     depends_on:
       - user-service
+      - product-service
     ports:
       - "80:80"
     volumes:

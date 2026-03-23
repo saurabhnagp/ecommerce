@@ -64,6 +64,11 @@ export function UserMenuDropdown({ onLogout }: Props) {
           >
             Change password
           </Link>
+          {user?.role === "admin" && (
+            <Link to="/admin" className="user-menu__item" role="menuitem" onClick={() => setOpen(false)}>
+              Admin Panel
+            </Link>
+          )}
           <button type="button" className="user-menu__item user-menu__item--danger" role="menuitem" onClick={logout}>
             Log out
           </button>

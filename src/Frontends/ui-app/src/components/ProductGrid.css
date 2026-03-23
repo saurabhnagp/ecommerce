@@ -1,0 +1,116 @@
+/* Tab bar */
+.pgrid-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.pgrid-tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #888;
+  padding: 0.4rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.pgrid-tab:hover {
+  color: #555;
+}
+
+.pgrid-tab--active {
+  color: #c9a962;
+  border-bottom-color: #c9a962;
+}
+
+/* Nav arrows */
+.pgrid-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.pgrid-nav__btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pgrid-nav__btn:hover:not(:disabled) {
+  background: #c9a962;
+  border-color: #c9a962;
+  color: #fff;
+}
+
+.pgrid-nav__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Grid */
+.pgrid-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+
+/* Results count / info */
+.pgrid-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+.pgrid-info__count {
+  font-weight: 600;
+  color: #555;
+}
+
+/* Empty state */
+.pgrid-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1024px) {
+  .pgrid-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .pgrid-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pgrid-tabs {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .pgrid-grid {
+    grid-template-columns: 1fr;
+  }
+}

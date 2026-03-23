@@ -22,4 +22,4 @@ RUN dotnet publish "ProductService.Api.csproj" -c Release -o /app/publish /p:Use
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ProductService.Api.dll"]
+ENTRYPOINT ["dotnet", "AmCart.ProductService.Api.dll"]

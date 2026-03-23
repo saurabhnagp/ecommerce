@@ -11,9 +11,10 @@ This guide covers **amcart-gateway** on Docker Desktop Kubernetes: nginx in fron
 - Docker Desktop with **Kubernetes** enabled.
 - **PostgreSQL:** `kubectl apply -k src/Databases/postgres/kubernetes/overlays/local`
 - **UserService:** `kubectl apply -k src/Services/UserService/kubernetes/overlays/local`
+- **ProductService:** `kubectl apply -k src/Services/ProductService/kubernetes/overlays/local`
 
 ```bash
-kubectl -n amcart-services get svc user-service
+kubectl -n amcart-services get svc user-service product-service
 ```
 
 ---
@@ -32,7 +33,10 @@ Port-forward:
 kubectl -n amcart-gateway port-forward svc/amcart-gateway 9081:80
 ```
 
-- **http://localhost:9081/api/v1/...** → UserService
+- **http://localhost:9081/api/v1/products/...** → ProductService
+- **http://localhost:9081/api/v1/categories/...** → ProductService
+- **http://localhost:9081/api/v1/brands/...** → ProductService
+- **http://localhost:9081/api/v1/...** (other) → UserService
 
 ---
 
@@ -55,4 +59,4 @@ kubectl delete -k src/Infrastructure/nginx/kubernetes/gateway/overlays/local
 
 | Issue | Check |
 |-------|--------|
-| 502 on `/api` | UserService running; DNS from gateway pod to `user-service.amcart-services` |
+| 502 on `/api` | UserService/ProductService running; DNS from gateway pod to `user-service.amcart-services` / `product-service.amcart-services` |

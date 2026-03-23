@@ -12,11 +12,21 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { ContactPage } from "./pages/ContactPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
+import { ProductListingPage } from "./pages/ProductListingPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { AdminRoute } from "./admin/AdminRoute";
+import { AdminLayout } from "./admin/AdminLayout";
+import { AdminDashboard } from "./admin/AdminDashboard";
+import { AdminProducts } from "./admin/AdminProducts";
+import { AdminCategories } from "./admin/AdminCategories";
+import { AdminSales } from "./admin/AdminSales";
+import { AdminTestimonials } from "./admin/AdminTestimonials";
+import { AdminContacts } from "./admin/AdminContacts";
+import { AdminNewsletter } from "./admin/AdminNewsletter";
 import "./App.css";
 
 export default function App() {
@@ -56,35 +66,69 @@ export default function App() {
     <div className="app">
       <Header signedIn={signedIn} onAuthRefresh={refresh} />
 
-      <main className="app-main">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-          <Route
-            path="/account/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/account/change-password"
-            element={
-              <ProtectedRoute>
-                <ChangePasswordPage />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
+      <Routes>
+        {/* Admin panel — full-width, own layout */}
+        <Route
+          path="/admin/*"
+          element={
+            <AdminRoute>
+              <Routes>
+                <Route element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="categories" element={<AdminCategories />} />
+                  <Route path="sales" element={<AdminSales />} />
+                  <Route path="testimonials" element={<AdminTestimonials />} />
+                  <Route path="contacts" element={<AdminContacts />} />
+                  <Route path="newsletter" element={<AdminNewsletter />} />
+                </Route>
+              </Routes>
+            </AdminRoute>
+          }
+        />
 
-      <Footer />
+        {/* Public / user pages — constrained width */}
+        <Route
+          path="*"
+          element={
+            <>
+              <main className="app-main">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/products" element={<ProductListingPage />} />
+                  <Route path="/new-products" element={<ProductListingPage />} />
+                  <Route path="/popular" element={<ProductListingPage />} />
+                  <Route path="/sale" element={<ProductListingPage />} />
+                  <Route path="/category/:slug" element={<ProductListingPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+                  <Route
+                    path="/account/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/account/change-password"
+                    element={
+                      <ProtectedRoute>
+                        <ChangePasswordPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </main>
+              <Footer />
+            </>
+          }
+        />
+      </Routes>
     </div>
   );
 }

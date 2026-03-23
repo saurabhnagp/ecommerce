@@ -23,6 +23,7 @@ concurrency:
 env:
   AWS_REGION: ap-south-1
   ECR_USER_REPO: amcart/user-service
+  ECR_PRODUCT_REPO: amcart/product-service
   ECR_UI_REPO: amcart/ui
 
 jobs:
@@ -58,6 +59,18 @@ jobs:
           docker push "$REGISTRY/${{ env.ECR_USER_REPO }}:$IMAGE_TAG"
           docker push "$REGISTRY/${{ env.ECR_USER_REPO }}:latest"
 
+      - name: Build and push ProductService
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/Services/ProductService/Dockerfile \
+            -t "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$IMAGE_TAG" \
+            -t "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:latest" \
+            src
+          docker push "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$IMAGE_TAG"
+          docker push "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:latest"
+
       - name: Build and push UI
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -88,6 +101,7 @@ jobs:
             cd "$DEPLOY_DIR"
             aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
             export USER_SERVICE_IMAGE="$REGISTRY/${{ env.ECR_USER_REPO }}:$TAG"
+            export PRODUCT_SERVICE_IMAGE="$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$TAG"
             export UI_IMAGE="$REGISTRY/${{ env.ECR_UI_REPO }}:$TAG"
             docker compose --env-file .env pull
             docker compose --env-file .env up -d
