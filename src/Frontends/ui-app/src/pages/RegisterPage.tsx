@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { mergeCart } from "../api/cart";
 import { register } from "../api/auth";
+import { clearCartSessionId, getOrCreateCartSessionId } from "../cart/cartSession";
 import { notifyAuthChange } from "../auth/notify";
 import { saveSession } from "../auth/storage";
 import { PasswordInput } from "../components/PasswordInput";
@@ -27,6 +29,7 @@ export function RegisterPage() {
     }
     setLoading(true);
     try {
+      const guestSessionId = getOrCreateCartSessionId();
       const name = `${firstName.trim()} ${lastName.trim()}`.trim();
       const res = await register({
         firstName: firstName.trim(),
@@ -40,6 +43,12 @@ export function RegisterPage() {
       });
       if (res.data?.tokens && res.data.user) {
         saveSession(res.data.tokens, res.data.user);
+        try {
+          await mergeCart(res.data.tokens.accessToken, guestSessionId);
+        } catch {
+          /* ignore */
+        }
+        clearCartSessionId();
         notifyAuthChange();
         navigate("/", { replace: true });
       }

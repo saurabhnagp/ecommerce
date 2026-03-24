@@ -53,4 +53,6 @@ public class Product
     public ICollection<ProductAttribute> Attributes { get; set; } = new List<ProductAttribute>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<ProductTag> Tags { get; set; } = new List<ProductTag>();
+    public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
+    public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 }

@@ -24,11 +24,16 @@ public static class DependencyInjection
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
+        services.AddScoped<IWishlistRepository, WishlistRepository>();
+        services.AddScoped<ICouponRepository, CouponRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
 
         services.AddScoped<IProductService, AmCart.ProductService.Application.Services.ProductService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IBrandService, BrandService>();
         services.AddScoped<IProductReviewService, ProductReviewService>();
+        services.AddScoped<IWishlistService, WishlistService>();
+        services.AddScoped<ICartService, CartService>();
 
         return services;
     }

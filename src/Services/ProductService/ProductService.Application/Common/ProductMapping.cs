@@ -51,6 +51,8 @@ public static class ProductMapping
             SKU = p.SKU,
             Price = p.Price,
             CompareAtPrice = p.CompareAtPrice,
+            Currency = p.Currency ?? "USD",
+            Quantity = p.Quantity,
             Status = p.Status,
             IsFeatured = p.IsFeatured,
             CategoryId = p.CategoryId,

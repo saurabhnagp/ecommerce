@@ -47,9 +47,11 @@ export type ProductDto = {
   sku: string;
   price: number;
   compareAtPrice?: number;
-  currency: string;
-  quantity: number;
-  lowStockThreshold: number;
+  /** Present on paged list responses from the API. */
+  currency?: string;
+  /** Present on paged list and full product responses. */
+  quantity?: number;
+  lowStockThreshold?: number;
   status: string;
   isFeatured: boolean;
   categoryId?: string;
@@ -60,8 +62,11 @@ export type ProductDto = {
   reviewCount: number;
   createdAt: string;
   publishedAt?: string;
-  images: ProductImage[];
-  tagNames: string[];
+  /** Full detail only; list uses primaryImageUrl. */
+  images?: ProductImage[];
+  /** Paged list API returns this instead of images[]. */
+  primaryImageUrl?: string;
+  tagNames?: string[];
 };
 
 export type PagedResult<T> = {
@@ -82,7 +87,7 @@ export type CategoryDto = {
   displayOrder: number;
   isActive: boolean;
   createdAt: string;
-  subCategories: CategoryDto[];
+  subCategories?: CategoryDto[];
 };
 
 export type BrandDto = {
@@ -91,6 +96,7 @@ export type BrandDto = {
   slug: string;
   description?: string;
   logoUrl?: string;
+  websiteUrl?: string;
   isActive: boolean;
 };
 

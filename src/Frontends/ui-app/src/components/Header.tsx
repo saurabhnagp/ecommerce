@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../cart/CartContext";
 import { getStoredUser } from "../auth/storage";
 import { UserMenuDropdown } from "./UserMenuDropdown";
 import "./Header.css";
@@ -80,7 +81,15 @@ function MegaMenu({ cats }: { cats: Record<string, string[]> }) {
 
 export function Header({ signedIn, onAuthRefresh }: Props) {
   const navigate = useNavigate();
+  const { cart, loading: cartLoading } = useCart();
   const [query, setQuery] = useState("");
+
+  const cartCount = cart?.items.reduce((n, i) => n + i.quantity, 0) ?? 0;
+  const cartSym = cart?.currency === "USD" ? "$" : "₹";
+  const cartTotal = cart?.total ?? 0;
+  const cartTotalFmt = cartTotal.toLocaleString(cart?.currency === "USD" ? "en-US" : "en-IN", {
+    minimumFractionDigits: 2,
+  });
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -157,7 +166,13 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
           <Link to="/cart" className="cart-widget">
             <span className="cart-widget__icon">&#x1F6D2;</span>
             <span className="cart-widget__text">
-              0 item(s) / <b>$0.00</b>
+              {cartLoading ? (
+                "…"
+              ) : (
+                <>
+                  {cartCount} item(s) / <b>{cartSym}</b> <b>{cartTotalFmt}</b>
+                </>
+              )}
             </span>
             <span className="cart-widget__arrow">&rarr;</span>
           </Link>

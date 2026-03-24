@@ -2,34 +2,51 @@ import { useEffect, useState } from "react";
 import {
   fetchProducts,
   fetchCategories,
+  fetchBrands,
   createProduct,
   updateProduct,
   deleteProduct,
 } from "./productApi";
-import type { ProductDto, CategoryDto } from "./productApi";
+import type { ProductDto, CategoryDto, BrandDto } from "./productApi";
 
 type FormData = {
   name: string;
+  slug: string;
   sku: string;
   price: number;
   compareAtPrice: number;
   quantity: number;
   status: string;
   categoryId: string;
+  brandId: string;
   description: string;
   imageUrl: string;
   isFeatured: boolean;
   currency: string;
 };
 
+/** Client-side preview of URL slug; server uses the same rules when slug is omitted. */
+function slugifyFromName(name: string): string {
+  const s = name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return s || "item";
+}
+
 const EMPTY_FORM: FormData = {
   name: "",
+  slug: "",
   sku: "",
   price: 0,
   compareAtPrice: 0,
   quantity: 0,
   status: "draft",
   categoryId: "",
+  brandId: "",
   description: "",
   imageUrl: "",
   isFeatured: false,
@@ -46,6 +63,7 @@ const STATUS_BADGE: Record<string, string> = {
 export function AdminProducts() {
   const [products, setProducts] = useState<ProductDto[]>([]);
   const [categories, setCategories] = useState<CategoryDto[]>([]);
+  const [brands, setBrands] = useState<BrandDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
@@ -56,13 +74,15 @@ export function AdminProducts() {
 
   async function load(p = page, s = search) {
     try {
-      const [prodRes, catRes] = await Promise.all([
+      const [prodRes, catRes, brandRes] = await Promise.all([
         fetchProducts({ page: p, pageSize: 20, search: s || undefined }),
         fetchCategories(),
+        fetchBrands(true),
       ]);
       setProducts(prodRes.data.items);
       setTotalPages(prodRes.data.totalPages);
       setCategories(catRes.data);
+      setBrands(brandRes.data);
     } catch (err) {
       setMsg({ type: "error", text: err instanceof Error ? err.message : "Failed to load." });
     } finally {
@@ -84,16 +104,18 @@ export function AdminProducts() {
     const primaryImg = imgs.find((i) => i.isPrimary) ?? imgs[0];
     setForm({
       name: p.name,
+      slug: p.slug ?? "",
       sku: p.sku,
       price: p.price,
       compareAtPrice: p.compareAtPrice ?? 0,
-      quantity: p.quantity,
+      quantity: p.quantity ?? 0,
       status: p.status,
       categoryId: p.categoryId ?? "",
+      brandId: p.brandId ?? "",
       description: p.description ?? "",
       imageUrl: primaryImg?.url ?? "",
       isFeatured: p.isFeatured,
-      currency: p.currency,
+      currency: p.currency ?? "INR",
     });
     setMsg(null);
   }
@@ -101,6 +123,7 @@ export function AdminProducts() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     try {
+      const emptyGuid = "00000000-0000-0000-0000-000000000000";
       const body: Record<string, unknown> = {
         name: form.name,
         sku: form.sku,
@@ -108,19 +131,24 @@ export function AdminProducts() {
         compareAtPrice: form.compareAtPrice || undefined,
         quantity: form.quantity,
         status: form.status,
-        categoryId: form.categoryId || undefined,
         description: form.description || undefined,
         isFeatured: form.isFeatured,
         currency: form.currency,
       };
+      const slugTrim = form.slug.trim();
+      if (slugTrim) body.slug = slugTrim;
       if (form.imageUrl) {
         body.images = [{ url: form.imageUrl, isPrimary: true, displayOrder: 0 }];
       }
 
       if (editingId === "__new__") {
+        if (form.categoryId) body.categoryId = form.categoryId;
+        if (form.brandId) body.brandId = form.brandId;
         await createProduct(body);
         setMsg({ type: "success", text: "Product created." });
       } else {
+        body.categoryId = form.categoryId || emptyGuid;
+        body.brandId = form.brandId || emptyGuid;
         await updateProduct(editingId!, body);
         setMsg({ type: "success", text: "Product saved." });
       }
@@ -175,6 +203,27 @@ export function AdminProducts() {
               <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             </div>
             <div className="admin-field">
+              <label>URL slug (SEO)</label>
+              <input
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="e.g. lacoste-cotton-shirt-slim-fit"
+                autoComplete="off"
+              />
+              <p className="admin-field-hint">
+                Used in product URLs (<code>/products/…</code>). Leave empty when creating to auto-generate from the name.
+                Uniqueness is enforced on the server.
+              </p>
+              <button
+                type="button"
+                className="admin-btn admin-btn--ghost"
+                style={{ marginTop: "0.35rem" }}
+                onClick={() => setForm((f) => ({ ...f, slug: slugifyFromName(f.name) }))}
+              >
+                Generate from name
+              </button>
+            </div>
+            <div className="admin-field">
               <label>SKU / Product Number *</label>
               <input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} required />
             </div>
@@ -184,6 +233,15 @@ export function AdminProducts() {
                 <option value="">— None —</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="admin-field">
+              <label>Brand</label>
+              <select value={form.brandId} onChange={(e) => setForm({ ...form, brandId: e.target.value })}>
+                <option value="">— None —</option>
+                {brands.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
             </div>
@@ -201,8 +259,11 @@ export function AdminProducts() {
               <input type="number" min={0} step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: +e.target.value })} required />
             </div>
             <div className="admin-field">
-              <label>Compare-at Price</label>
+              <label>Compare-at price (MSRP / was price)</label>
               <input type="number" min={0} step="0.01" value={form.compareAtPrice} onChange={(e) => setForm({ ...form, compareAtPrice: +e.target.value })} />
+              <p className="admin-field-hint">
+                Optional “original” or list price. When higher than <strong>Price</strong>, the storefront can show it struck through so the sale price looks like a discount.
+              </p>
             </div>
             <div className="admin-field">
               <label>Quantity *</label>
@@ -260,8 +321,10 @@ export function AdminProducts() {
                   <tr>
                     <th>Image</th>
                     <th>Name</th>
+                    <th>Slug</th>
                     <th>SKU</th>
                     <th>Category</th>
+                    <th>Brand</th>
                     <th>Price</th>
                     <th>Qty</th>
                     <th>Status</th>
@@ -272,27 +335,33 @@ export function AdminProducts() {
                   {products.map((p) => {
                     const imgs = p.images ?? [];
                     const img = imgs.find((i) => i.isPrimary) ?? imgs[0];
+                    const thumb = p.primaryImageUrl ?? img?.url;
+                    const cur = p.currency ?? "INR";
                     return (
                       <tr key={p.id}>
                         <td>
-                          {img ? (
-                            <img className="admin-table__img" src={img.url} alt="" />
+                          {thumb ? (
+                            <img className="admin-table__img" src={thumb} alt="" />
                           ) : (
                             <span style={{ color: "#ccc" }}>—</span>
                           )}
                         </td>
                         <td style={{ fontWeight: 600 }}>{p.name}</td>
+                        <td>
+                          <code style={{ fontSize: "0.78rem", color: "#555" }}>{p.slug}</code>
+                        </td>
                         <td>{p.sku}</td>
                         <td>{p.categoryId ? catMap.get(p.categoryId) ?? "—" : "—"}</td>
+                        <td>{p.brandName ?? "—"}</td>
                         <td>
-                          {p.currency === "INR" ? "₹" : "$"}{p.price.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                          {cur === "INR" ? "₹" : "$"}{p.price.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                           {p.compareAtPrice != null && p.compareAtPrice > p.price && (
                             <span style={{ color: "#aaa", textDecoration: "line-through", marginLeft: "0.4rem", fontSize: "0.78rem" }}>
-                              {p.currency === "INR" ? "₹" : "$"}{p.compareAtPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                              {cur === "INR" ? "₹" : "$"}{p.compareAtPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                             </span>
                           )}
                         </td>
-                        <td>{p.quantity}</td>
+                        <td>{p.quantity ?? 0}</td>
                         <td>
                           <span className={STATUS_BADGE[p.status] ?? "admin-badge"}>{p.status.replace("_", " ")}</span>
                         </td>
@@ -307,7 +376,7 @@ export function AdminProducts() {
                   })}
                   {products.length === 0 && (
                     <tr>
-                      <td colSpan={8} style={{ textAlign: "center", color: "#999", padding: "2rem" }}>
+                      <td colSpan={10} style={{ textAlign: "center", color: "#999", padding: "2rem" }}>
                         No products found.
                       </td>
                     </tr>

@@ -182,7 +182,9 @@ export function AdminCategories() {
                       {c.name}
                     </td>
                     <td style={{ color: "#888" }}>{c.slug}</td>
-                    <td>{c.subCategories?.length ?? 0}</td>
+                    <td>
+                      {categories.filter((x) => x.parentCategoryId === c.id).length}
+                    </td>
                     <td>{c.displayOrder}</td>
                     <td>
                       <span className={c.isActive ? "admin-badge admin-badge--green" : "admin-badge admin-badge--red"}>

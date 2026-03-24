@@ -27,6 +27,24 @@ public class ProductRepository : IProductRepository
         .Include(p => p.Attributes.OrderBy(a => a.DisplayOrder))
         .Include(p => p.Tags);
 
+    /// <summary>
+    /// Category id plus all descendant ids (products are usually on leaf categories).
+    /// Uses a PostgreSQL recursive CTE so hierarchy is resolved in the database (reliable vs. client-side closure + LINQ translation).
+    /// </summary>
+    private async Task<List<Guid>> GetSelfAndDescendantCategoryIdsAsync(Guid rootId, CancellationToken ct = default)
+    {
+        return await _db.Database
+            .SqlQuery<Guid>($@"
+                WITH RECURSIVE cat_tree AS (
+                    SELECT id FROM categories WHERE id = {rootId}
+                    UNION ALL
+                    SELECT c.id FROM categories c
+                    INNER JOIN cat_tree t ON c.parent_category_id = t.id
+                )
+                SELECT id FROM cat_tree")
+            .ToListAsync(ct);
+    }
+
     public async Task<Product?> GetByIdAsync(Guid id, bool publicOnly = false, CancellationToken ct = default)
     {
         var query = ProductBaseQuery(_db.Products)
@@ -87,7 +105,10 @@ public class ProductRepository : IProductRepository
             status = "active";
 
         if (categoryId.HasValue)
-            query = query.Where(p => p.CategoryId == categoryId.Value);
+        {
+            var categoryIds = await GetSelfAndDescendantCategoryIdsAsync(categoryId.Value, ct);
+            query = query.Where(p => p.CategoryId.HasValue && categoryIds.Contains(p.CategoryId.Value));
+        }
         if (brandId.HasValue)
             query = query.Where(p => p.BrandId == brandId.Value);
         if (!string.IsNullOrWhiteSpace(status))

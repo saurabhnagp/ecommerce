@@ -1,62 +1,57 @@
 import { useState } from "react";
+import type { CategoryDto, BrandDto } from "../api/products";
 import "./FilterSidebar.css";
 
-const CATEGORIES = [
-  {
-    name: "Women",
-    subs: ["Dresses", "Tops", "Skirts", "Jackets", "Accessories"],
-  },
-  {
-    name: "Men",
-    subs: ["Shirts", "T-Shirts", "Jeans", "Jackets", "Watches"],
-  },
-  {
-    name: "Accessories",
-    subs: ["Bags", "Sunglasses", "Wallets", "Belts"],
-  },
-];
+// const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
-
-const COLORS: { name: string; hex: string }[] = [
-  { name: "Black", hex: "#222" },
-  { name: "White", hex: "#f5f5f5" },
-  { name: "Red", hex: "#d32f2f" },
-  { name: "Blue", hex: "#1976d2" },
-  { name: "Green", hex: "#388e3c" },
-  { name: "Beige", hex: "#d4c5a9" },
-  { name: "Navy", hex: "#1a237e" },
-  { name: "Grey", hex: "#9e9e9e" },
-];
-
-const BRANDS = ["Lacoste", "Gucci", "Puma", "Nike", "Adidas", "Levi's"];
+// const COLORS: { name: string; hex: string }[] = [
+//   { name: "Black", hex: "#222" },
+//   { name: "White", hex: "#f5f5f5" },
+//   { name: "Red", hex: "#d32f2f" },
+//   { name: "Blue", hex: "#1976d2" },
+//   { name: "Green", hex: "#388e3c" },
+//   { name: "Beige", hex: "#d4c5a9" },
+//   { name: "Navy", hex: "#1a237e" },
+//   { name: "Grey", hex: "#9e9e9e" },
+// ];
 
 export type Filters = {
-  category: string | null;
-  subcategory: string | null;
+  /** Category id sent to the product API (leaf or root with no children). */
+  selectedCategoryId: string | null;
   priceMin: number;
   priceMax: number;
   sizes: string[];
   colors: string[];
-  brands: string[];
+  brandId: string | null;
   sort: string;
 };
 
 type Props = {
   filters: Filters;
   onChange: (f: Filters) => void;
+  categories: CategoryDto[];
+  brands: BrandDto[];
+  maxPrice?: number;
+  loading?: boolean;
 };
 
-export function FilterSidebar({ filters, onChange }: Props) {
-  const [openCat, setOpenCat] = useState<string | null>(filters.category);
+export function FilterSidebar({
+  filters,
+  onChange,
+  categories,
+  brands,
+  maxPrice = 50000,
+  loading,
+}: Props) {
+  /** Which root row is expanded (UI only; does not filter by parent id). */
+  const [expandedRootId, setExpandedRootId] = useState<string | null>(null);
 
   function set<K extends keyof Filters>(key: K, value: Filters[K]) {
     onChange({ ...filters, [key]: value });
   }
 
-  function toggleArr(key: "sizes" | "colors" | "brands", val: string) {
-    const arr = filters[key];
-    set(key, arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val]);
+  function subs(cat: CategoryDto) {
+    return cat.subCategories ?? [];
   }
 
   return (
@@ -76,42 +71,104 @@ export function FilterSidebar({ filters, onChange }: Props) {
       {/* Categories */}
       <div className="filter-section">
         <h4 className="filter-section__title">Categories</h4>
-        <ul className="filter-cat-list">
-          {CATEGORIES.map((cat) => (
-            <li key={cat.name}>
+        {loading ? (
+          <p className="filter-loading">Loading…</p>
+        ) : categories.length === 0 ? (
+          <p className="filter-empty">No categories yet.</p>
+        ) : (
+          <>
+            <ul className="filter-cat-list">
+              {categories.map((cat) => {
+                const children = subs(cat);
+                const hasChildren = children.length > 0;
+                const isExpanded = expandedRootId === cat.id;
+                const rootSelected =
+                  !hasChildren && filters.selectedCategoryId === cat.id;
+
+                const parentSelected =
+                  hasChildren && filters.selectedCategoryId === cat.id;
+
+                return (
+                  <li key={cat.id}>
+                    <button
+                      type="button"
+                      className={`filter-cat-btn${rootSelected || parentSelected ? " filter-cat-btn--active" : ""}${hasChildren && isExpanded ? " filter-cat-btn--expanded" : ""}`}
+                      onClick={() => {
+                        if (hasChildren) {
+                          if (isExpanded) {
+                            setExpandedRootId(null);
+                            const childIds = new Set(children.map((c) => c.id));
+                            const sel = filters.selectedCategoryId;
+                            if (
+                              sel === cat.id ||
+                              (sel != null && childIds.has(sel))
+                            ) {
+                              set("selectedCategoryId", null);
+                            }
+                          } else {
+                            setExpandedRootId(cat.id);
+                            set("selectedCategoryId", cat.id);
+                          }
+                          return;
+                        }
+                        set(
+                          "selectedCategoryId",
+                          filters.selectedCategoryId === cat.id ? null : cat.id
+                        );
+                      }}
+                    >
+                      {hasChildren ? (
+                        <span
+                          className={`filter-cat-btn__arrow${isExpanded ? " filter-cat-btn__arrow--open" : ""}`}
+                          aria-hidden
+                        >
+                          &#9654;
+                        </span>
+                      ) : (
+                        <span className="filter-cat-btn__arrow filter-cat-btn__arrow--spacer" aria-hidden />
+                      )}
+                      {cat.name}
+                    </button>
+                    {hasChildren && isExpanded && (
+                      <ul className="filter-cat-sublist">
+                        {children.map((sub) => (
+                          <li key={sub.id}>
+                            <button
+                              type="button"
+                              className={
+                                filters.selectedCategoryId === sub.id ? "active" : ""
+                              }
+                              onClick={() => {
+                                setExpandedRootId(cat.id);
+                                set(
+                                  "selectedCategoryId",
+                                  filters.selectedCategoryId === sub.id
+                                    ? null
+                                    : sub.id
+                                );
+                              }}
+                            >
+                              {sub.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            {filters.selectedCategoryId && (
               <button
-                className={`filter-cat-btn${filters.category === cat.name ? " filter-cat-btn--active" : ""}`}
-                onClick={() => {
-                  const next = openCat === cat.name ? null : cat.name;
-                  setOpenCat(next);
-                  set("category", next);
-                  set("subcategory", null);
-                }}
+                type="button"
+                className="filter-clear-btn"
+                onClick={() => set("selectedCategoryId", null)}
               >
-                <span
-                  className={`filter-cat-btn__arrow${openCat === cat.name ? " filter-cat-btn__arrow--open" : ""}`}
-                >
-                  &#9654;
-                </span>
-                {cat.name}
+                Clear category
               </button>
-              {openCat === cat.name && (
-                <ul className="filter-cat-sublist">
-                  {cat.subs.map((sub) => (
-                    <li key={sub}>
-                      <button
-                        className={filters.subcategory === sub ? "active" : ""}
-                        onClick={() => set("subcategory", filters.subcategory === sub ? null : sub)}
-                      >
-                        {sub}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+            )}
+          </>
+        )}
       </div>
 
       {/* Price Range */}
@@ -122,9 +179,9 @@ export function FilterSidebar({ filters, onChange }: Props) {
             type="range"
             className="price-range__slider"
             min={0}
-            max={5000}
+            max={maxPrice}
             step={50}
-            value={filters.priceMax}
+            value={filters.priceMax || maxPrice}
             onChange={(e) => set("priceMax", +e.target.value)}
           />
           <div className="price-range__inputs">
@@ -147,8 +204,8 @@ export function FilterSidebar({ filters, onChange }: Props) {
         </div>
       </div>
 
-      {/* Size */}
-      <div className="filter-section">
+      {/* Size (client-side only — kept for UI completeness) */}
+      {/* <div className="filter-section">
         <h4 className="filter-section__title">Size</h4>
         <div className="filter-checks">
           {SIZES.map((s) => (
@@ -162,15 +219,16 @@ export function FilterSidebar({ filters, onChange }: Props) {
             </label>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      {/* Color */}
-      <div className="filter-section">
+      {/* Color (client-side only) */}
+      {/* <div className="filter-section">
         <h4 className="filter-section__title">Color</h4>
         <div className="filter-colors">
           {COLORS.map((c) => (
             <button
               key={c.name}
+              type="button"
               className={`color-swatch${filters.colors.includes(c.name) ? " color-swatch--active" : ""}`}
               style={{ background: c.hex }}
               title={c.name}
@@ -178,23 +236,41 @@ export function FilterSidebar({ filters, onChange }: Props) {
             />
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Brand */}
       <div className="filter-section">
         <h4 className="filter-section__title">Brand</h4>
-        <div className="filter-checks">
-          {BRANDS.map((b) => (
-            <label key={b} className="filter-check">
-              <input
-                type="checkbox"
-                checked={filters.brands.includes(b)}
-                onChange={() => toggleArr("brands", b)}
-              />
-              {b}
-            </label>
-          ))}
-        </div>
+        {loading ? (
+          <p className="filter-loading">Loading…</p>
+        ) : brands.length === 0 ? (
+          <p className="filter-empty">No brands yet.</p>
+        ) : (
+          <div className="filter-checks">
+            {brands.map((b) => (
+              <label key={b.id} className="filter-check">
+                <input
+                  type="radio"
+                  name="brand"
+                  checked={filters.brandId === b.id}
+                  onChange={() =>
+                    set("brandId", filters.brandId === b.id ? null : b.id)
+                  }
+                />
+                {b.name}
+              </label>
+            ))}
+            {filters.brandId && (
+              <button
+                type="button"
+                className="filter-clear-btn"
+                onClick={() => set("brandId", null)}
+              >
+                Clear brand
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -1,91 +1,87 @@
-import { useState } from "react";
 import { ProductCard } from "./ProductCard";
-import type { Product } from "./ProductCard";
+import type { ProductDto } from "../api/products";
 import "./ProductGrid.css";
 
-const TABS = [
-  { key: "new", label: "New Products" },
-  { key: "featured", label: "Featured" },
-  { key: "special", label: "Special" },
-  { key: "bestsellers", label: "Bestsellers" },
-] as const;
-
-type TabKey = (typeof TABS)[number]["key"];
-
-const PAGE_SIZE = 8;
-
 type Props = {
-  products: Product[];
+  products: ProductDto[];
+  totalCount: number;
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  loading?: boolean;
+  /** When false, hide pagination and “Showing X of Y” (e.g. home featured strip). */
+  showListingMeta?: boolean;
+  wishlistProductIds?: Set<string>;
+  onWishlistToggle?: (productId: string, nextInWishlist: boolean) => void | Promise<void>;
+  onAddToCart?: (productId: string, quantity?: number) => void | Promise<void>;
 };
 
-export function ProductGrid({ products }: Props) {
-  const [activeTab, setActiveTab] = useState<TabKey>("new");
-  const [page, setPage] = useState(0);
-
-  const filtered = products.filter((p) => p.tab === activeTab);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-
-  function switchTab(tab: TabKey) {
-    setActiveTab(tab);
-    setPage(0);
-  }
-
+export function ProductGrid({
+  products,
+  totalCount,
+  page,
+  totalPages,
+  onPageChange,
+  loading,
+  showListingMeta = true,
+  wishlistProductIds,
+  onWishlistToggle,
+  onAddToCart,
+}: Props) {
   return (
     <div>
-      {/* Tabs */}
-      <div className="pgrid-tabs">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            className={`pgrid-tab${activeTab === t.key ? " pgrid-tab--active" : ""}`}
-            onClick={() => switchTab(t.key)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
       {/* Page arrows */}
-      <div className="pgrid-nav">
-        <button
-          className="pgrid-nav__btn"
-          disabled={page === 0}
-          onClick={() => setPage((p) => p - 1)}
-        >
-          &#8249;
-        </button>
-        <button
-          className="pgrid-nav__btn"
-          disabled={page >= totalPages - 1}
-          onClick={() => setPage((p) => p + 1)}
-        >
-          &#8250;
-        </button>
-      </div>
+      {showListingMeta && totalPages > 1 && (
+        <div className="pgrid-nav">
+          <button
+            className="pgrid-nav__btn"
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+          >
+            &#8249;
+          </button>
+          <span className="pgrid-nav__page">
+            {page} / {totalPages}
+          </span>
+          <button
+            className="pgrid-nav__btn"
+            disabled={page >= totalPages}
+            onClick={() => onPageChange(page + 1)}
+          >
+            &#8250;
+          </button>
+        </div>
+      )}
 
       {/* Info bar */}
-      <div className="pgrid-info">
-        <span>
-          Showing{" "}
-          <span className="pgrid-info__count">
-            {paged.length} of {filtered.length}
-          </span>{" "}
-          products
-        </span>
-        {totalPages > 1 && (
+      {showListingMeta && (
+        <div className="pgrid-info">
           <span>
-            Page {page + 1} / {totalPages}
+            Showing{" "}
+            <span className="pgrid-info__count">
+              {products.length} of {totalCount}
+            </span>{" "}
+            products
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Grid */}
       <div className="pgrid-grid">
-        {paged.length > 0 ? (
-          paged.map((p) => <ProductCard key={p.id} product={p} />)
+        {loading ? (
+          <p className="pgrid-empty">Loading products…</p>
+        ) : products.length > 0 ? (
+          products.map((p) => (
+            <ProductCard
+              key={p.id}
+              product={p}
+              wishlistProductIds={wishlistProductIds}
+              onWishlistToggle={onWishlistToggle}
+              onAddToCart={onAddToCart}
+            />
+          ))
         ) : (
-          <p className="pgrid-empty">No products found in this category.</p>
+          <p className="pgrid-empty">No products found.</p>
         )}
       </div>
     </div>

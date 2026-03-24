@@ -8,6 +8,7 @@ const NAV: (
   { to: "/admin",              icon: "📊", label: "Dashboard",        end: true },
   { to: "/admin/products",     icon: "📦", label: "Products" },
   { to: "/admin/categories",   icon: "🗂️", label: "Categories" },
+  { to: "/admin/brands",       icon: "🏷️", label: "Brands" },
   { to: "/admin/sales",        icon: "🏷️", label: "Sales & Discounts" },
   "sep",
   { to: "/admin/testimonials", icon: "💬", label: "Testimonials" },

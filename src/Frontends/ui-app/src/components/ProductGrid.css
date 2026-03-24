@@ -61,6 +61,13 @@
   cursor: default;
 }
 
+.pgrid-nav__page {
+  font-size: 0.82rem;
+  color: #666;
+  padding: 0 0.4rem;
+  line-height: 28px;
+}
+
 /* Grid */
 .pgrid-grid {
   display: grid;

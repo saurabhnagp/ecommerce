@@ -232,6 +232,20 @@
   color: #555;
 }
 
+.admin-field-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888;
+  line-height: 1.45;
+}
+
+.admin-field-hint code {
+  font-size: 0.72rem;
+  background: #f3f3f3;
+  padding: 0.05rem 0.25rem;
+  border-radius: 3px;
+}
+
 .admin-field input,
 .admin-field select,
 .admin-field textarea {

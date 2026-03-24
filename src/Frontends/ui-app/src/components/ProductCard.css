@@ -77,6 +77,10 @@
   transform: translateY(0);
 }
 
+.product-card__action-btn--wishlist-on {
+  color: #c41e3a;
+}
+
 .product-card__action-btn {
   width: 34px;
   height: 34px;

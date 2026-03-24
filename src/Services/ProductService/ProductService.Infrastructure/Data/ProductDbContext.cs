@@ -18,6 +18,11 @@ public class ProductDbContext : DbContext
     public DbSet<ProductAttribute> ProductAttributes => Set<ProductAttribute>();
     public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
     public DbSet<ProductTag> ProductTags => Set<ProductTag>();
+    public DbSet<Wishlist> Wishlists => Set<Wishlist>();
+    public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
+    public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<Cart> Carts => Set<Cart>();
+    public DbSet<CartItem> CartItems => Set<CartItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

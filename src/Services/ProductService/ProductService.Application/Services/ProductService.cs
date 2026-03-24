@@ -170,8 +170,10 @@ public class ProductService : IProductService
             if (request.Status != null) product.Status = request.Status;
             if (request.IsFeatured.HasValue) product.IsFeatured = request.IsFeatured.Value;
             if (request.IsDigital.HasValue) product.IsDigital = request.IsDigital.Value;
-            if (request.CategoryId.HasValue) product.CategoryId = request.CategoryId;
-            if (request.BrandId.HasValue) product.BrandId = request.BrandId;
+            if (request.CategoryId.HasValue)
+                product.CategoryId = request.CategoryId.Value == Guid.Empty ? null : request.CategoryId;
+            if (request.BrandId.HasValue)
+                product.BrandId = request.BrandId.Value == Guid.Empty ? null : request.BrandId;
 
             if (request.Images != null)
             {

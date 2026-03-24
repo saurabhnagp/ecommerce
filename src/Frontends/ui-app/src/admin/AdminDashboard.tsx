@@ -33,6 +33,7 @@ export function AdminDashboard() {
         <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
           <a href="/admin/products?action=new" className="admin-btn admin-btn--primary">+ Add Product</a>
           <a href="/admin/categories" className="admin-btn admin-btn--ghost">Manage Categories</a>
+          <a href="/admin/brands" className="admin-btn admin-btn--ghost">Manage Brands</a>
           <a href="/admin/sales?action=new" className="admin-btn admin-btn--ghost">Create Sale</a>
           <a href="/admin/contacts" className="admin-btn admin-btn--ghost">View Messages</a>
         </div>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { mergeCart } from "../api/cart";
 import { login } from "../api/auth";
+import { clearCartSessionId, getOrCreateCartSessionId } from "../cart/cartSession";
 import { notifyAuthChange } from "../auth/notify";
 import { saveSession } from "../auth/storage";
 import { PasswordInput } from "../components/PasswordInput";
@@ -21,8 +23,15 @@ export function LoginPage() {
     setError(null);
     setLoading(true);
     try {
+      const guestSessionId = getOrCreateCartSessionId();
       const { user, tokens } = await login(email.trim(), password, rememberMe);
       saveSession(tokens, user);
+      try {
+        await mergeCart(tokens.accessToken, guestSessionId);
+      } catch {
+        /* empty or invalid guest cart is fine */
+      }
+      clearCartSessionId();
       notifyAuthChange();
       navigate("/", { replace: true });
     } catch (err) {

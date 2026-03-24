@@ -6,6 +6,7 @@ import { endSessionDueToUnauthorized } from "./auth/endSession";
 import { onAuthChange } from "./auth/notify";
 import { getAccessToken } from "./auth/storage";
 import { useInactivityLogout } from "./auth/useInactivityLogout";
+import { CartProvider } from "./cart/CartContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -16,6 +17,9 @@ import { ProductListingPage } from "./pages/ProductListingPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { WishlistPage } from "./pages/WishlistPage";
+import { CartPage } from "./pages/CartPage";
+import { CheckoutPlaceholderPage } from "./pages/CheckoutPlaceholderPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { AdminRoute } from "./admin/AdminRoute";
@@ -23,6 +27,7 @@ import { AdminLayout } from "./admin/AdminLayout";
 import { AdminDashboard } from "./admin/AdminDashboard";
 import { AdminProducts } from "./admin/AdminProducts";
 import { AdminCategories } from "./admin/AdminCategories";
+import { AdminBrands } from "./admin/AdminBrands";
 import { AdminSales } from "./admin/AdminSales";
 import { AdminTestimonials } from "./admin/AdminTestimonials";
 import { AdminContacts } from "./admin/AdminContacts";
@@ -63,10 +68,11 @@ export default function App() {
   }, [signedIn, navigate]);
 
   return (
-    <div className="app">
-      <Header signedIn={signedIn} onAuthRefresh={refresh} />
+    <CartProvider>
+      <div className="app">
+        <Header signedIn={signedIn} onAuthRefresh={refresh} />
 
-      <Routes>
+        <Routes>
         {/* Admin panel — full-width, own layout */}
         <Route
           path="/admin/*"
@@ -77,6 +83,7 @@ export default function App() {
                   <Route index element={<AdminDashboard />} />
                   <Route path="products" element={<AdminProducts />} />
                   <Route path="categories" element={<AdminCategories />} />
+                  <Route path="brands" element={<AdminBrands />} />
                   <Route path="sales" element={<AdminSales />} />
                   <Route path="testimonials" element={<AdminTestimonials />} />
                   <Route path="contacts" element={<AdminContacts />} />
@@ -102,6 +109,8 @@ export default function App() {
                   <Route path="/popular" element={<ProductListingPage />} />
                   <Route path="/sale" element={<ProductListingPage />} />
                   <Route path="/category/:slug" element={<ProductListingPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPlaceholderPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -122,6 +131,14 @@ export default function App() {
                       </ProtectedRoute>
                     }
                   />
+                  <Route
+                    path="/wishlist"
+                    element={
+                      <ProtectedRoute>
+                        <WishlistPage />
+                      </ProtectedRoute>
+                    }
+                  />
                 </Routes>
               </main>
               <Footer />
@@ -129,6 +146,7 @@ export default function App() {
           }
         />
       </Routes>
-    </div>
+      </div>
+    </CartProvider>
   );
 }

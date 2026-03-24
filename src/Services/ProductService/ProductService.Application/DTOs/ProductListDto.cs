@@ -9,6 +9,8 @@ public class ProductListDto
     public string SKU { get; set; } = null!;
     public decimal Price { get; set; }
     public decimal? CompareAtPrice { get; set; }
+    public string Currency { get; set; } = null!;
+    public int Quantity { get; set; }
     public string Status { get; set; } = null!;
     public bool IsFeatured { get; set; }
     public Guid? CategoryId { get; set; }

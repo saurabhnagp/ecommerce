@@ -50,6 +50,15 @@
   font-weight: 600;
 }
 
+.filter-cat-btn--expanded:not(.filter-cat-btn--active) {
+  color: #666;
+}
+
+.filter-cat-btn__arrow--spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .filter-cat-btn__arrow {
   font-size: 0.65rem;
   transition: transform 0.2s;
@@ -194,6 +203,34 @@
   font-size: 0.84rem;
   color: #555;
   background: #fff;
+}
+
+/* Radio for brand (single-select) */
+.filter-check input[type="radio"] {
+  accent-color: #c9a962;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* Loading / empty / clear */
+.filter-loading,
+.filter-empty {
+  font-size: 0.82rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.filter-clear-btn {
+  display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: #c9a962;
+  padding: 0.35rem 0 0;
+  text-decoration: underline;
+  text-align: left;
 }
 
 @media (max-width: 860px) {
