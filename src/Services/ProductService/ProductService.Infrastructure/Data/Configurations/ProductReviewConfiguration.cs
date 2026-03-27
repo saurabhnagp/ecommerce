@@ -21,8 +21,14 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
         builder.Property(e => e.Comment).HasMaxLength(5000).HasColumnName("comment");
 
         builder.Property(e => e.IsVerifiedPurchase).HasColumnName("is_verified_purchase").HasDefaultValue(false);
-        builder.Property(e => e.IsApproved).HasColumnName("is_approved").HasDefaultValue(false);
+        builder.Property(e => e.IsApproved)
+            .HasColumnName("is_approved")
+            .HasDefaultValue(false)
+            .ValueGeneratedNever();
         builder.Property(e => e.HelpfulCount).HasColumnName("helpful_count").HasDefaultValue(0);
+        builder.Property(e => e.NotHelpfulCount).HasColumnName("not_helpful_count").HasDefaultValue(0);
+        builder.Property(e => e.ReviewerDisplayName).HasMaxLength(200).HasColumnName("reviewer_display_name");
+        builder.Property(e => e.ReviewerPhotoUrl).HasMaxLength(500).HasColumnName("reviewer_photo_url");
 
         builder.Property(e => e.CreatedAt).HasColumnName("created_at");
         builder.Property(e => e.UpdatedAt).HasColumnName("updated_at");

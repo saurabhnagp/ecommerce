@@ -1,3 +1,5 @@
+using AmCart.ProductService.Application.Common;
+using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Domain.Entities;
 
 namespace AmCart.ProductService.Application.Interfaces;
@@ -30,6 +32,7 @@ public interface IProductRepository
         string? sortBy = null,
         bool sortDescending = false,
         bool defaultToActiveStatus = false,
+        ProductStockFilter stockFilter = ProductStockFilter.None,
         CancellationToken ct = default);
 
     Task<IReadOnlyList<Product>> GetFeaturedAsync(int count, CancellationToken ct = default);
@@ -51,4 +54,11 @@ public interface IProductRepository
 
     Task<bool> SlugExistsAsync(string slug, Guid? excludeId = null, CancellationToken ct = default);
     Task<bool> SkuExistsAsync(string sku, Guid? excludeId = null, CancellationToken ct = default);
+
+    /// <summary>Active products in the same category, ordered by name then id. Used for storefront prev/next navigation.</summary>
+    Task<(ProductNeighborDto? Previous, ProductNeighborDto? Next)> GetCategoryNeighborsAsync(
+        Guid productId,
+        Guid? categoryId,
+        CancellationToken ct = default);
 }
+

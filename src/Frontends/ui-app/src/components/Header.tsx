@@ -1,88 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchPublicCategories, type CategoryDto } from "../api/products";
 import { useCart } from "../cart/CartContext";
 import { getStoredUser } from "../auth/storage";
+import { NavMegaMenu } from "./NavMegaMenu";
 import { UserMenuDropdown } from "./UserMenuDropdown";
 import "./Header.css";
 
 type Props = { signedIn: boolean; onAuthRefresh: () => void };
 
-const WOMEN_CATS: Record<string, string[]> = {
-  "Indian & Western Wear": [
-    "Kurtas & Suits",
-    "Kurtis & Tunics",
-    "Leggings & Salwars",
-    "Skirts & Palazzos",
-    "Sarees & Blouses",
-    "Dress Material",
-    "Lehenga Choli",
-    "Dupattas & Shawls",
-  ],
-  "Western Wear": [
-    "Dresses & Jumpsuits",
-    "Tops & T-Shirts",
-    "Jeans & Jeggings",
-    "Trousers & Capris",
-    "Shorts & Skirts",
-    "Shrugs",
-    "Sweaters & Sweatshirts",
-    "Jackets & Waistcoats",
-  ],
-  Accessories: ["Watches", "Sunglasses", "Eye Glasses", "Belts"],
-};
-
-const MEN_CATS: Record<string, string[]> = {
-  Clothing: [
-    "T-Shirts",
-    "Casual Shirts",
-    "Formal Shirts",
-    "Suits",
-    "Jeans",
-    "Casual Trousers",
-    "Formal Trousers",
-    "Shorts",
-    "Track Pants",
-    "Sweaters & Sweatshirts",
-    "Jackets",
-    "Blazers & Coats",
-  ],
-  Accessories: [
-    "Watches & Wearables",
-    "Sunglasses & Frames",
-    "Bags & Backpacks",
-    "Wallets & Belts",
-    "Fashion Accessories",
-  ],
-};
-
-function MegaMenu({ cats }: { cats: Record<string, string[]> }) {
-  return (
-    <div className="mega-menu">
-      {Object.entries(cats).map(([group, items]) => (
-        <div key={group} className="mega-menu__col">
-          <h4 className="mega-menu__title">{group}</h4>
-          <ul className="mega-menu__list">
-            {items.map((item) => (
-              <li key={item}>
-                <Link
-                  to={`/category/${encodeURIComponent(item.toLowerCase().replace(/\s+/g, "-"))}`}
-                  className="mega-menu__link"
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export function Header({ signedIn, onAuthRefresh }: Props) {
   const navigate = useNavigate();
   const { cart, loading: cartLoading } = useCart();
   const [query, setQuery] = useState("");
+  const [searchError, setSearchError] = useState("");
+  const [categoryRoots, setCategoryRoots] = useState<CategoryDto[]>([]);
+  const [catNavLoading, setCatNavLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetchPublicCategories();
+        if (!cancelled) setCategoryRoots(res.data ?? []);
+      } catch {
+        if (!cancelled) setCategoryRoots([]);
+      } finally {
+        if (!cancelled) setCatNavLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const cartCount = cart?.items.reduce((n, i) => n + i.quantity, 0) ?? 0;
   const cartSym = cart?.currency === "USD" ? "$" : "₹";
@@ -94,7 +44,12 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     const q = query.trim();
-    if (q) navigate(`/search?q=${encodeURIComponent(q)}`);
+    if (!q) {
+      setSearchError("Please enter a search term.");
+      return;
+    }
+    setSearchError("");
+    navigate(`/search?q=${encodeURIComponent(q)}`);
   }
 
   return (
@@ -145,19 +100,31 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
       {/* ——— Middle Bar ——— */}
       <div className="mid-bar">
         <div className="mid-bar__inner">
-          <form className="search-box" onSubmit={handleSearch}>
-            <input
-              type="text"
-              className="search-box__input"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              aria-label="Search products"
-            />
-            <button type="submit" className="search-box__btn" aria-label="Search">
-              &#x1F50D;
-            </button>
-          </form>
+          <div className="search-box-wrap">
+            <form className="search-box" onSubmit={handleSearch}>
+              <input
+                type="text"
+                className="search-box__input"
+                placeholder="Search products..."
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  if (searchError) setSearchError("");
+                }}
+                aria-label="Search products"
+                aria-invalid={!!searchError}
+                aria-describedby={searchError ? "header-search-error" : undefined}
+              />
+              <button type="submit" className="search-box__btn" aria-label="Search">
+                &#x1F50D;
+              </button>
+            </form>
+            {searchError && (
+              <p id="header-search-error" className="search-box__error" role="alert">
+                {searchError}
+              </p>
+            )}
+          </div>
 
           <Link to="/" className="mid-bar__logo">
             AmCart
@@ -187,23 +154,20 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
               Home
             </Link>
           </li>
-          <li className="nav-bar__item nav-bar__item--mega">
-            <span className="nav-bar__link">
-              Women <span className="nav-bar__caret">&#9662;</span>
-            </span>
-            <MegaMenu cats={WOMEN_CATS} />
-          </li>
-          <li className="nav-bar__item nav-bar__item--mega">
-            <span className="nav-bar__link">
-              Men <span className="nav-bar__caret">&#9662;</span>
-            </span>
-            <MegaMenu cats={MEN_CATS} />
-          </li>
-          <li className="nav-bar__item">
-            <Link to="/new-products" className="nav-bar__link">
-              New Products
-            </Link>
-          </li>
+          {catNavLoading ? (
+            <li className="nav-bar__item">
+              <span className="nav-bar__link nav-bar__link--muted">Categories…</span>
+            </li>
+          ) : (
+            categoryRoots.map((root) => (
+              <li key={root.id} className="nav-bar__item nav-bar__item--mega">
+                <span className="nav-bar__link">
+                  {root.name} <span className="nav-bar__caret">&#9662;</span>
+                </span>
+                <NavMegaMenu root={root} />
+              </li>
+            ))
+          )}
           <li className="nav-bar__item">
             <Link to="/popular" className="nav-bar__link">
               Popular
@@ -212,11 +176,6 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
           <li className="nav-bar__item">
             <Link to="/contact" className="nav-bar__link">
               Contact Us
-            </Link>
-          </li>
-          <li className="nav-bar__item">
-            <Link to="/sale" className="nav-bar__link nav-bar__link--sale">
-              Sale
             </Link>
           </li>
         </ul>

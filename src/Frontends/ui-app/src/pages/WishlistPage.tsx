@@ -94,7 +94,13 @@ export function WishlistPage() {
               <li key={row.id} className="wishlist-page__row">
                 <img className="wishlist-page__thumb" src={img} alt="" />
                 <div className="wishlist-page__meta">
-                  <div className="wishlist-page__name">{name}</div>
+                  <div className="wishlist-page__name">
+                    {row.productLoaded && row.productSlug ? (
+                      <Link to={`/products/${encodeURIComponent(row.productSlug)}`}>{name}</Link>
+                    ) : (
+                      name
+                    )}
+                  </div>
                   {!row.productLoaded && (
                     <span className="wishlist-page__badge">Removed from catalog</span>
                   )}

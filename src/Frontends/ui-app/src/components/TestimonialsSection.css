@@ -16,6 +16,13 @@
   margin: 0 0 0.3rem;
 }
 
+.testimonials__loading {
+  text-align: center;
+  color: #666;
+  font-size: 0.95rem;
+  padding: 1.5rem 0;
+}
+
 .testimonials__sub {
   font-size: 0.88rem;
   color: #999;

@@ -209,9 +209,6 @@ export function CartPage() {
             <Link to="/checkout" className="cart-page__checkout">
               Proceed to checkout
             </Link>
-            <p className="muted cart-page__checkout-note">
-              Checkout flow coming next — this link is a placeholder.
-            </p>
           </aside>
         </div>
       )}

@@ -1,3 +1,4 @@
+using AmCart.ProductService.Application.Common;
 using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
 using AmCart.ProductService.Domain.Entities;
@@ -247,7 +248,7 @@ public class CartService : ICartService
             couponOk = false;
         }
 
-        var discount = couponOk && coupon != null ? ComputeDiscount(subtotal, coupon) : 0m;
+        var discount = couponOk && coupon != null ? CartPricingHelper.ComputeDiscount(subtotal, coupon, now) : 0m;
         var total = Math.Max(0, subtotal - discount);
 
         return new CartDto
@@ -262,12 +263,4 @@ public class CartService : ICartService
         };
     }
 
-    private static decimal ComputeDiscount(decimal subtotal, Coupon coupon)
-    {
-        if (string.Equals(coupon.DiscountType, "Percentage", StringComparison.OrdinalIgnoreCase))
-            return Math.Round(subtotal * (coupon.DiscountValue / 100m), 2, MidpointRounding.AwayFromZero);
-        if (string.Equals(coupon.DiscountType, "FixedAmount", StringComparison.OrdinalIgnoreCase))
-            return Math.Min(coupon.DiscountValue, subtotal);
-        return 0;
-    }
 }

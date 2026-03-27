@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { fetchActiveTestimonials, type TestimonialApiDto } from "../api/testimonials";
 import "./TestimonialsSection.css";
 
 type Testimonial = {
@@ -11,53 +12,27 @@ type Testimonial = {
   rating: number;
 };
 
-const SAMPLE_TESTIMONIALS: Testimonial[] = [
-  {
-    id: "1",
-    name: "Ananya Gupta",
-    role: "Verified Buyer",
-    initials: "AG",
-    comment:
-      "Absolutely love the quality of clothing I received! The fabric is premium, fits perfectly, and delivery was super fast. AmCart has become my go-to for online shopping.",
-    rating: 5,
-  },
-  {
-    id: "2",
-    name: "Vikram Singh",
-    role: "Verified Buyer",
-    initials: "VS",
-    comment:
-      "Great selection of men's formal wear. I ordered two blazers and a pair of trousers — all arrived within 3 days. The return process is hassle-free too. Highly recommended!",
-    rating: 5,
-  },
-  {
-    id: "3",
-    name: "Sneha Reddy",
-    role: "Verified Buyer",
-    initials: "SR",
-    comment:
-      "The ethnic wear collection is stunning. I bought a lehenga for my sister's wedding and received so many compliments. The prices are very reasonable for the quality you get.",
-    rating: 4,
-  },
-  {
-    id: "4",
-    name: "Arjun Mehta",
-    role: "Verified Buyer",
-    initials: "AM",
-    comment:
-      "I've been shopping here for over a year now. The customer service is excellent, and I love how they keep adding new styles every week. Five stars without a doubt!",
-    rating: 5,
-  },
-  {
-    id: "5",
-    name: "Pooja Iyer",
-    role: "Verified Buyer",
-    initials: "PI",
-    comment:
-      "Ordered a set of kurtis and they look even better in person than the photos. The size guide is accurate and packaging was very neat. Will definitely order again!",
-    rating: 4,
-  },
-];
+const VERIFIED_ROLE = "Verified Buyer";
+
+function initialsFromName(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function mapApiToCard(t: TestimonialApiDto): Testimonial {
+  const rating = Number.isFinite(t.rating) ? Math.min(5, Math.max(1, Math.round(t.rating))) : 5;
+  return {
+    id: t.id,
+    name: t.customerName?.trim() || "Customer",
+    role: VERIFIED_ROLE,
+    initials: initialsFromName(t.customerName ?? ""),
+    photoUrl: t.photoUrl?.trim() || undefined,
+    comment: t.comment ?? "",
+    rating,
+  };
+}
 
 function Stars({ count }: { count: number }) {
   return (
@@ -70,15 +45,65 @@ function Stars({ count }: { count: number }) {
 }
 
 type Props = {
+  /** When set, skips the API and shows these items (e.g. Storybook). */
   testimonials?: Testimonial[];
 };
 
-export function TestimonialsSection({ testimonials = SAMPLE_TESTIMONIALS }: Props) {
+export function TestimonialsSection({ testimonials: testimonialsProp }: Props) {
+  const [items, setItems] = useState<Testimonial[] | null>(testimonialsProp ?? null);
+  const [loading, setLoading] = useState(!testimonialsProp);
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (testimonialsProp) {
+      setItems(testimonialsProp);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    fetchActiveTestimonials()
+      .then((rows) => {
+        if (!cancelled) {
+          setItems(rows.map(mapApiToCard));
+          setIndex(0);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setItems([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [testimonialsProp]);
+
+  useEffect(() => {
+    setIndex((i) => {
+      const total = items?.length ?? 0;
+      if (total === 0) return 0;
+      return i >= total ? 0 : i;
+    });
+  }, [items]);
+
+  const testimonials = items ?? [];
   const total = testimonials.length;
 
   const prev = useCallback(() => setIndex((i) => (i - 1 + total) % total), [total]);
   const next = useCallback(() => setIndex((i) => (i + 1) % total), [total]);
+
+  if (loading) {
+    return (
+      <section className="testimonials" aria-busy="true">
+        <h2 className="testimonials__heading">What Our Clients Say</h2>
+        <p className="testimonials__sub">Trusted by thousands of happy customers across India</p>
+        <p className="testimonials__loading">Loading testimonials…</p>
+        <hr className="testimonials__divider" />
+      </section>
+    );
+  }
 
   if (total === 0) return null;
 

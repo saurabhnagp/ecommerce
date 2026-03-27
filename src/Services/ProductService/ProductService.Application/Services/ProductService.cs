@@ -26,9 +26,9 @@ public class ProductService : IProductService
         return p?.ToDto();
     }
 
-    public async Task<PagedResult<ProductListDto>> GetPagedAsync(int page, int pageSize, Guid? categoryId = null, Guid? brandId = null, string? status = null, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, bool sortDescending = false, bool defaultToActiveStatus = false, CancellationToken ct = default)
+    public async Task<PagedResult<ProductListDto>> GetPagedAsync(int page, int pageSize, Guid? categoryId = null, Guid? brandId = null, string? status = null, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, bool sortDescending = false, bool defaultToActiveStatus = false, ProductStockFilter stockFilter = ProductStockFilter.None, CancellationToken ct = default)
     {
-        var (items, totalCount) = await _products.GetPagedAsync(page, pageSize, categoryId, brandId, status, searchTerm, minPrice, maxPrice, sortBy, sortDescending, defaultToActiveStatus, ct);
+        var (items, totalCount) = await _products.GetPagedAsync(page, pageSize, categoryId, brandId, status, searchTerm, minPrice, maxPrice, sortBy, sortDescending, defaultToActiveStatus, stockFilter, ct);
         return new PagedResult<ProductListDto>
         {
             Items = items.Select(x => x.ToListDto()).ToList(),
@@ -267,5 +267,14 @@ public class ProductService : IProductService
     {
         var p = await _products.GetByIdIncludingDeletedAsync(id, ct);
         return p?.ToDto();
+    }
+
+    public async Task<ProductNeighborsDto?> GetPublicNeighborsAsync(Guid productId, CancellationToken ct = default)
+    {
+        var p = await _products.GetByIdAsync(productId, publicOnly: true, ct);
+        if (p == null)
+            return null;
+        var (prev, next) = await _products.GetCategoryNeighborsAsync(productId, p.CategoryId, ct);
+        return new ProductNeighborsDto { Previous = prev, Next = next };
     }
 }

@@ -4,9 +4,6 @@ namespace AmCart.ProductService.Application.DTOs;
 
 public class CreateProductReviewRequest
 {
-    [Required]
-    public Guid UserId { get; set; }
-
     [Range(1, 5)]
     public int Rating { get; set; }
 
@@ -17,4 +14,7 @@ public class CreateProductReviewRequest
     public string? Comment { get; set; }
 
     public bool IsVerifiedPurchase { get; set; }
+
+    [Url, MaxLength(500)]
+    public string? ReviewerPhotoUrl { get; set; }
 }

@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<IWishlistRepository, WishlistRepository>();
         services.AddScoped<ICouponRepository, CouponRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<ICheckoutRepository, CheckoutRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
 
         services.AddScoped<IProductService, AmCart.ProductService.Application.Services.ProductService>();
         services.AddScoped<ICategoryService, CategoryService>();
@@ -34,6 +36,8 @@ public static class DependencyInjection
         services.AddScoped<IProductReviewService, ProductReviewService>();
         services.AddScoped<IWishlistService, WishlistService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<ICheckoutService, CheckoutService>();
+        services.AddScoped<IOrderService, OrderService>();
 
         return services;
     }

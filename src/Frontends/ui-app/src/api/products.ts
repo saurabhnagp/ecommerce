@@ -1,11 +1,12 @@
-const base = () =>
-  (import.meta.env.VITE_PRODUCT_SERVICE_URL?.trim() || "/product-api").replace(
+export function productServiceBase() {
+  return (import.meta.env.VITE_PRODUCT_SERVICE_URL?.trim() || "/product-api").replace(
     /\/$/,
     ""
   );
+}
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${base()}${path}`);
+  const res = await fetch(`${productServiceBase()}${path}`);
   const json = await res.json().catch(() => ({}));
   if (!res.ok)
     throw new Error(
@@ -25,6 +26,24 @@ export type ProductImage = {
   isPrimary: boolean;
 };
 
+export type ProductVariantDto = {
+  id: string;
+  sku: string;
+  name: string;
+  price: number;
+  compareAtPrice?: number;
+  quantity: number;
+  optionsJson?: string | null;
+  imageUrl?: string | null;
+};
+
+export type ProductAttributeDto = {
+  id: string;
+  name: string;
+  value: string;
+  displayOrder: number;
+};
+
 export type ProductDto = {
   id: string;
   name: string;
@@ -36,11 +55,15 @@ export type ProductDto = {
   compareAtPrice?: number;
   currency?: string;
   quantity?: number;
+  lowStockThreshold?: number;
+  trackInventory?: boolean;
   status: string;
   isFeatured: boolean;
+  isDigital?: boolean;
   categoryId?: string;
   brandId?: string;
   categoryName?: string;
+  categorySlug?: string;
   brandName?: string;
   averageRating: number;
   reviewCount: number;
@@ -49,6 +72,8 @@ export type ProductDto = {
   images?: ProductImage[];
   primaryImageUrl?: string;
   tagNames?: string[];
+  variants?: ProductVariantDto[];
+  attributes?: ProductAttributeDto[];
 };
 
 export type PagedResult<T> = {
@@ -93,6 +118,8 @@ export type ProductQuery = {
   sortBy?: string;
   sortDesc?: boolean;
   search?: string;
+  /** API: outOfStock (public) | lowStock (admin token only). */
+  stockFilter?: "outOfStock" | "lowStock";
 };
 
 export async function fetchPublicProducts(params: ProductQuery = {}) {
@@ -108,12 +135,43 @@ export async function fetchPublicProducts(params: ProductQuery = {}) {
   if (params.sortBy) q.set("sortBy", params.sortBy);
   if (params.sortDesc) q.set("sortDesc", "true");
   if (params.search) q.set("search", params.search);
+  if (params.stockFilter === "outOfStock") q.set("stockFilter", "outOfStock");
+  if (params.stockFilter === "lowStock") q.set("stockFilter", "lowStock");
   return get<{ data: PagedResult<ProductDto> }>(`/v1/products?${q}`);
 }
 
 /** Root categories with nested `subCategories` (tree). Do not use flat `/v1/categories` for storefront filters. */
 export async function fetchPublicCategories() {
-  return get<{ data: CategoryDto[] }>("/v1/categories/roots");
+  const res = await get<{ data: CategoryDto[] }>(
+    "/v1/categories?includeInactive=false"
+  );
+  const flat = res.data ?? [];
+
+  const byId = new Map<string, CategoryDto>();
+  for (const c of flat) {
+    byId.set(c.id, { ...c, subCategories: [] });
+  }
+
+  const roots: CategoryDto[] = [];
+  for (const c of byId.values()) {
+    if (c.parentCategoryId && byId.has(c.parentCategoryId)) {
+      byId.get(c.parentCategoryId)!.subCategories!.push(c);
+    } else {
+      roots.push(c);
+    }
+  }
+
+  const sortTree = (nodes: CategoryDto[]) => {
+    nodes.sort(
+      (a, b) =>
+        a.displayOrder - b.displayOrder ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+    for (const n of nodes) sortTree(n.subCategories ?? []);
+  };
+  sortTree(roots);
+
+  return { data: roots };
 }
 
 export async function fetchPublicBrands() {
@@ -122,4 +180,22 @@ export async function fetchPublicBrands() {
 
 export async function fetchFeaturedProducts(count = 10) {
   return get<{ data: ProductDto[] }>(`/v1/products/featured?count=${count}`);
+}
+
+export type ProductNeighborDto = { slug: string; name: string };
+
+export type ProductNeighborsDto = {
+  previous: ProductNeighborDto | null;
+  next: ProductNeighborDto | null;
+};
+
+export async function fetchProductBySlug(slug: string) {
+  const path = `/v1/products/by-slug/${encodeURIComponent(slug)}?publicOnly=true`;
+  return get<{ data: ProductDto }>(path);
+}
+
+export async function fetchProductNeighbors(productId: string) {
+  return get<{ data: ProductNeighborsDto }>(
+    `/v1/products/${encodeURIComponent(productId)}/neighbors`
+  );
 }

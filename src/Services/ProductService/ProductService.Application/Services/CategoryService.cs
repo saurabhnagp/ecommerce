@@ -46,6 +46,8 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryDto> CreateAsync(CreateCategoryRequest request, CancellationToken ct = default)
     {
+        await ValidateParentAsync(null, request.ParentCategoryId, ct);
+
         var slug = !string.IsNullOrWhiteSpace(request.Slug)
             ? request.Slug.Trim().ToLowerInvariant()
             : await SlugGenerator.GetUniqueSlugAsync(request.Name, (s, c) => _categories.SlugExistsAsync(s, null, c), ct);
@@ -79,11 +81,13 @@ public class CategoryService : ICategoryService
         var category = await _categories.GetByIdAsync(id, ct);
         if (category == null) return null;
 
+        await ValidateParentAsync(id, request.ParentCategoryId, ct);
+
         if (request.Name != null) category.Name = request.Name.Trim();
         if (request.Slug != null) category.Slug = request.Slug.Trim().ToLowerInvariant();
         if (request.Description != null) category.Description = request.Description.Trim();
         if (request.ImageUrl != null) category.ImageUrl = request.ImageUrl.Trim();
-        if (request.ParentCategoryId.HasValue) category.ParentCategoryId = request.ParentCategoryId;
+        category.ParentCategoryId = request.ParentCategoryId;
         if (request.DisplayOrder.HasValue) category.DisplayOrder = request.DisplayOrder.Value;
         if (request.IsActive.HasValue) category.IsActive = request.IsActive.Value;
         if (request.MetaTitle != null) category.MetaTitle = request.MetaTitle.Trim();
@@ -110,5 +114,42 @@ public class CategoryService : ICategoryService
 
         await _categories.DeleteAsync(category, ct);
         return true;
+    }
+
+    private async Task ValidateParentAsync(Guid? categoryId, Guid? parentCategoryId, CancellationToken ct)
+    {
+        if (!parentCategoryId.HasValue) return;
+
+        var parent = await _categories.GetByIdAsync(parentCategoryId.Value, ct);
+        if (parent == null)
+            throw new InvalidOperationException("Parent category does not exist.");
+
+        if (categoryId.HasValue && parentCategoryId.Value == categoryId.Value)
+            throw new InvalidOperationException("Category cannot be its own parent.");
+
+        if (!categoryId.HasValue) return;
+
+        var all = await _categories.GetAllAsync(includeInactive: true, ct);
+        var childIdsByParent = all
+            .Where(c => c.ParentCategoryId.HasValue)
+            .GroupBy(c => c.ParentCategoryId!.Value)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.Id).ToList());
+
+        var stack = new Stack<Guid>();
+        stack.Push(categoryId.Value);
+        var descendants = new HashSet<Guid>();
+        while (stack.Count > 0)
+        {
+            var current = stack.Pop();
+            if (!childIdsByParent.TryGetValue(current, out var children)) continue;
+            foreach (var ch in children)
+            {
+                if (!descendants.Add(ch)) continue;
+                stack.Push(ch);
+            }
+        }
+
+        if (descendants.Contains(parentCategoryId.Value))
+            throw new InvalidOperationException("Category cannot be moved under one of its descendants.");
     }
 }

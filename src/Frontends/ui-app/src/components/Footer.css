@@ -253,6 +253,19 @@
   border-top: 1px solid #222;
 }
 
+.footer-oos-link {
+  color: #c9a962;
+  text-decoration: none;
+}
+
+.footer-oos-link:hover {
+  text-decoration: underline;
+}
+
+.footer-copyright__sep {
+  color: #666;
+}
+
 /* ——— Responsive ——— */
 @media (max-width: 900px) {
   .footer-upper__inner {

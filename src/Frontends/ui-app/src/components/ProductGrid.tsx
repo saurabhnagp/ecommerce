@@ -14,6 +14,8 @@ type Props = {
   wishlistProductIds?: Set<string>;
   onWishlistToggle?: (productId: string, nextInWishlist: boolean) => void | Promise<void>;
   onAddToCart?: (productId: string, quantity?: number) => void | Promise<void>;
+  /** Shown when not loading and there are no products (default: "No products found."). */
+  emptyMessage?: string;
 };
 
 export function ProductGrid({
@@ -27,6 +29,7 @@ export function ProductGrid({
   wishlistProductIds,
   onWishlistToggle,
   onAddToCart,
+  emptyMessage = "No products found.",
 }: Props) {
   return (
     <div>
@@ -81,7 +84,7 @@ export function ProductGrid({
             />
           ))
         ) : (
-          <p className="pgrid-empty">No products found.</p>
+          <p className="pgrid-empty">{emptyMessage}</p>
         )}
       </div>
     </div>

@@ -12,4 +12,14 @@ public interface IProductReviewRepository
     Task AddAsync(ProductReview review, CancellationToken ct = default);
     Task UpdateAsync(ProductReview review, CancellationToken ct = default);
     Task DeleteAsync(ProductReview review, CancellationToken ct = default);
+
+    Task<IReadOnlyDictionary<Guid, bool>> GetUserVotesForReviewIdsAsync(
+        IReadOnlyList<Guid> reviewIds,
+        Guid userId,
+        CancellationToken ct = default);
+
+    /// <summary>Toggle like/dislike: same choice again removes vote; opposite switches.</summary>
+    Task ApplyVoteToggleAsync(Guid reviewId, Guid userId, bool wantUp, CancellationToken ct = default);
+
+    Task RefreshReviewVoteCountsAsync(Guid reviewId, CancellationToken ct = default);
 }

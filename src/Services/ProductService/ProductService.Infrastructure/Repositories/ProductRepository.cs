@@ -1,3 +1,5 @@
+using AmCart.ProductService.Application.Common;
+using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
 using AmCart.ProductService.Domain.Entities;
 using AmCart.ProductService.Infrastructure.Data;
@@ -93,6 +95,7 @@ public class ProductRepository : IProductRepository
         decimal? minPrice = null, decimal? maxPrice = null,
         string? sortBy = null, bool sortDescending = false,
         bool defaultToActiveStatus = false,
+        ProductStockFilter stockFilter = ProductStockFilter.None,
         CancellationToken ct = default)
     {
         var query = _db.Products
@@ -115,13 +118,26 @@ public class ProductRepository : IProductRepository
             query = query.Where(p => p.Status == status);
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            var term = searchTerm.ToLower();
-            query = query.Where(p => p.Name.ToLower().Contains(term) || (p.Description != null && p.Description.ToLower().Contains(term)));
+            var term = searchTerm.Trim().ToLower();
+            query = query.Where(p =>
+                p.Name.ToLower().Contains(term)
+                || (p.Description != null && p.Description.ToLower().Contains(term))
+                || (p.ShortDescription != null && p.ShortDescription.ToLower().Contains(term))
+                || p.SKU.ToLower().Contains(term)
+                || p.Tags.Any(t => t.Name.ToLower().Contains(term)));
         }
         if (minPrice.HasValue)
             query = query.Where(p => p.Price >= minPrice.Value);
         if (maxPrice.HasValue)
             query = query.Where(p => p.Price <= maxPrice.Value);
+
+        query = stockFilter switch
+        {
+            ProductStockFilter.OutOfStock => query.Where(p => p.TrackInventory && p.Quantity < 1),
+            ProductStockFilter.LowStock => query.Where(p =>
+                p.TrackInventory && p.Quantity >= 1 && p.Quantity <= p.LowStockThreshold),
+            _ => query,
+        };
 
         var totalCount = await query.CountAsync(ct);
 
@@ -232,5 +248,34 @@ public class ProductRepository : IProductRepository
         var query = _db.Products.Where(p => p.SKU == sku);
         if (excludeId.HasValue) query = query.Where(p => p.Id != excludeId.Value);
         return await query.AnyAsync(ct);
+    }
+
+    public async Task<(ProductNeighborDto? Previous, ProductNeighborDto? Next)> GetCategoryNeighborsAsync(
+        Guid productId,
+        Guid? categoryId,
+        CancellationToken ct = default)
+    {
+        if (!categoryId.HasValue)
+            return (null, null);
+
+        var siblings = await _db.Products
+            .AsNoTracking()
+            .Where(p => p.CategoryId == categoryId && p.Status == "active")
+            .OrderBy(p => p.Name)
+            .ThenBy(p => p.Id)
+            .Select(p => new { p.Id, p.Slug, p.Name })
+            .ToListAsync(ct);
+
+        var idx = siblings.FindIndex(x => x.Id == productId);
+        if (idx < 0)
+            return (null, null);
+
+        ProductNeighborDto? prev = idx > 0
+            ? new ProductNeighborDto { Slug = siblings[idx - 1].Slug, Name = siblings[idx - 1].Name }
+            : null;
+        ProductNeighborDto? next = idx < siblings.Count - 1
+            ? new ProductNeighborDto { Slug = siblings[idx + 1].Slug, Name = siblings[idx + 1].Name }
+            : null;
+        return (prev, next);
     }
 }

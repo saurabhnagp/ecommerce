@@ -1,4 +1,5 @@
 using System.Text;
+using AmCart.UserService.Api.Services;
 using AmCart.UserService.Infrastructure;
 using AmCart.UserService.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +10,14 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpClient<ProductServiceProxy>((sp, client) =>
+{
+    var url = builder.Configuration["ProductService:BaseUrl"]?.Trim().TrimEnd('/');
+    if (string.IsNullOrEmpty(url))
+        url = "http://localhost:5002";
+    client.BaseAddress = new Uri(url + "/");
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

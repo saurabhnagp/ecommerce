@@ -14,12 +14,18 @@ import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { ContactPage } from "./pages/ContactPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { ProductListingPage } from "./pages/ProductListingPage";
+import { ProductDetailPage } from "./pages/ProductDetailPage";
+import { SearchResultsPage } from "./pages/SearchResultsPage";
+import { OutOfStockPage } from "./pages/OutOfStockPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { WishlistPage } from "./pages/WishlistPage";
 import { CartPage } from "./pages/CartPage";
-import { CheckoutPlaceholderPage } from "./pages/CheckoutPlaceholderPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { OrderConfirmationPage } from "./pages/OrderConfirmationPage";
+import { AccountOrdersPage } from "./pages/AccountOrdersPage";
+import { AccountOrderDetailPage } from "./pages/AccountOrderDetailPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { AdminRoute } from "./admin/AdminRoute";
@@ -28,10 +34,10 @@ import { AdminDashboard } from "./admin/AdminDashboard";
 import { AdminProducts } from "./admin/AdminProducts";
 import { AdminCategories } from "./admin/AdminCategories";
 import { AdminBrands } from "./admin/AdminBrands";
-import { AdminSales } from "./admin/AdminSales";
 import { AdminTestimonials } from "./admin/AdminTestimonials";
 import { AdminContacts } from "./admin/AdminContacts";
 import { AdminNewsletter } from "./admin/AdminNewsletter";
+import { AdminLowStock } from "./admin/AdminLowStock";
 import "./App.css";
 
 export default function App() {
@@ -82,9 +88,9 @@ export default function App() {
                 <Route element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="products" element={<AdminProducts />} />
+                  <Route path="low-stock" element={<AdminLowStock />} />
                   <Route path="categories" element={<AdminCategories />} />
                   <Route path="brands" element={<AdminBrands />} />
-                  <Route path="sales" element={<AdminSales />} />
                   <Route path="testimonials" element={<AdminTestimonials />} />
                   <Route path="contacts" element={<AdminContacts />} />
                   <Route path="newsletter" element={<AdminNewsletter />} />
@@ -104,13 +110,17 @@ export default function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/search" element={<SearchResultsPage />} />
+                  <Route path="/products/:slug" element={<ProductDetailPage />} />
                   <Route path="/products" element={<ProductListingPage />} />
                   <Route path="/new-products" element={<ProductListingPage />} />
                   <Route path="/popular" element={<ProductListingPage />} />
                   <Route path="/sale" element={<ProductListingPage />} />
                   <Route path="/category/:slug" element={<ProductListingPage />} />
                   <Route path="/cart" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPlaceholderPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+                  <Route path="/out-of-stock" element={<OutOfStockPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -128,6 +138,22 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <ChangePasswordPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/account/orders"
+                    element={
+                      <ProtectedRoute>
+                        <AccountOrdersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/account/orders/:orderId"
+                    element={
+                      <ProtectedRoute>
+                        <AccountOrderDetailPage />
                       </ProtectedRoute>
                     }
                   />

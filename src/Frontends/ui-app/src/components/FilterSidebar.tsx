@@ -43,8 +43,8 @@ export function FilterSidebar({
   maxPrice = 50000,
   loading,
 }: Props) {
-  /** Which root row is expanded (UI only; does not filter by parent id). */
-  const [expandedRootId, setExpandedRootId] = useState<string | null>(null);
+  /** Expanded category rows for recursive tree UI. */
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
 
   function set<K extends keyof Filters>(key: K, value: Filters[K]) {
     onChange({ ...filters, [key]: value });
@@ -52,6 +52,80 @@ export function FilterSidebar({
 
   function subs(cat: CategoryDto) {
     return cat.subCategories ?? [];
+  }
+
+  function collectDescendantIds(cat: CategoryDto, out: Set<string>) {
+    const children = subs(cat);
+    for (const ch of children) {
+      out.add(ch.id);
+      collectDescendantIds(ch, out);
+    }
+  }
+
+  function toggleExpanded(id: string, open: boolean) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (open) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function renderCategoryNode(cat: CategoryDto, depth = 0) {
+    const children = subs(cat);
+    const hasChildren = children.length > 0;
+    const isExpanded = expandedIds.has(cat.id);
+    const isSelected = filters.selectedCategoryId === cat.id;
+
+    return (
+      <li key={cat.id}>
+        <button
+          type="button"
+          className={`filter-cat-btn${isSelected ? " filter-cat-btn--active" : ""}${hasChildren && isExpanded ? " filter-cat-btn--expanded" : ""}`}
+          style={{ paddingLeft: `${0.35 + depth * 0.85}rem` }}
+          onClick={() => {
+            if (!hasChildren) {
+              set(
+                "selectedCategoryId",
+                filters.selectedCategoryId === cat.id ? null : cat.id
+              );
+              return;
+            }
+
+            if (isExpanded) {
+              toggleExpanded(cat.id, false);
+              const desc = new Set<string>();
+              collectDescendantIds(cat, desc);
+              const sel = filters.selectedCategoryId;
+              if (sel === cat.id || (sel != null && desc.has(sel))) {
+                set("selectedCategoryId", null);
+              }
+            } else {
+              toggleExpanded(cat.id, true);
+              set("selectedCategoryId", cat.id);
+            }
+          }}
+        >
+          {hasChildren ? (
+            <span
+              className={`filter-cat-btn__arrow${isExpanded ? " filter-cat-btn__arrow--open" : ""}`}
+              aria-hidden
+            >
+              &#9654;
+            </span>
+          ) : (
+            <span className="filter-cat-btn__arrow filter-cat-btn__arrow--spacer" aria-hidden />
+          )}
+          {cat.name}
+        </button>
+
+        {hasChildren && isExpanded && (
+          <ul className="filter-cat-sublist">
+            {children.map((child) => renderCategoryNode(child, depth + 1))}
+          </ul>
+        )}
+      </li>
+    );
   }
 
   return (
@@ -78,85 +152,7 @@ export function FilterSidebar({
         ) : (
           <>
             <ul className="filter-cat-list">
-              {categories.map((cat) => {
-                const children = subs(cat);
-                const hasChildren = children.length > 0;
-                const isExpanded = expandedRootId === cat.id;
-                const rootSelected =
-                  !hasChildren && filters.selectedCategoryId === cat.id;
-
-                const parentSelected =
-                  hasChildren && filters.selectedCategoryId === cat.id;
-
-                return (
-                  <li key={cat.id}>
-                    <button
-                      type="button"
-                      className={`filter-cat-btn${rootSelected || parentSelected ? " filter-cat-btn--active" : ""}${hasChildren && isExpanded ? " filter-cat-btn--expanded" : ""}`}
-                      onClick={() => {
-                        if (hasChildren) {
-                          if (isExpanded) {
-                            setExpandedRootId(null);
-                            const childIds = new Set(children.map((c) => c.id));
-                            const sel = filters.selectedCategoryId;
-                            if (
-                              sel === cat.id ||
-                              (sel != null && childIds.has(sel))
-                            ) {
-                              set("selectedCategoryId", null);
-                            }
-                          } else {
-                            setExpandedRootId(cat.id);
-                            set("selectedCategoryId", cat.id);
-                          }
-                          return;
-                        }
-                        set(
-                          "selectedCategoryId",
-                          filters.selectedCategoryId === cat.id ? null : cat.id
-                        );
-                      }}
-                    >
-                      {hasChildren ? (
-                        <span
-                          className={`filter-cat-btn__arrow${isExpanded ? " filter-cat-btn__arrow--open" : ""}`}
-                          aria-hidden
-                        >
-                          &#9654;
-                        </span>
-                      ) : (
-                        <span className="filter-cat-btn__arrow filter-cat-btn__arrow--spacer" aria-hidden />
-                      )}
-                      {cat.name}
-                    </button>
-                    {hasChildren && isExpanded && (
-                      <ul className="filter-cat-sublist">
-                        {children.map((sub) => (
-                          <li key={sub.id}>
-                            <button
-                              type="button"
-                              className={
-                                filters.selectedCategoryId === sub.id ? "active" : ""
-                              }
-                              onClick={() => {
-                                setExpandedRootId(cat.id);
-                                set(
-                                  "selectedCategoryId",
-                                  filters.selectedCategoryId === sub.id
-                                    ? null
-                                    : sub.id
-                                );
-                              }}
-                            >
-                              {sub.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
+              {categories.map((cat) => renderCategoryNode(cat))}
             </ul>
             {filters.selectedCategoryId && (
               <button

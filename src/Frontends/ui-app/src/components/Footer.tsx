@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { subscribeNewsletter } from "../api/newsletter";
 import "./Footer.css";
 
@@ -198,7 +199,13 @@ export function Footer() {
             </a>
           </div>
 
-          <p className="footer-copyright">&copy; 2026 AmCart. All rights reserved.</p>
+          <p className="footer-copyright">
+            <Link to="/out-of-stock" className="footer-oos-link">
+              Out of stock
+            </Link>
+            <span className="footer-copyright__sep"> · </span>
+            &copy; 2026 AmCart. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

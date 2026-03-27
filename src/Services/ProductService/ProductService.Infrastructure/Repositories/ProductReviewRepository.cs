@@ -69,4 +69,61 @@ public class ProductReviewRepository : IProductReviewRepository
         _db.ProductReviews.Remove(review);
         await _db.SaveChangesAsync(ct);
     }
+
+    public async Task<IReadOnlyDictionary<Guid, bool>> GetUserVotesForReviewIdsAsync(
+        IReadOnlyList<Guid> reviewIds,
+        Guid userId,
+        CancellationToken ct = default)
+    {
+        if (reviewIds.Count == 0)
+            return new Dictionary<Guid, bool>();
+
+        return await _db.ProductReviewVotes
+            .AsNoTracking()
+            .Where(v => v.UserId == userId && reviewIds.Contains(v.ReviewId))
+            .ToDictionaryAsync(v => v.ReviewId, v => v.IsUp, ct);
+    }
+
+    public async Task ApplyVoteToggleAsync(Guid reviewId, Guid userId, bool wantUp, CancellationToken ct = default)
+    {
+        var existing = await _db.ProductReviewVotes
+            .FirstOrDefaultAsync(v => v.ReviewId == reviewId && v.UserId == userId, ct);
+
+        if (existing == null)
+        {
+            _db.ProductReviewVotes.Add(new ProductReviewVote
+            {
+                Id = Guid.NewGuid(),
+                ReviewId = reviewId,
+                UserId = userId,
+                IsUp = wantUp,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            });
+        }
+        else if (existing.IsUp == wantUp)
+        {
+            _db.ProductReviewVotes.Remove(existing);
+        }
+        else
+        {
+            existing.IsUp = wantUp;
+            existing.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await _db.SaveChangesAsync(ct);
+        await RefreshReviewVoteCountsAsync(reviewId, ct);
+    }
+
+    public async Task RefreshReviewVoteCountsAsync(Guid reviewId, CancellationToken ct = default)
+    {
+        var up = await _db.ProductReviewVotes.CountAsync(v => v.ReviewId == reviewId && v.IsUp, ct);
+        var down = await _db.ProductReviewVotes.CountAsync(v => v.ReviewId == reviewId && !v.IsUp, ct);
+        var r = await _db.ProductReviews.FirstOrDefaultAsync(x => x.Id == reviewId, ct);
+        if (r == null) return;
+        r.HelpfulCount = up;
+        r.NotHelpfulCount = down;
+        r.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync(ct);
+    }
 }

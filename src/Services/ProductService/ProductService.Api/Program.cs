@@ -1,7 +1,9 @@
+using System.Security.Claims;
 using System.Text;
 using AmCart.ProductService.Infrastructure;
 using AmCart.ProductService.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -32,7 +34,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = ClaimTypes.Role,
+            NameClaimType = ClaimTypes.Name
+        };
+
+        // Optional bearer on anonymous endpoints (e.g. GET reviews): invalid/expired token must not 401 the whole request.
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var endpoint = context.HttpContext.GetEndpoint();
+                if (endpoint is null)
+                    return Task.CompletedTask;
+
+                var requiresAuth = endpoint.Metadata.GetOrderedMetadata<IAuthorizeData>().Any();
+                if (!requiresAuth)
+                    context.NoResult();
+
+                return Task.CompletedTask;
+            }
         };
     });
 

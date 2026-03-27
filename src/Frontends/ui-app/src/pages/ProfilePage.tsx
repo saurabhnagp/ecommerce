@@ -79,8 +79,6 @@ export function ProfilePage() {
         </dl>
       )}
       <p className="profile-actions">
-        <Link to="/account/change-password">Change password</Link>
-        {" · "}
         <Link to="/">Home</Link>
       </p>
     </div>

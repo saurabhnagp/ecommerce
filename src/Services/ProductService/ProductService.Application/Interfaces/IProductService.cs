@@ -7,7 +7,7 @@ public interface IProductService
 {
     Task<ProductDto?> GetByIdAsync(Guid id, bool publicOnly = false, CancellationToken ct = default);
     Task<ProductDto?> GetBySlugAsync(string slug, bool publicOnly = false, CancellationToken ct = default);
-    Task<PagedResult<ProductListDto>> GetPagedAsync(int page, int pageSize, Guid? categoryId = null, Guid? brandId = null, string? status = null, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, bool sortDescending = false, bool defaultToActiveStatus = false, CancellationToken ct = default);
+    Task<PagedResult<ProductListDto>> GetPagedAsync(int page, int pageSize, Guid? categoryId = null, Guid? brandId = null, string? status = null, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, bool sortDescending = false, bool defaultToActiveStatus = false, ProductStockFilter stockFilter = ProductStockFilter.None, CancellationToken ct = default);
     Task<IReadOnlyList<ProductListDto>> GetFeaturedAsync(int count, CancellationToken ct = default);
     Task<IReadOnlyList<ProductListDto>> GetByCategoryIdAsync(Guid categoryId, CancellationToken ct = default);
     Task<IReadOnlyList<ProductListDto>> GetByBrandIdAsync(Guid brandId, CancellationToken ct = default);
@@ -16,4 +16,7 @@ public interface IProductService
     Task<ProductDto?> PublishAsync(Guid id, CancellationToken ct = default);
     Task<bool> SoftDeleteAsync(Guid id, CancellationToken ct = default);
     Task<ProductDto?> GetByIdIncludingDeletedAsync(Guid id, CancellationToken ct = default);
+
+    /// <summary>Prev/next active products in the same category. Null when product is not public/active.</summary>
+    Task<ProductNeighborsDto?> GetPublicNeighborsAsync(Guid productId, CancellationToken ct = default);
 }

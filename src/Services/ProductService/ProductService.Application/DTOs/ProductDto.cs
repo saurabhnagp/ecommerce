@@ -20,6 +20,7 @@ public class ProductDto
     public Guid? CategoryId { get; set; }
     public Guid? BrandId { get; set; }
     public string? CategoryName { get; set; }
+    public string? CategorySlug { get; set; }
     public string? BrandName { get; set; }
     public double AverageRating { get; set; }
     public int ReviewCount { get; set; }

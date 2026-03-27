@@ -18,7 +18,13 @@ export function getAccessToken() {
   return localStorage.getItem(ACCESS);
 }
 
-export function getStoredUser(): { email?: string; name?: string; phone?: string; role?: string } | null {
+export function getStoredUser(): {
+  id?: string;
+  email?: string;
+  name?: string;
+  phone?: string;
+  role?: string;
+} | null {
   try {
     const u = localStorage.getItem(USER);
     return u ? JSON.parse(u) : null;

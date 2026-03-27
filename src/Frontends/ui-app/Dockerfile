@@ -5,6 +5,8 @@ COPY package.json package-lock.json* ./
 RUN npm install
 COPY . .
 ENV VITE_USER_SERVICE_URL=
+# Same-origin /api so nginx can route /api/v1/products → ProductService (default /product-api is not proxied in static nginx).
+ENV VITE_PRODUCT_SERVICE_URL=/api
 RUN npm run build
 
 FROM nginx:1.27-alpine

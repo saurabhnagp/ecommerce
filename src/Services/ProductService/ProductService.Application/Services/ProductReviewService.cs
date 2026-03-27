@@ -22,12 +22,34 @@ public class ProductReviewService : IProductReviewService
         return r?.ToDto();
     }
 
-    public async Task<PagedResult<ProductReviewDto>> GetByProductIdAsync(Guid productId, int page, int pageSize, CancellationToken ct = default)
+    public async Task<PagedResult<ProductReviewDto>> GetByProductIdAsync(
+        Guid productId,
+        int page,
+        int pageSize,
+        Guid? currentUserId,
+        CancellationToken ct = default)
     {
         var (items, totalCount) = await _reviews.GetByProductIdAsync(productId, page, pageSize, ct);
+        IReadOnlyDictionary<Guid, bool>? voteMap = null;
+        if (currentUserId.HasValue && items.Count > 0)
+        {
+            voteMap = await _reviews.GetUserVotesForReviewIdsAsync(
+                items.Select(x => x.Id).ToList(),
+                currentUserId.Value,
+                ct);
+        }
+
+        var dtos = items.Select(r =>
+        {
+            bool? my = null;
+            if (voteMap != null && voteMap.TryGetValue(r.Id, out var isUp))
+                my = isUp;
+            return r.ToDto(my);
+        }).ToList();
+
         return new PagedResult<ProductReviewDto>
         {
-            Items = items.Select(x => x.ToDto()).ToList(),
+            Items = dtos,
             TotalCount = totalCount,
             Page = page,
             PageSize = pageSize
@@ -40,23 +62,45 @@ public class ProductReviewService : IProductReviewService
         return r?.ToDto();
     }
 
-    public async Task<ProductReviewDto> CreateAsync(Guid productId, CreateProductReviewRequest request, CancellationToken ct = default)
+    public async Task<ProductReviewDto> CreateAsync(
+        Guid productId,
+        Guid userId,
+        string? reviewerDisplayName,
+        CreateProductReviewRequest request,
+        CancellationToken ct = default)
     {
-        var existing = await _reviews.GetByProductAndUserAsync(productId, request.UserId, ct);
+        var product = await _products.GetByIdAsync(productId, publicOnly: true, ct);
+        if (product == null)
+            throw new InvalidOperationException("Product not found.");
+
+        var existing = await _reviews.GetByProductAndUserAsync(productId, userId, ct);
         if (existing != null)
             throw new InvalidOperationException("You have already submitted a review for this product.");
+
+        if (string.IsNullOrWhiteSpace(request.Title) && string.IsNullOrWhiteSpace(request.Comment))
+            throw new InvalidOperationException("Please add a title or comment to your review.");
+
+        var name = string.IsNullOrWhiteSpace(reviewerDisplayName)
+            ? "Customer"
+            : reviewerDisplayName.Trim();
+        var photo = string.IsNullOrWhiteSpace(request.ReviewerPhotoUrl)
+            ? null
+            : request.ReviewerPhotoUrl.Trim();
 
         var review = new ProductReview
         {
             Id = Guid.NewGuid(),
             ProductId = productId,
-            UserId = request.UserId,
+            UserId = userId,
             Rating = request.Rating,
             Title = request.Title?.Trim(),
             Comment = request.Comment?.Trim(),
             IsVerifiedPurchase = request.IsVerifiedPurchase,
-            IsApproved = false,
+            IsApproved = true,
             HelpfulCount = 0,
+            NotHelpfulCount = 0,
+            ReviewerDisplayName = name,
+            ReviewerPhotoUrl = photo,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -67,10 +111,40 @@ public class ProductReviewService : IProductReviewService
         return loaded!.ToDto();
     }
 
-    public async Task<ProductReviewDto?> UpdateAsync(Guid id, int? rating, string? title, string? comment, CancellationToken ct = default)
+    public async Task<ProductReviewDto?> VoteAsync(
+        Guid productId,
+        Guid reviewId,
+        Guid userId,
+        ReviewVoteRequest request,
+        CancellationToken ct = default)
+    {
+        var review = await _reviews.GetByIdAsync(reviewId, ct);
+        if (review == null || review.ProductId != productId || !review.IsApproved)
+            return null;
+
+        var act = request.Action.Trim().ToLowerInvariant();
+        if (act is not ("like" or "dislike"))
+            throw new InvalidOperationException("Action must be 'like' or 'dislike'.");
+
+        var wantUp = act == "like";
+        await _reviews.ApplyVoteToggleAsync(reviewId, userId, wantUp, ct);
+        var loaded = await _reviews.GetByIdAsync(reviewId, ct);
+        if (loaded == null) return null;
+
+        var myVote = await _reviews.GetUserVotesForReviewIdsAsync(
+            new[] { reviewId },
+            userId,
+            ct);
+        bool? mv = myVote.TryGetValue(reviewId, out var u) ? u : null;
+        return loaded.ToDto(mv);
+    }
+
+    public async Task<ProductReviewDto?> UpdateAsync(Guid id, Guid userId, bool isAdmin, int? rating, string? title, string? comment, CancellationToken ct = default)
     {
         var review = await _reviews.GetByIdAsync(id, ct);
         if (review == null) return null;
+        if (!isAdmin && review.UserId != userId)
+            throw new InvalidOperationException("You can only edit your own review.");
 
         if (rating.HasValue && rating.Value >= 1 && rating.Value <= 5) review.Rating = rating.Value;
         if (title != null) review.Title = title.Trim();

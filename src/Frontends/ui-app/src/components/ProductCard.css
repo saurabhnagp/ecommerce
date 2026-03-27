@@ -26,6 +26,16 @@
   justify-content: center;
 }
 
+.product-card__img-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  z-index: 0;
+}
+
 .product-card__img {
   width: 100%;
   height: 100%;
@@ -37,11 +47,51 @@
   transform: scale(1.04);
 }
 
+/* Stock indicator (tracked inventory only) */
+.product-card__stock-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.product-card__stock-dot--in {
+  background: #16a34a;
+}
+
+.product-card__stock-dot--low {
+  background: #ca8a04;
+}
+
+.product-card__stock-dot--out {
+  background: #dc2626;
+}
+
+.product-card__oos {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b91c1c;
+  margin-top: 0.25rem;
+}
+
+.product-card__low-stock {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #a16207;
+  margin-top: 0.25rem;
+}
+
 /* Badge */
 .product-card__badge {
   position: absolute;
   top: 10px;
   left: 10px;
+  z-index: 2;
   padding: 0.2rem 0.6rem;
   font-size: 0.72rem;
   font-weight: 700;
@@ -64,6 +114,7 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 2;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -123,6 +174,15 @@
   text-decoration: line-through;
   font-weight: 400;
   margin-right: 0.4rem;
+}
+
+.product-card__name-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card__name-link:hover .product-card__name {
+  color: #c9a962;
 }
 
 .product-card__name {

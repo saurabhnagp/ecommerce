@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { ProductDto } from "../api/products";
 import { getAccessToken } from "../auth/storage";
+import { productInStock, productIsLowStock } from "../utils/stock";
 import "./ProductCard.css";
 
 type Props = {
@@ -32,6 +33,7 @@ export function ProductCard({
   const navigate = useNavigate();
   const [cartBusy, setCartBusy] = useState(false);
   const inWishlist = wishlistProductIds?.has(product.id) ?? false;
+  const detailPath = `/products/${encodeURIComponent(product.slug)}`;
 
   const imgs = product.images ?? [];
   const primaryImg = imgs.find((i) => i.isPrimary) ?? imgs[0];
@@ -50,6 +52,16 @@ export function ProductCard({
 
   const badge = isSale ? `- ${discount}%` : product.isFeatured ? "NEW" : null;
 
+  const inStock = productInStock(product);
+  const lowStock = productIsLowStock(product);
+  const stockTitle = !product.trackInventory
+    ? "In stock"
+    : inStock
+      ? lowStock
+        ? "Low stock"
+        : "In stock"
+      : "Out of stock";
+
   async function handleWishlistClick(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
@@ -63,6 +75,7 @@ export function ProductCard({
   async function handleAddToCartClick(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!inStock) return;
     if (!onAddToCart) return;
     setCartBusy(true);
     try {
@@ -75,12 +88,22 @@ export function ProductCard({
   return (
     <div className="product-card">
       <div className="product-card__img-wrap">
-        <img
-          className="product-card__img"
-          src={imgUrl}
-          alt={product.name}
-          loading="lazy"
-        />
+        <Link to={detailPath} className="product-card__img-link" aria-label={product.name}>
+          <img
+            className="product-card__img"
+            src={imgUrl}
+            alt={product.name}
+            loading="lazy"
+          />
+        </Link>
+
+        {product.trackInventory === true && (
+          <span
+            className={`product-card__stock-dot${inStock ? (lowStock ? " product-card__stock-dot--low" : " product-card__stock-dot--in") : " product-card__stock-dot--out"}`}
+            title={stockTitle}
+            aria-label={stockTitle}
+          />
+        )}
 
         {badge && (
           <span
@@ -91,7 +114,16 @@ export function ProductCard({
         )}
 
         <div className="product-card__actions">
-          <button type="button" className="product-card__action-btn" title="Quick view">
+          <button
+            type="button"
+            className="product-card__action-btn"
+            title="Quick view"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(detailPath);
+            }}
+          >
             &#128065;
           </button>
           <button
@@ -106,8 +138,8 @@ export function ProductCard({
           <button
             type="button"
             className="product-card__action-btn"
-            title="Add to cart"
-            disabled={cartBusy}
+            title={inStock ? "Add to cart" : "Out of stock"}
+            disabled={cartBusy || !inStock}
             onClick={handleAddToCartClick}
           >
             &#128722;
@@ -130,7 +162,15 @@ export function ProductCard({
             minimumFractionDigits: 2,
           })}
         </div>
-        <div className="product-card__name">{product.name}</div>
+        <Link to={detailPath} className="product-card__name-link">
+          <div className="product-card__name">{product.name}</div>
+        </Link>
+        {product.trackInventory === true && !inStock && (
+          <div className="product-card__oos">Out of stock</div>
+        )}
+        {product.trackInventory === true && inStock && lowStock && (
+          <div className="product-card__low-stock">Low stock</div>
+        )}
         {product.averageRating > 0 && <Stars count={product.averageRating} />}
       </div>
     </div>

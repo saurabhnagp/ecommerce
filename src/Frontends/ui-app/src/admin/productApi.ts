@@ -52,6 +52,7 @@ export type ProductDto = {
   /** Present on paged list and full product responses. */
   quantity?: number;
   lowStockThreshold?: number;
+  trackInventory?: boolean;
   status: string;
   isFeatured: boolean;
   categoryId?: string;
@@ -109,6 +110,7 @@ export function fetchProducts(params?: {
   status?: string;
   categoryId?: string;
   brandId?: string;
+  stockFilter?: "outOfStock" | "lowStock";
 }) {
   const q = new URLSearchParams();
   q.set("publicOnly", "false");
@@ -118,6 +120,8 @@ export function fetchProducts(params?: {
   if (params?.status) q.set("status", params.status);
   if (params?.categoryId) q.set("categoryId", params.categoryId);
   if (params?.brandId) q.set("brandId", params.brandId);
+  if (params?.stockFilter === "outOfStock") q.set("stockFilter", "outOfStock");
+  if (params?.stockFilter === "lowStock") q.set("stockFilter", "lowStock");
   return productFetch<{ data: PagedResult<ProductDto> }>(`/v1/products?${q}`);
 }
 

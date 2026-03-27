@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { FilterSidebar } from "../components/FilterSidebar";
 import { ProductGrid } from "../components/ProductGrid";
 import type { Filters } from "../components/FilterSidebar";
@@ -17,6 +18,10 @@ import {
 import { useCart } from "../cart/CartContext";
 import { onAuthChange } from "../auth/notify";
 import { getAccessToken } from "../auth/storage";
+import {
+  findCategoryIdBySlug,
+  findCategoryNameById,
+} from "../utils/categoryNav";
 import "./ProductListingPage.css";
 
 const PAGE_SIZE = 12;
@@ -48,6 +53,9 @@ function sortToApi(sort: string): { sortBy?: string; sortDesc?: boolean } {
 }
 
 export function ProductListingPage() {
+  const { slug } = useParams<{ slug?: string }>();
+  const location = useLocation();
+  const prevPathRef = useRef<string | null>(null);
   const { refreshCart } = useCart();
   const [sessionRev, setSessionRev] = useState(0);
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(() => new Set());
@@ -142,6 +150,35 @@ export function ProductListingPage() {
     };
   }, []);
 
+  /** URL `/category/:slug` drives filter; leaving that route clears the category filter. */
+  useEffect(() => {
+    if (!categories.length) return;
+
+    const path = location.pathname;
+    const prev = prevPathRef.current;
+    prevPathRef.current = path;
+
+    const isCat = path.startsWith("/category/");
+    const wasCat = prev != null && prev.startsWith("/category/");
+
+    if (wasCat && !isCat) {
+      setFilters((f) => ({ ...f, selectedCategoryId: null }));
+      setPage(1);
+    }
+
+    if (isCat && slug) {
+      const raw = decodeURIComponent(slug);
+      const id = findCategoryIdBySlug(categories, raw);
+      setFilters((f) => ({ ...f, selectedCategoryId: id }));
+      setPage(1);
+    }
+  }, [categories, location.pathname, slug]);
+
+  const categoryBreadcrumbLabel = useMemo(
+    () => findCategoryNameById(categories, filters.selectedCategoryId),
+    [categories, filters.selectedCategoryId]
+  );
+
   const fetchRef = useRef(0);
 
   const loadProducts = useCallback(
@@ -200,9 +237,15 @@ export function ProductListingPage() {
 
       <section className="product-listing__main">
         <nav className="listing-breadcrumb">
-          <a href="/">Home</a>
+          <Link to="/">Home</Link>
           <span className="listing-breadcrumb__sep">/</span>
-          <span>Products</span>
+          <Link to="/products">Products</Link>
+          {categoryBreadcrumbLabel && (
+            <>
+              <span className="listing-breadcrumb__sep">/</span>
+              <span>{categoryBreadcrumbLabel}</span>
+            </>
+          )}
         </nav>
 
         <ProductGrid

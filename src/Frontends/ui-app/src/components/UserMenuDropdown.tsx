@@ -56,6 +56,9 @@ export function UserMenuDropdown({ onLogout }: Props) {
           <Link to="/account/profile" className="user-menu__item" role="menuitem" onClick={() => setOpen(false)}>
             Profile
           </Link>
+          <Link to="/account/orders" className="user-menu__item" role="menuitem" onClick={() => setOpen(false)}>
+            Order history
+          </Link>
           <Link
             to="/account/change-password"
             className="user-menu__item"

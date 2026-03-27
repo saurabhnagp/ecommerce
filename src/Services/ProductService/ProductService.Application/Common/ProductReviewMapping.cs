@@ -5,7 +5,7 @@ namespace AmCart.ProductService.Application.Common;
 
 public static class ProductReviewMapping
 {
-    public static ProductReviewDto ToDto(this ProductReview r) => new()
+    public static ProductReviewDto ToDto(this ProductReview r, bool? myVoteIsUp = null) => new()
     {
         Id = r.Id,
         ProductId = r.ProductId,
@@ -16,6 +16,10 @@ public static class ProductReviewMapping
         IsVerifiedPurchase = r.IsVerifiedPurchase,
         IsApproved = r.IsApproved,
         HelpfulCount = r.HelpfulCount,
+        NotHelpfulCount = r.NotHelpfulCount,
+        ReviewerDisplayName = r.ReviewerDisplayName,
+        ReviewerPhotoUrl = r.ReviewerPhotoUrl,
+        MyVote = myVoteIsUp switch { true => "like", false => "dislike", _ => null },
         CreatedAt = r.CreatedAt
     };
 }

@@ -1,3 +1,4 @@
+using AmCart.ProductService.Application.Common;
 using AmCart.ProductService.Application.DTOs;
 using AmCart.ProductService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -30,10 +31,27 @@ public class ProductsController : ControllerBase
         [FromQuery] string? sortBy = null,
         [FromQuery] bool sortDesc = false,
         [FromQuery] bool publicOnly = true,
+        [FromQuery] string? stockFilter = null,
         CancellationToken ct = default)
     {
-        var result = await _productService.GetPagedAsync(page, pageSize, categoryId, brandId, status, search, minPrice, maxPrice, sortBy, sortDesc, defaultToActiveStatus: publicOnly, ct);
+        var sf = ParseStockFilter(stockFilter);
+        if (sf == ProductStockFilter.LowStock && !User.IsInRole("admin"))
+            return Forbid();
+
+        var result = await _productService.GetPagedAsync(page, pageSize, categoryId, brandId, status, search, minPrice, maxPrice, sortBy, sortDesc, defaultToActiveStatus: publicOnly, sf, ct);
         return Ok(new { success = true, data = result });
+    }
+
+    private static ProductStockFilter ParseStockFilter(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return ProductStockFilter.None;
+        return raw.Trim().ToLowerInvariant() switch
+        {
+            "outofstock" or "out_of_stock" or "out-of-stock" => ProductStockFilter.OutOfStock,
+            "lowstock" or "low_stock" or "low-stock" => ProductStockFilter.LowStock,
+            _ => ProductStockFilter.None,
+        };
     }
 
     [HttpGet("featured")]
@@ -42,6 +60,17 @@ public class ProductsController : ControllerBase
     {
         var items = await _productService.GetFeaturedAsync(count, ct);
         return Ok(new { success = true, data = items });
+    }
+
+    [HttpGet("{id:guid}/neighbors")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetNeighbors(Guid id, CancellationToken ct = default)
+    {
+        var neighbors = await _productService.GetPublicNeighborsAsync(id, ct);
+        if (neighbors == null)
+            return NotFound(new { success = false, error = new { code = "NOT_FOUND", message = "Product not found." } });
+        return Ok(new { success = true, data = neighbors });
     }
 
     [HttpGet("{id:guid}")]
