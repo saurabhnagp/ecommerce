@@ -42,6 +42,30 @@ export async function login(email: string, password: string, rememberMe: boolean
   return data.data;
 }
 
+export async function completeExternalLogin(
+  provider: "google" | "facebook" | "twitter",
+  body: { code: string; codeVerifier?: string; redirectUri: string }
+) {
+  const res = await fetch(`${base()}/api/v1/auth/external/${provider}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      code: body.code,
+      codeVerifier: body.codeVerifier,
+      redirectUri: body.redirectUri,
+    }),
+  });
+  const data = await parseJson<{
+    success: boolean;
+    data?: { user: UserSummary; tokens: TokenResponse };
+    error?: { code: string; message: string };
+  }>(res);
+  if (!res.ok || !data.success || !data.data) {
+    throw new Error(data.error?.message ?? "Sign-in failed");
+  }
+  return data.data;
+}
+
 export async function register(payload: {
   firstName: string;
   lastName: string;

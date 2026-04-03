@@ -23,7 +23,13 @@ export function AdminSales() {
   const [editing, setEditing] = useState<Sale | null>(null);
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  function openNew() { setEditing({ ...EMPTY, id: crypto.randomUUID() }); setMsg(null); }
+  function openNew() {
+    const id = typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
+    setEditing({ ...EMPTY, id });
+    setMsg(null);
+  }
   function openEdit(s: Sale) { setEditing({ ...s }); setMsg(null); }
 
   function handleDelete(id: string) {

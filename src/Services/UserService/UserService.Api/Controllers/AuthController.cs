@@ -1,3 +1,4 @@
+using AmCart.UserService.Application;
 using AmCart.UserService.Application.DTOs;
 using AmCart.UserService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -51,6 +52,48 @@ public class AuthController : ControllerBase
         var baseUrl = _configuration["App:BaseUrl"] ?? $"{Request.Scheme}://{Request.Host}";
         var result = await _authService.ResendVerificationEmailAsync(request.Email, baseUrl, ct);
         return Ok(new { success = true, message = result.Message });
+    }
+
+    [HttpPost("external/google")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ExternalGoogle([FromBody] ExternalLoginRequest request, CancellationToken ct)
+    {
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var userAgent = HttpContext.Request.Headers.UserAgent.ToString();
+        var result = await _authService.ExternalLoginAsync(ExternalAuthProvider.Google, request, ipAddress, userAgent, ct);
+        if (!result.Success)
+            return BadRequest(new { success = false, error = new { code = result.ErrorCode, message = result.Message } });
+        return Ok(new { success = true, data = new { user = result.User, tokens = result.Tokens } });
+    }
+
+    [HttpPost("external/facebook")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ExternalFacebook([FromBody] ExternalLoginRequest request, CancellationToken ct)
+    {
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var userAgent = HttpContext.Request.Headers.UserAgent.ToString();
+        var result = await _authService.ExternalLoginAsync(ExternalAuthProvider.Facebook, request, ipAddress, userAgent, ct);
+        if (!result.Success)
+            return BadRequest(new { success = false, error = new { code = result.ErrorCode, message = result.Message } });
+        return Ok(new { success = true, data = new { user = result.User, tokens = result.Tokens } });
+    }
+
+    [HttpPost("external/twitter")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ExternalTwitter([FromBody] ExternalLoginRequest request, CancellationToken ct)
+    {
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var userAgent = HttpContext.Request.Headers.UserAgent.ToString();
+        var result = await _authService.ExternalLoginAsync(ExternalAuthProvider.Twitter, request, ipAddress, userAgent, ct);
+        if (!result.Success)
+            return BadRequest(new { success = false, error = new { code = result.ErrorCode, message = result.Message } });
+        return Ok(new { success = true, data = new { user = result.User, tokens = result.Tokens } });
     }
 
     [HttpPost("login")]

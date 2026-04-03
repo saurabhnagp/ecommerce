@@ -1,3 +1,4 @@
+using AmCart.UserService.Application.Configuration;
 using AmCart.UserService.Application.Interfaces;
 using AmCart.UserService.Application.Services;
 using AmCart.UserService.Infrastructure.Data;
@@ -20,6 +21,9 @@ public static class DependencyInjection
         {
             options.UseNpgsql(connectionString);
         });
+
+        services.Configure<OAuthProvidersOptions>(configuration.GetSection(OAuthProvidersOptions.SectionName));
+        services.AddHttpClient<IExternalOAuthExchangeService, ExternalOAuthExchangeService>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

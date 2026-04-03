@@ -29,7 +29,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(e => e.AuthProvider).HasMaxLength(20).HasColumnName("auth_provider").HasDefaultValue("email");
         builder.Property(e => e.GoogleId).HasMaxLength(255).HasColumnName("google_id");
+        builder.HasIndex(e => e.GoogleId).IsUnique().HasFilter("google_id IS NOT NULL");
         builder.Property(e => e.FacebookId).HasMaxLength(255).HasColumnName("facebook_id");
+        builder.HasIndex(e => e.FacebookId).IsUnique().HasFilter("facebook_id IS NOT NULL");
+        builder.Property(e => e.TwitterId).HasMaxLength(255).HasColumnName("twitter_id");
+        builder.HasIndex(e => e.TwitterId).IsUnique().HasFilter("twitter_id IS NOT NULL");
 
         builder.Property(e => e.Role).HasMaxLength(20).HasColumnName("role").HasDefaultValue("customer");
         builder.Property(e => e.PermissionsJson).HasColumnName("permissions").HasColumnType("jsonb");

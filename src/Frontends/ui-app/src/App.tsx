@@ -19,6 +19,7 @@ import { SearchResultsPage } from "./pages/SearchResultsPage";
 import { OutOfStockPage } from "./pages/OutOfStockPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
+import { OAuthCallbackPage } from "./pages/OAuthCallbackPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { WishlistPage } from "./pages/WishlistPage";
 import { CartPage } from "./pages/CartPage";
@@ -109,6 +110,7 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/search" element={<SearchResultsPage />} />
                   <Route path="/products/:slug" element={<ProductDetailPage />} />

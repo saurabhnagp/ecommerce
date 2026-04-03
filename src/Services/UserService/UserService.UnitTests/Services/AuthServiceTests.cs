@@ -1,8 +1,10 @@
+using AmCart.UserService.Application.Configuration;
 using AmCart.UserService.Application.DTOs;
 using AmCart.UserService.Application.Interfaces;
 using AmCart.UserService.Application.Services;
 using AmCart.UserService.Domain.Entities;
 using AmCart.UserService.UnitTests.TestFixtures;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -14,6 +16,7 @@ public class AuthServiceTests
     private readonly Mock<IPasswordHasher> _passwordHasher;
     private readonly Mock<ITokenService> _tokenService;
     private readonly Mock<IEmailService> _emailService;
+    private readonly Mock<IExternalOAuthExchangeService> _externalOAuth;
     private readonly AuthService _sut;
 
     public AuthServiceTests()
@@ -22,17 +25,21 @@ public class AuthServiceTests
         _passwordHasher = new Mock<IPasswordHasher>();
         _tokenService = new Mock<ITokenService>();
         _emailService = new Mock<IEmailService>();
+        _externalOAuth = new Mock<IExternalOAuthExchangeService>();
 
         _tokenService.Setup(t => t.AccessTokenExpirySeconds).Returns(900);
         _tokenService.Setup(t => t.RefreshTokenExpiryDays).Returns(7);
         _tokenService.Setup(t => t.StoreRefreshTokenAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<CancellationToken>())).ReturnsAsync("stored");
         _tokenService.Setup(t => t.RevokeAllUserTokensAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
+        var oauthOpts = Options.Create(new OAuthProvidersOptions());
         _sut = new AuthService(
             _userRepo.Object,
             _passwordHasher.Object,
             _tokenService.Object,
-            _emailService.Object);
+            _emailService.Object,
+            _externalOAuth.Object,
+            oauthOpts);
     }
 
     #region RegisterAsync
@@ -47,9 +54,11 @@ public class AuthServiceTests
 
         var request = new RegisterRequest
         {
+            FirstName = "Jane",
+            LastName = "Doe",
             Email = "new@example.com",
             Password = "SecureP@ss1",
-            Name = "Jane Doe",
+            ConfirmPassword = "SecureP@ss1",
             Phone = "+1234567890",
             Gender = "female"
         };
@@ -77,9 +86,12 @@ public class AuthServiceTests
 
         var request = new RegisterRequest
         {
+            FirstName = "Test",
+            LastName = "User",
             Email = "existing@example.com",
             Password = "SecureP@ss1",
-            Name = "Test User"
+            ConfirmPassword = "SecureP@ss1",
+            Phone = "+1000000000"
         };
 
         var result = await _sut.RegisterAsync(request, "https://app.com", CancellationToken.None);
@@ -102,9 +114,12 @@ public class AuthServiceTests
 
         var request = new RegisterRequest
         {
+            FirstName = "Test",
+            LastName = "User",
             Email = "new@example.com",
             Password = password,
-            Name = "Test User"
+            ConfirmPassword = password,
+            Phone = "+1000000000"
         };
 
         var result = await _sut.RegisterAsync(request, "https://app.com", CancellationToken.None);
@@ -123,12 +138,20 @@ public class AuthServiceTests
         _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<User>())).Returns("access");
         _tokenService.Setup(t => t.GenerateRefreshToken()).Returns("refresh");
 
-        var request = new RegisterRequest { Email = "a@b.com", Password = "SecureP@ss1", Name = "OnlyFirst" };
+        var request = new RegisterRequest
+        {
+            FirstName = "OnlyFirst",
+            LastName = "Surname",
+            Email = "a@b.com",
+            Password = "SecureP@ss1",
+            ConfirmPassword = "SecureP@ss1",
+            Phone = "+1000000001"
+        };
 
         var result = await _sut.RegisterAsync(request, "https://app.com", CancellationToken.None);
 
         Assert.True(result.Success);
-        _userRepo.Verify(r => r.AddAsync(It.Is<User>(u => u.FirstName == "OnlyFirst" && u.LastName == ""), It.IsAny<CancellationToken>()), Times.Once);
+        _userRepo.Verify(r => r.AddAsync(It.Is<User>(u => u.FirstName == "OnlyFirst" && u.LastName == "Surname"), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion

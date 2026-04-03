@@ -2,6 +2,12 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { mergeCart } from "../api/cart";
 import { login } from "../api/auth";
+import {
+  isOAuthConfigured,
+  startFacebookOAuth,
+  startGoogleOAuth,
+  startTwitterOAuth,
+} from "../auth/oauthProviders";
 import { clearCartSessionId, getOrCreateCartSessionId } from "../cart/cartSession";
 import { notifyAuthChange } from "../auth/notify";
 import { saveSession } from "../auth/storage";
@@ -17,6 +23,7 @@ export function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const oauth = isOAuthConfigured();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,11 +63,32 @@ export function LoginPage() {
           <span>Sign in using</span>
           <div className="signin-using-line" />
         </div>
-        <div className="social-row">
-          <button type="button" className="btn-social btn-facebook" disabled title="Coming soon">
+        <div className="social-row social-row--three">
+          <button
+            type="button"
+            className="btn-social btn-google"
+            disabled={!oauth.google}
+            title={oauth.google ? "Sign in with Google" : "Set VITE_GOOGLE_CLIENT_ID"}
+            onClick={() => void startGoogleOAuth(import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "")}
+          >
+            G GOOGLE
+          </button>
+          <button
+            type="button"
+            className="btn-social btn-facebook"
+            disabled={!oauth.facebook}
+            title={oauth.facebook ? "Sign in with Facebook" : "Set VITE_FACEBOOK_APP_ID"}
+            onClick={() => startFacebookOAuth(import.meta.env.VITE_FACEBOOK_APP_ID ?? "")}
+          >
             <span>f</span> FACEBOOK
           </button>
-          <button type="button" className="btn-social btn-twitter" disabled title="Coming soon">
+          <button
+            type="button"
+            className="btn-social btn-twitter"
+            disabled={!oauth.twitter}
+            title={oauth.twitter ? "Sign in with X" : "Set VITE_TWITTER_CLIENT_ID"}
+            onClick={() => void startTwitterOAuth(import.meta.env.VITE_TWITTER_CLIENT_ID ?? "")}
+          >
             𝕏 TWITTER
           </button>
         </div>

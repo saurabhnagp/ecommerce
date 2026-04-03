@@ -1,8 +1,11 @@
 using System.Security.Cryptography;
+using AmCart.UserService.Application;
 using AmCart.UserService.Application.Common;
+using AmCart.UserService.Application.Configuration;
 using AmCart.UserService.Application.DTOs;
 using AmCart.UserService.Application.Interfaces;
 using AmCart.UserService.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace AmCart.UserService.Application.Services;
 
@@ -12,6 +15,8 @@ public class AuthService : IAuthService
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenService _tokenService;
     private readonly IEmailService _emailService;
+    private readonly IExternalOAuthExchangeService _externalOAuth;
+    private readonly IOptions<OAuthProvidersOptions> _oauthOptions;
     private const int MaxFailedAttempts = 5;
     private const int LockoutMinutes = 30;
     private const int EmailVerificationExpiryHours = 24;
@@ -21,12 +26,184 @@ public class AuthService : IAuthService
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
         ITokenService tokenService,
-        IEmailService emailService)
+        IEmailService emailService,
+        IExternalOAuthExchangeService externalOAuth,
+        IOptions<OAuthProvidersOptions> oauthOptions)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _tokenService = tokenService;
         _emailService = emailService;
+        _externalOAuth = externalOAuth;
+        _oauthOptions = oauthOptions;
+    }
+
+    public async Task<AuthResult> ExternalLoginAsync(
+        ExternalAuthProvider provider,
+        ExternalLoginRequest request,
+        string? ipAddress,
+        string? deviceInfo,
+        CancellationToken ct = default)
+    {
+        var section = provider switch
+        {
+            ExternalAuthProvider.Google => _oauthOptions.Value.Google,
+            ExternalAuthProvider.Facebook => _oauthOptions.Value.Facebook,
+            ExternalAuthProvider.Twitter => _oauthOptions.Value.Twitter,
+            _ => null
+        };
+
+        if (section == null || !section.IsConfigured)
+            return AuthResult.Fail("OAUTH_NOT_CONFIGURED", "Social sign-in is not configured.");
+
+        var redirectUri = request.RedirectUri?.Trim() ?? "";
+        if (section.RedirectUriAllowlist.Length == 0 ||
+            !section.RedirectUriAllowlist.Contains(redirectUri, StringComparer.Ordinal))
+            return AuthResult.Fail("OAUTH_INVALID_REDIRECT", "Invalid redirect URI.");
+
+        if (string.IsNullOrWhiteSpace(request.Code))
+            return AuthResult.Fail("OAUTH_INVALID_CODE", "Authorization code is missing.");
+
+        var profile = await _externalOAuth.ExchangeAsync(
+            provider,
+            request.Code.Trim(),
+            request.CodeVerifier?.Trim(),
+            redirectUri,
+            ct);
+
+        if (profile == null)
+            return AuthResult.Fail("OAUTH_PROVIDER_ERROR", "Could not complete sign-in with the provider. Try again.");
+
+        var user = provider switch
+        {
+            ExternalAuthProvider.Google => await _userRepository.GetByGoogleIdAsync(profile.ProviderUserId, ct),
+            ExternalAuthProvider.Facebook => await _userRepository.GetByFacebookIdAsync(profile.ProviderUserId, ct),
+            ExternalAuthProvider.Twitter => await _userRepository.GetByTwitterIdAsync(profile.ProviderUserId, ct),
+            _ => null
+        };
+
+        if (user != null)
+            return await CompleteSocialLoginAsync(user, ipAddress, deviceInfo, ct);
+
+        var email = profile.Email?.Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            if (provider == ExternalAuthProvider.Twitter)
+                email = $"x_{profile.ProviderUserId}@oauth.amcart.internal";
+            else
+                return AuthResult.Fail(
+                    "OAUTH_EMAIL_REQUIRED",
+                    "Your account did not return an email. Grant email permission or use another sign-in method.");
+        }
+
+        var existing = await _userRepository.GetByEmailAsync(email, ct);
+        if (existing != null && IsEmailPasswordAccount(existing))
+            return AuthResult.Fail(
+                "EMAIL_USE_PASSWORD",
+                "This email is already registered. Please sign in with your email and password.");
+
+        if (existing != null)
+            return AuthResult.Fail(
+                "EMAIL_IN_USE",
+                "This email is already associated with another account.");
+
+        var (firstName, lastName) = ResolveNameParts(profile);
+        var authProvider = provider switch
+        {
+            ExternalAuthProvider.Google => "google",
+            ExternalAuthProvider.Facebook => "facebook",
+            ExternalAuthProvider.Twitter => "twitter",
+            _ => "email"
+        };
+
+        user = new User
+        {
+            Id = Guid.NewGuid(),
+            Email = email,
+            FirstName = firstName,
+            LastName = lastName,
+            AuthProvider = authProvider,
+            Role = "customer",
+            Status = "active",
+            IsEmailVerified = true,
+            EmailVerifiedAt = DateTime.UtcNow,
+            PasswordHash = null,
+            GoogleId = provider == ExternalAuthProvider.Google ? profile.ProviderUserId : null,
+            FacebookId = provider == ExternalAuthProvider.Facebook ? profile.ProviderUserId : null,
+            TwitterId = provider == ExternalAuthProvider.Twitter ? profile.ProviderUserId : null,
+            AvatarUrl = profile.PictureUrl,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        await _userRepository.AddAsync(user, ct);
+        return await CompleteSocialLoginAsync(user, ipAddress, deviceInfo, ct);
+    }
+
+    private static bool IsEmailPasswordAccount(User u) =>
+        !string.IsNullOrEmpty(u.PasswordHash) ||
+        string.Equals(u.AuthProvider, "email", StringComparison.OrdinalIgnoreCase);
+
+    private static (string FirstName, string LastName) ResolveNameParts(ExternalLoginProfile p)
+    {
+        if (!string.IsNullOrWhiteSpace(p.GivenName) || !string.IsNullOrWhiteSpace(p.FamilyName))
+        {
+            var f = (p.GivenName ?? "User").Trim();
+            var l = (p.FamilyName ?? "User").Trim();
+            return (Clamp(f, 100), Clamp(l, 100));
+        }
+
+        var full = (p.FullName ?? "User").Trim();
+        if (string.IsNullOrWhiteSpace(full))
+            return ("User", "User");
+
+        var parts = full.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 1)
+            return (Clamp(parts[0], 100), "User");
+
+        var first = Clamp(parts[0], 100);
+        var last = Clamp(string.Join(' ', parts.Skip(1)), 100);
+        return (first, last);
+    }
+
+    private static string Clamp(string s, int max) =>
+        s.Length <= max ? s : s[..max];
+
+    private async Task<AuthResult> CompleteSocialLoginAsync(
+        User user,
+        string? ipAddress,
+        string? deviceInfo,
+        CancellationToken ct)
+    {
+        if (user.Status != "active")
+            return AuthResult.Fail("ACCOUNT_DISABLED", "Account is not active.");
+
+        if (!user.IsEmailVerified && string.Equals(user.AuthProvider, "email", StringComparison.OrdinalIgnoreCase))
+            return AuthResult.Fail("EMAIL_NOT_VERIFIED", "Please verify your email before logging in.");
+
+        user.FailedLoginAttempts = 0;
+        user.LockoutEnd = null;
+        user.LastLoginAt = DateTime.UtcNow;
+        user.LastLoginIp = ipAddress;
+        user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user, ct);
+
+        var accessToken = _tokenService.GenerateAccessToken(user);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        await _tokenService.StoreRefreshTokenAsync(
+            user.Id,
+            TokenHasher.HashToken(refreshToken),
+            DateTime.UtcNow.AddDays(_tokenService.RefreshTokenExpiryDays),
+            deviceInfo,
+            ipAddress,
+            ct);
+
+        return AuthResult.Ok(user.ToDto(), new TokenResponse
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            ExpiresIn = _tokenService.AccessTokenExpirySeconds
+        });
     }
 
     public async Task<AuthResult> RegisterAsync(RegisterRequest request, string baseUrl, CancellationToken ct = default)

@@ -20,6 +20,8 @@ public class User
     public string AuthProvider { get; set; } = "email";
     public string? GoogleId { get; set; }
     public string? FacebookId { get; set; }
+    /// <summary>X (Twitter) OAuth 2.0 user id (string).</summary>
+    public string? TwitterId { get; set; }
 
     public string Role { get; set; } = "customer";
     /// <summary>JSON array of permission strings, e.g. ["manage_products"].</summary>

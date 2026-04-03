@@ -1,9 +1,17 @@
+using AmCart.UserService.Application;
 using AmCart.UserService.Application.DTOs;
 
 namespace AmCart.UserService.Application.Interfaces;
 
 public interface IAuthService
 {
+    Task<AuthResult> ExternalLoginAsync(
+        ExternalAuthProvider provider,
+        ExternalLoginRequest request,
+        string? ipAddress,
+        string? deviceInfo,
+        CancellationToken ct = default);
+
     Task<AuthResult> RegisterAsync(RegisterRequest request, string baseUrl, CancellationToken ct = default);
     Task<AuthResult> VerifyEmailAsync(string token, CancellationToken ct = default);
     Task<AuthResult> ResendVerificationEmailAsync(string email, string baseUrl, CancellationToken ct = default);

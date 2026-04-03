@@ -58,6 +58,16 @@
   margin-bottom: 1.25rem;
 }
 
+.social-row--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 520px) {
+  .social-row--three {
+    grid-template-columns: 1fr;
+  }
+}
+
 .btn-social {
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -75,12 +85,16 @@
   cursor: not-allowed;
 }
 
+.btn-google {
+  background: #4285f4;
+}
+
 .btn-facebook {
   background: #3b5998;
 }
 
 .btn-twitter {
-  background: #1da1f2;
+  background: #14171a;
 }
 
 .auth-form .field-wrap {

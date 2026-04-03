@@ -26,6 +26,24 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.Email == email && u.DeletedAt == null, ct);
     }
 
+    public async Task<User?> GetByGoogleIdAsync(string googleId, CancellationToken ct = default)
+    {
+        return await _db.Users
+            .FirstOrDefaultAsync(u => u.GoogleId == googleId && u.DeletedAt == null, ct);
+    }
+
+    public async Task<User?> GetByFacebookIdAsync(string facebookId, CancellationToken ct = default)
+    {
+        return await _db.Users
+            .FirstOrDefaultAsync(u => u.FacebookId == facebookId && u.DeletedAt == null, ct);
+    }
+
+    public async Task<User?> GetByTwitterIdAsync(string twitterId, CancellationToken ct = default)
+    {
+        return await _db.Users
+            .FirstOrDefaultAsync(u => u.TwitterId == twitterId && u.DeletedAt == null, ct);
+    }
+
     public async Task<User?> GetByEmailVerificationTokenAsync(string token, CancellationToken ct = default)
     {
         return await _db.Users
