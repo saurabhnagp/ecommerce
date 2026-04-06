@@ -6,6 +6,7 @@ import {
   deleteBrand,
 } from "./productApi";
 import type { BrandDto } from "./productApi";
+import { BRAND_IMAGES } from "./imageCatalog";
 
 type FormData = {
   name: string;
@@ -168,12 +169,20 @@ export function AdminBrands() {
               />
             </div>
             <div className="admin-field">
-              <label>Logo URL</label>
-              <input
-                value={form.logoUrl}
-                onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
-                placeholder="https://..."
-              />
+              <label>Logo</label>
+              <select value={form.logoUrl} onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}>
+                <option value="">— Select a logo —</option>
+                {BRAND_IMAGES.map((img) => (
+                  <option key={img.path} value={img.path}>{img.label}</option>
+                ))}
+              </select>
+              {form.logoUrl && (
+                <img
+                  src={form.logoUrl}
+                  alt="Preview"
+                  style={{ marginTop: "0.5rem", width: 80, height: 80, objectFit: "contain", borderRadius: 6, border: "1px solid #e2e8f0" }}
+                />
+              )}
             </div>
             <div className="admin-field">
               <label>Website URL</label>

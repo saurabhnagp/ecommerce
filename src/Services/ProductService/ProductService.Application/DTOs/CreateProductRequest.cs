@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AmCart.ProductService.Application.Validation;
 
 namespace AmCart.ProductService.Application.DTOs;
 
@@ -50,7 +51,7 @@ public class CreateProductRequest
 
 public class CreateProductImageRequest
 {
-    [Required, Url, MaxLength(500)]
+    [Required, MaxLength(500), HttpOrRootRelativeUrl]
     public string Url { get; set; } = null!;
 
     [MaxLength(300)]
@@ -77,7 +78,7 @@ public class CreateProductVariantRequest
     public int Quantity { get; set; }
     public string? OptionsJson { get; set; }
 
-    [Url, MaxLength(500)]
+    [MaxLength(500), HttpOrRootRelativeUrl]
     public string? ImageUrl { get; set; }
 }
 

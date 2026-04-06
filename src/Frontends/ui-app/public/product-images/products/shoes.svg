@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fff7ed"/>
+  <path d="M80 230 Q80 190 120 180 L220 160 Q260 155 280 170 L320 200 Q340 210 340 230 L340 250 Q340 270 320 270 L100 270 Q80 270 80 250 Z" fill="#ea580c" opacity=".9"/>
+  <path d="M120 180 L120 230" stroke="#fff" stroke-width="2" opacity=".3"/>
+  <path d="M160 170 L160 230" stroke="#fff" stroke-width="2" opacity=".3"/>
+  <path d="M200 163 L200 230" stroke="#fff" stroke-width="2" opacity=".3"/>
+  <rect x="80" y="250" width="260" height="20" rx="4" fill="#9a3412"/>
+  <text x="200" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#ea580c" font-weight="600">Shoes</text>
+</svg>

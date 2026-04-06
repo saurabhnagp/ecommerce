@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   fetchProducts,
+  fetchProductById,
   fetchCategories,
   fetchBrands,
   createProduct,
@@ -8,6 +9,21 @@ import {
   deleteProduct,
 } from "./productApi";
 import type { ProductDto, CategoryDto, BrandDto } from "./productApi";
+import { PRODUCT_IMAGES } from "./imageCatalog";
+
+type ProductImageFormRow = {
+  key: string;
+  url: string;
+  isPrimary: boolean;
+};
+
+function newImageRowKey(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
+function newImageRow(isPrimary = false): ProductImageFormRow {
+  return { key: newImageRowKey(), url: "", isPrimary };
+}
 
 type FormData = {
   name: string;
@@ -20,7 +36,7 @@ type FormData = {
   categoryId: string;
   brandId: string;
   description: string;
-  imageUrl: string;
+  images: ProductImageFormRow[];
   isFeatured: boolean;
   currency: string;
 };
@@ -48,7 +64,7 @@ const EMPTY_FORM: FormData = {
   categoryId: "",
   brandId: "",
   description: "",
-  imageUrl: "",
+  images: [newImageRow(true)],
   isFeatured: false,
   currency: "INR",
 };
@@ -71,6 +87,7 @@ export function AdminProducts() {
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [editLoading, setEditLoading] = useState(false);
 
   async function load(p = page, s = search) {
     try {
@@ -98,26 +115,44 @@ export function AdminProducts() {
     setMsg(null);
   }
 
-  function openEdit(p: ProductDto) {
+  async function openEdit(p: ProductDto) {
     setEditingId(p.id);
-    const imgs = p.images ?? [];
-    const primaryImg = imgs.find((i) => i.isPrimary) ?? imgs[0];
-    setForm({
-      name: p.name,
-      slug: p.slug ?? "",
-      sku: p.sku,
-      price: p.price,
-      compareAtPrice: p.compareAtPrice ?? 0,
-      quantity: p.quantity ?? 0,
-      status: p.status,
-      categoryId: p.categoryId ?? "",
-      brandId: p.brandId ?? "",
-      description: p.description ?? "",
-      imageUrl: primaryImg?.url ?? "",
-      isFeatured: p.isFeatured,
-      currency: p.currency ?? "INR",
-    });
     setMsg(null);
+    setEditLoading(true);
+    try {
+      const { data: full } = await fetchProductById(p.id);
+      const imgs = [...(full.images ?? [])].sort(
+        (a, b) => a.displayOrder - b.displayOrder
+      );
+      const imageRows: ProductImageFormRow[] =
+        imgs.length > 0
+          ? imgs.map((i) => ({
+              key: newImageRowKey(),
+              url: i.url ?? "",
+              isPrimary: i.isPrimary,
+            }))
+          : [newImageRow(true)];
+      setForm({
+        name: full.name,
+        slug: full.slug ?? "",
+        sku: full.sku,
+        price: full.price,
+        compareAtPrice: full.compareAtPrice ?? 0,
+        quantity: full.quantity ?? 0,
+        status: full.status,
+        categoryId: full.categoryId ?? "",
+        brandId: full.brandId ?? "",
+        description: full.description ?? "",
+        images: imageRows,
+        isFeatured: full.isFeatured,
+        currency: full.currency ?? "INR",
+      });
+    } catch {
+      setMsg({ type: "error", text: "Failed to load product for editing." });
+      setEditingId(null);
+    } finally {
+      setEditLoading(false);
+    }
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -137,8 +172,20 @@ export function AdminProducts() {
       };
       const slugTrim = form.slug.trim();
       if (slugTrim) body.slug = slugTrim;
-      if (form.imageUrl) {
-        body.images = [{ url: form.imageUrl, isPrimary: true, displayOrder: 0 }];
+
+      const filled = form.images
+        .map((row) => ({ ...row, url: row.url.trim() }))
+        .filter((row) => row.url.length > 0);
+      if (filled.length > 0) {
+        let primaryIndex = filled.findIndex((r) => r.isPrimary);
+        if (primaryIndex < 0) primaryIndex = 0;
+        body.images = filled.map((row, i) => ({
+          url: row.url,
+          isPrimary: i === primaryIndex,
+          displayOrder: i,
+        }));
+      } else if (editingId !== "__new__") {
+        body.images = [];
       }
 
       if (editingId === "__new__") {
@@ -197,6 +244,9 @@ export function AdminProducts() {
           <h3 style={{ margin: "0 0 1rem", fontSize: "0.95rem", color: "#555" }}>
             {editingId === "__new__" ? "New Product" : "Edit Product"}
           </h3>
+          {editLoading ? (
+            <p style={{ color: "#888" }}>Loading product…</p>
+          ) : (
           <form className="admin-form" onSubmit={handleSave}>
             <div className="admin-field">
               <label>Product Name *</label>
@@ -280,9 +330,111 @@ export function AdminProducts() {
               <label>Description</label>
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
-            <div className="admin-field">
-              <label>Primary Image URL</label>
-              <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+            <div className="admin-field admin-field--full">
+              <label>Product images</label>
+              <p className="admin-field-hint" style={{ marginTop: 0 }}>
+                Add one or more images from the catalog. Mark exactly one as primary (shown first in listings).
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                {form.images.map((row, index) => {
+                  const catalogPaths = new Set(PRODUCT_IMAGES.map((x) => x.path));
+                  const storedUrl = row.url.trim();
+                  const isCustomUrl = storedUrl.length > 0 && !catalogPaths.has(storedUrl);
+                  return (
+                    <div
+                      key={row.key}
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "flex-end",
+                        gap: "0.5rem 1rem",
+                        padding: "0.65rem",
+                        border: "1px solid #e2e8f0",
+                        borderRadius: 8,
+                        background: "#fafafa",
+                      }}
+                    >
+                      <div className="admin-field" style={{ margin: 0, minWidth: 200, flex: "1 1 200px" }}>
+                        <label style={{ fontSize: "0.8rem" }}>Image {index + 1}</label>
+                        <select
+                          value={isCustomUrl ? storedUrl : row.url}
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            setForm((f) => ({
+                              ...f,
+                              images: f.images.map((r) =>
+                                r.key === row.key ? { ...r, url: v } : r
+                              ),
+                            }));
+                          }}
+                        >
+                          <option value="">— Select —</option>
+                          {isCustomUrl && (
+                            <option value={storedUrl}>
+                              Stored URL ({storedUrl.length > 48 ? `${storedUrl.slice(0, 45)}…` : storedUrl})
+                            </option>
+                          )}
+                          {PRODUCT_IMAGES.map((img) => (
+                            <option key={img.path} value={img.path}>{img.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {row.url.trim() && (
+                        <img
+                          src={row.url}
+                          alt=""
+                          style={{ width: 56, height: 56, objectFit: "contain", borderRadius: 6, border: "1px solid #e2e8f0" }}
+                        />
+                      )}
+                      <label style={{ display: "flex", alignItems: "center", gap: "0.35rem", cursor: "pointer", fontSize: "0.85rem" }}>
+                        <input
+                          type="radio"
+                          name="product-primary-image"
+                          checked={row.isPrimary}
+                          onChange={() => {
+                            setForm((f) => ({
+                              ...f,
+                              images: f.images.map((r) => ({
+                                ...r,
+                                isPrimary: r.key === row.key,
+                              })),
+                            }));
+                          }}
+                        />
+                        Primary
+                      </label>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn--ghost"
+                        disabled={form.images.length <= 1}
+                        onClick={() => {
+                          setForm((f) => {
+                            const next = f.images.filter((r) => r.key !== row.key);
+                            if (next.length === 0) return { ...f, images: [newImageRow(true)] };
+                            if (!next.some((r) => r.isPrimary)) next[0] = { ...next[0]!, isPrimary: true };
+                            return { ...f, images: next };
+                          });
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                className="admin-btn admin-btn--ghost"
+                style={{ marginTop: "0.5rem" }}
+                onClick={() =>
+                  setForm((f) => ({
+                    ...f,
+                    images: [...f.images, newImageRow(false)],
+                  }))
+                }
+              >
+                + Add image
+              </button>
             </div>
             <div className="admin-field">
               <label>Featured</label>
@@ -296,6 +448,7 @@ export function AdminProducts() {
               <button type="button" className="admin-btn admin-btn--ghost" onClick={() => setEditingId(null)}>Cancel</button>
             </div>
           </form>
+          )}
         </div>
       )}
 

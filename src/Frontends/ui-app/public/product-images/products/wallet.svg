@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fef2f2"/>
+  <rect x="90" y="130" width="220" height="140" rx="12" fill="#7f1d1d"/>
+  <rect x="90" y="130" width="220" height="50" rx="12" fill="#991b1b"/>
+  <rect x="240" y="180" width="50" height="30" rx="6" fill="#fca5a5"/>
+  <circle cx="265" cy="195" r="6" fill="#7f1d1d"/>
+  <text x="200" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#7f1d1d" font-weight="600">Wallet</text>
+</svg>

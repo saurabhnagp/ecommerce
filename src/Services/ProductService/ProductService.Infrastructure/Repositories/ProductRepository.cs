@@ -211,9 +211,52 @@ public class ProductRepository : IProductRepository
         if (product == null)
             return;
 
+        var origImageIds = product.Images.Select(i => i.Id).ToHashSet();
+        var origVariantIds = product.Variants.Select(v => v.Id).ToHashSet();
+        var origAttributeIds = product.Attributes.Select(a => a.Id).ToHashSet();
+        var origTagIds = product.Tags.Select(t => t.Id).ToHashSet();
+
         await apply(product);
         product.UpdatedAt = DateTime.UtcNow;
+
+        _db.ChangeTracker.Clear();
+
+        _db.Entry(product).State = EntityState.Modified;
+
+        foreach (var img in product.Images)
+            _db.Entry(img).State = origImageIds.Contains(img.Id) ? EntityState.Unchanged : EntityState.Added;
+        foreach (var v in product.Variants)
+            _db.Entry(v).State = origVariantIds.Contains(v.Id) ? EntityState.Unchanged : EntityState.Added;
+        foreach (var a in product.Attributes)
+            _db.Entry(a).State = origAttributeIds.Contains(a.Id) ? EntityState.Unchanged : EntityState.Added;
+        foreach (var t in product.Tags)
+            _db.Entry(t).State = origTagIds.Contains(t.Id) ? EntityState.Unchanged : EntityState.Added;
+
         await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task RemoveAllProductImagesAsync(Product product, CancellationToken ct = default)
+    {
+        product.Images.Clear();
+        await _db.ProductImages.Where(i => i.ProductId == product.Id).ExecuteDeleteAsync(ct);
+    }
+
+    public async Task RemoveAllProductVariantsAsync(Product product, CancellationToken ct = default)
+    {
+        product.Variants.Clear();
+        await _db.ProductVariants.Where(v => v.ProductId == product.Id).ExecuteDeleteAsync(ct);
+    }
+
+    public async Task RemoveAllProductAttributesAsync(Product product, CancellationToken ct = default)
+    {
+        product.Attributes.Clear();
+        await _db.ProductAttributes.Where(a => a.ProductId == product.Id).ExecuteDeleteAsync(ct);
+    }
+
+    public async Task RemoveAllProductTagsAsync(Product product, CancellationToken ct = default)
+    {
+        product.Tags.Clear();
+        await _db.ProductTags.Where(t => t.ProductId == product.Id).ExecuteDeleteAsync(ct);
     }
 
     public async Task SoftDeleteAsync(Product product, CancellationToken ct = default)

@@ -6,6 +6,7 @@ import {
   deleteCategory,
 } from "./productApi";
 import type { CategoryDto } from "./productApi";
+import { CATEGORY_IMAGES } from "./imageCatalog";
 
 type FormData = {
   name: string;
@@ -183,8 +184,20 @@ export function AdminCategories() {
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="admin-field">
-              <label>Image URL</label>
-              <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+              <label>Image</label>
+              <select value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}>
+                <option value="">— Select an image —</option>
+                {CATEGORY_IMAGES.map((img) => (
+                  <option key={img.path} value={img.path}>{img.label}</option>
+                ))}
+              </select>
+              {form.imageUrl && (
+                <img
+                  src={form.imageUrl}
+                  alt="Preview"
+                  style={{ marginTop: "0.5rem", width: 80, height: 80, objectFit: "contain", borderRadius: 6, border: "1px solid #e2e8f0" }}
+                />
+              )}
             </div>
             <div className="admin-field">
               <label>Display Order</label>

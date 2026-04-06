@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AmCart.ProductService.Application.Validation;
 
 namespace AmCart.ProductService.Application.DTOs;
 
@@ -13,7 +14,7 @@ public class CreateBrandRequest
     [MaxLength(1000)]
     public string? Description { get; set; }
 
-    [Url, MaxLength(500)]
+    [MaxLength(500), HttpOrRootRelativeUrl]
     public string? LogoUrl { get; set; }
 
     [Url, MaxLength(500)]

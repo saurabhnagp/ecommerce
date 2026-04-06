@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fdf2f8"/>
+  <rect x="100" y="120" width="200" height="160" rx="16" fill="#fce7f3"/>
+  <text x="200" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="48" fill="#db2777" font-weight="800">F</text>
+  <text x="200" y="250" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#f472b6">FASHION</text>
+</svg>

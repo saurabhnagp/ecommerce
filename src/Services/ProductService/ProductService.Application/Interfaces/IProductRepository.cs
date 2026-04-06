@@ -47,6 +47,16 @@ public interface IProductRepository
     /// <summary>Loads product with all child collections (tracked), runs <paramref name="apply"/>, then saves. Use for updates that modify Images, Variants, Attributes, or Tags.</summary>
     Task UpdateProductAsync(Guid id, Func<Product, Task> apply, CancellationToken ct = default);
 
+    /// <summary>
+    /// Detaches tracked child rows, clears the navigation collection, then bulk-deletes matching rows in the database.
+    /// Call before re-adding children so SaveChanges only inserts new rows (avoids EF mixing UPDATE/DELETE on replaced dependents).
+    /// </summary>
+    Task RemoveAllProductImagesAsync(Product product, CancellationToken ct = default);
+
+    Task RemoveAllProductVariantsAsync(Product product, CancellationToken ct = default);
+    Task RemoveAllProductAttributesAsync(Product product, CancellationToken ct = default);
+    Task RemoveAllProductTagsAsync(Product product, CancellationToken ct = default);
+
     Task SoftDeleteAsync(Product product, CancellationToken ct = default);
 
     /// <summary>Updates only AverageRating and ReviewCount (e.g. after review add/update/delete/approve).</summary>

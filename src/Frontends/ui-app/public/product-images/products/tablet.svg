@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#f5f3ff"/>
+  <rect x="110" y="60" width="180" height="260" rx="16" fill="#6d28d9"/>
+  <rect x="122" y="78" width="156" height="220" rx="4" fill="#ede9fe"/>
+  <circle cx="200" cy="310" r="8" fill="#a78bfa"/>
+  <text x="200" y="365" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#6d28d9" font-weight="600">Tablet</text>
+</svg>

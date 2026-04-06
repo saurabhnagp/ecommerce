@@ -6,6 +6,7 @@ import {
   deleteTestimonial,
 } from "./api";
 import type { Testimonial } from "./api";
+import { AVATAR_IMAGES } from "./imageCatalog";
 
 type Form = {
   customerName: string;
@@ -105,8 +106,20 @@ export function AdminTestimonials() {
               <input value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} required />
             </div>
             <div className="admin-field">
-              <label>Photo URL</label>
-              <input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="https://..." />
+              <label>Photo</label>
+              <select value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}>
+                <option value="">— Select an avatar —</option>
+                {AVATAR_IMAGES.map((img) => (
+                  <option key={img.path} value={img.path}>{img.label}</option>
+                ))}
+              </select>
+              {form.photoUrl && (
+                <img
+                  src={form.photoUrl}
+                  alt="Preview"
+                  style={{ marginTop: "0.5rem", width: 56, height: 56, borderRadius: "50%", border: "1px solid #e2e8f0" }}
+                />
+              )}
             </div>
             <div className="admin-field admin-field--full">
               <label>Comment *</label>

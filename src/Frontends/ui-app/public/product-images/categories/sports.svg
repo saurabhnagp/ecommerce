@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fef2f2"/>
+  <circle cx="200" cy="180" r="80" fill="#ef4444"/>
+  <path d="M140 130 Q200 180 260 130" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
+  <path d="M140 230 Q200 180 260 230" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
+  <line x1="120" y1="180" x2="280" y2="180" stroke="#fff" stroke-width="3" opacity=".6"/>
+  <text x="200" y="320" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#dc2626" font-weight="700">Sports</text>
+</svg>

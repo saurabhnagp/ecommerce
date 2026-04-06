@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fff7ed"/>
+  <path d="M90 210 Q90 170 140 170 L240 160 Q280 155 300 175 L330 200 Q345 215 345 230 L345 245 Q345 260 330 260 L110 260 Q90 260 90 245 Z" fill="#ea580c"/>
+  <rect x="90" y="245" width="255" height="15" rx="4" fill="#9a3412"/>
+  <text x="200" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#ea580c" font-weight="700">Footwear</text>
+</svg>

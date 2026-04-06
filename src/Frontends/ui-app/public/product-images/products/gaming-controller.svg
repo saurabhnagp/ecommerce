@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#f8fafc"/>
+  <path d="M100 200 Q100 160 150 160 L250 160 Q300 160 300 200 L310 250 Q315 270 295 270 L260 270 L240 250 L160 250 L140 270 L105 270 Q85 270 90 250 Z" fill="#1e293b"/>
+  <circle cx="155" cy="200" r="15" fill="#475569"/>
+  <rect x="148" y="188" width="14" height="24" rx="2" fill="#64748b"/>
+  <rect x="143" y="193" width="24" height="14" rx="2" fill="#64748b"/>
+  <circle cx="255" cy="190" r="7" fill="#ef4444"/><circle cx="275" cy="200" r="7" fill="#3b82f6"/>
+  <circle cx="255" cy="210" r="7" fill="#22c55e"/><circle cx="235" cy="200" r="7" fill="#eab308"/>
+  <text x="200" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#1e293b" font-weight="600">Game Controller</text>
+</svg>

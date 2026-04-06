@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#faf5ff"/>
+  <path d="M200 80 L100 170 L120 170 L120 280 L280 280 L280 170 L300 170 Z" fill="#7c3aed"/>
+  <rect x="160" y="200" width="50" height="80" rx="4" fill="#a78bfa"/>
+  <rect x="230" y="200" width="30" height="30" rx="4" fill="#c4b5fd"/>
+  <text x="200" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#7c3aed" font-weight="700">Home &amp; Kitchen</text>
+</svg>

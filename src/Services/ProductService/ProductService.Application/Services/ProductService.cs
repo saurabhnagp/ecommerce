@@ -177,7 +177,7 @@ public class ProductService : IProductService
 
             if (request.Images != null)
             {
-                product.Images.Clear();
+                await _products.RemoveAllProductImagesAsync(product, ct);
                 foreach (var img in request.Images.OrderBy(x => x.DisplayOrder))
                     product.Images.Add(new ProductImage
                     {
@@ -193,7 +193,7 @@ public class ProductService : IProductService
 
             if (request.Variants != null)
             {
-                product.Variants.Clear();
+                await _products.RemoveAllProductVariantsAsync(product, ct);
                 foreach (var v in request.Variants)
                     product.Variants.Add(new ProductVariant
                     {
@@ -214,7 +214,7 @@ public class ProductService : IProductService
 
             if (request.Attributes != null)
             {
-                product.Attributes.Clear();
+                await _products.RemoveAllProductAttributesAsync(product, ct);
                 var order = 0;
                 foreach (var a in request.Attributes)
                     product.Attributes.Add(new ProductAttribute
@@ -229,7 +229,7 @@ public class ProductService : IProductService
 
             if (request.TagNames != null)
             {
-                product.Tags.Clear();
+                await _products.RemoveAllProductTagsAsync(product, ct);
                 foreach (var name in request.TagNames.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct())
                 {
                     var n = name!.Trim();

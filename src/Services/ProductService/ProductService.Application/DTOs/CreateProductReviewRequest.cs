@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AmCart.ProductService.Application.Validation;
 
 namespace AmCart.ProductService.Application.DTOs;
 
@@ -15,6 +16,6 @@ public class CreateProductReviewRequest
 
     public bool IsVerifiedPurchase { get; set; }
 
-    [Url, MaxLength(500)]
+    [MaxLength(500), HttpOrRootRelativeUrl]
     public string? ReviewerPhotoUrl { get; set; }
 }
