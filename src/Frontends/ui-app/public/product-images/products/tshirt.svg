@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#faf5ff"/>
+  <path d="M160 90 L120 110 L80 140 L110 170 L140 150 L140 300 L260 300 L260 150 L290 170 L320 140 L280 110 L240 90 Q220 120 200 120 Q180 120 160 90Z" fill="#9333ea" opacity=".9"/>
+  <path d="M160 90 Q180 120 200 120 Q220 120 240 90" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+  <text x="200" y="355" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#9333ea" font-weight="600">T-Shirt</text>
+</svg>

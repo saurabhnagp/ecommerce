@@ -1,0 +1,107 @@
+name: Deploy EC2
+
+# Build, push to ECR, pull on single EC2 via SSH.
+# Prerequisites: infra/ec2/README.md — ECR repos, EC2 IAM role (ECR pull), GitHub secrets.
+#
+# Auth: default step uses OIDC (secrets.AWS_ROLE_ARN). To use IAM user keys instead, replace
+# "Configure AWS credentials (OIDC)" with:
+#   uses: aws-actions/configure-aws-credentials@v4
+#   with:
+#     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#     aws-region: ${{ env.AWS_REGION }}
+
+on:
+  push:
+    branches: [main, master, userservice]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ec2-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: ap-south-1
+  ECR_USER_REPO: amcart/user-service
+  ECR_PRODUCT_REPO: amcart/product-service
+  ECR_UI_REPO: amcart/ui
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push UserService
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/Services/UserService/Dockerfile \
+            -t "$REGISTRY/${{ env.ECR_USER_REPO }}:$IMAGE_TAG" \
+            -t "$REGISTRY/${{ env.ECR_USER_REPO }}:latest" \
+            src
+          docker push "$REGISTRY/${{ env.ECR_USER_REPO }}:$IMAGE_TAG"
+          docker push "$REGISTRY/${{ env.ECR_USER_REPO }}:latest"
+
+      - name: Build and push ProductService
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/Services/ProductService/Dockerfile \
+            -t "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$IMAGE_TAG" \
+            -t "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:latest" \
+            src
+          docker push "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$IMAGE_TAG"
+          docker push "$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:latest"
+
+      - name: Build and push UI
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/Frontends/ui-app/Dockerfile \
+            -t "$REGISTRY/${{ env.ECR_UI_REPO }}:$IMAGE_TAG" \
+            -t "$REGISTRY/${{ env.ECR_UI_REPO }}:latest" \
+            src/Frontends/ui-app
+          docker push "$REGISTRY/${{ env.ECR_UI_REPO }}:$IMAGE_TAG"
+          docker push "$REGISTRY/${{ env.ECR_UI_REPO }}:latest"
+
+      - name: Deploy on EC2 (SSH)
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          TAG: ${{ github.sha }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: REGISTRY,TAG,AWS_REGION,DEPLOY_PATH
+          script: |
+            set -euo pipefail
+            DEPLOY_DIR="${DEPLOY_PATH:-/opt/amcart}"
+            cd "$DEPLOY_DIR"
+            aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
+            export USER_SERVICE_IMAGE="$REGISTRY/${{ env.ECR_USER_REPO }}:$TAG"
+            export PRODUCT_SERVICE_IMAGE="$REGISTRY/${{ env.ECR_PRODUCT_REPO }}:$TAG"
+            export UI_IMAGE="$REGISTRY/${{ env.ECR_UI_REPO }}:$TAG"
+            docker compose --env-file .env pull
+            docker compose --env-file .env up -d

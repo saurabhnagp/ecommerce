@@ -1,0 +1,264 @@
+/* ============================================================
+   Contact Us Page
+   ============================================================ */
+
+.contact-page {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2.5rem;
+  padding: 1.5rem 0;
+}
+
+/* ——— Map ——— */
+.contact-map {
+  width: 100%;
+  height: 380px;
+  border: none;
+  display: block;
+}
+
+/* ——— Leave A Reply ——— */
+.contact-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #222;
+  margin: 2rem 0 1.2rem;
+}
+
+.reply-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.reply-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reply-form__input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #ddd;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.reply-form__input:focus {
+  outline: none;
+  border-color: #c9a962;
+}
+
+.reply-form__input::placeholder {
+  color: #aaa;
+}
+
+.reply-form__textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #ddd;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.reply-form__textarea:focus {
+  outline: none;
+  border-color: #c9a962;
+}
+
+.reply-form__textarea::placeholder {
+  color: #aaa;
+}
+
+.reply-form__footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.3rem;
+}
+
+.reply-form__note {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.reply-form__submit {
+  padding: 0.7rem 2rem;
+  background: #222;
+  color: #fff;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.reply-form__submit:hover {
+  background: #c9a962;
+}
+
+.reply-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reply-form__success {
+  grid-column: 1 / -1;
+  color: #2a7;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.reply-form__error {
+  grid-column: 1 / -1;
+  color: #b00;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* ——— Right Sidebar ——— */
+.contact-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ——— Contact Person Cards ——— */
+.contact-persons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.person-card {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.person-card__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 4px;
+  background: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.person-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.person-card__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.person-card__role {
+  font-weight: 400;
+  color: #999;
+  font-style: italic;
+}
+
+.person-card__detail {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: #666;
+}
+
+.person-card__detail a {
+  color: #c9a962;
+  text-decoration: none;
+}
+
+.person-card__detail a:hover {
+  text-decoration: underline;
+}
+
+.person-card__icon {
+  color: #999;
+  font-size: 0.85rem;
+  width: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ——— Contact Details ——— */
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.contact-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.contact-detail-row__icon {
+  width: 1.1rem;
+  text-align: center;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.contact-detail-row a {
+  color: #c9a962;
+  text-decoration: none;
+}
+
+.contact-detail-row a:hover {
+  text-decoration: underline;
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 900px) {
+  .contact-page {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-map {
+    height: 280px;
+  }
+
+  .reply-form {
+    grid-template-columns: 1fr;
+  }
+
+  .reply-form__textarea {
+    min-height: 120px;
+  }
+}

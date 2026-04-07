@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#fdf2f8"/>
+  <path d="M160 100 L120 120 L90 150 L115 175 L140 155 L140 290 L260 290 L260 155 L285 175 L310 150 L280 120 L240 100 Q220 130 200 130 Q180 130 160 100Z" fill="#ec4899"/>
+  <path d="M160 100 Q180 130 200 130 Q220 130 240 100" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+  <text x="200" y="345" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#db2777" font-weight="700">Clothing</text>
+</svg>

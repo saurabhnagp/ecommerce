@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#f1f5f9"/>
+  <rect x="60" y="140" width="280" height="120" rx="12" fill="#475569"/>
+  <g fill="#94a3b8">
+    <rect x="80" y="158" width="22" height="22" rx="3"/><rect x="108" y="158" width="22" height="22" rx="3"/>
+    <rect x="136" y="158" width="22" height="22" rx="3"/><rect x="164" y="158" width="22" height="22" rx="3"/>
+    <rect x="192" y="158" width="22" height="22" rx="3"/><rect x="220" y="158" width="22" height="22" rx="3"/>
+    <rect x="248" y="158" width="22" height="22" rx="3"/><rect x="276" y="158" width="22" height="22" rx="3"/>
+    <rect x="90" y="188" width="22" height="22" rx="3"/><rect x="118" y="188" width="22" height="22" rx="3"/>
+    <rect x="146" y="188" width="22" height="22" rx="3"/><rect x="174" y="188" width="22" height="22" rx="3"/>
+    <rect x="202" y="188" width="22" height="22" rx="3"/><rect x="230" y="188" width="22" height="22" rx="3"/>
+    <rect x="258" y="188" width="22" height="22" rx="3"/>
+  </g>
+  <rect x="120" y="220" width="160" height="22" rx="3" fill="#94a3b8"/>
+  <text x="200" y="325" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#475569" font-weight="600">Keyboard</text>
+</svg>

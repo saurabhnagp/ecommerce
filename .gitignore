@@ -1,40 +1,54 @@
-# Cursor
-.cursor/
+# EC2 deployment secrets (never commit real values)
+infra/ec2/.env
 
-# Project docs (generated or local)
-docs/
+# Local env & keys
+.env
+.env.local
+.env.*.local
+*.pem
+
+# .NET
+[Bb]in/
+[Oo]bj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+*.vspscc
+*.vssscc
+.vs/
+
+# Node / frontend
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.eslintcache
+
+# Test / coverage
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
 
 # OS
 .DS_Store
 Thumbs.db
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Logs
-*.log
-npm-debug.log*
-
-# Dependencies
-node_modules/
-
-# Build / output
-dist/
-build/
-out/
-*.dll
-bin/
-obj/
-
-# Environment / secrets
-.env
-.env.local
-*.pem
-
-# Cache
-.cache/
-*.cache
+Desktop.ini

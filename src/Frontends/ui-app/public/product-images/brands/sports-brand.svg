@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="16" fill="#f0fdf4"/>
+  <rect x="100" y="120" width="200" height="160" rx="16" fill="#dcfce7"/>
+  <text x="200" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="48" fill="#16a34a" font-weight="800">S</text>
+  <text x="200" y="250" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#4ade80">SPORTS</text>
+</svg>

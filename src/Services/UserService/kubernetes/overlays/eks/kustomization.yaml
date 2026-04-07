@@ -1,0 +1,22 @@
+# AWS EKS. Set your ECR image in images (replace ACCOUNT_ID and REGION).
+# Build and push to ECR, then apply this overlay.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: amcart-services
+
+resources:
+  - ../../base
+  - deployment-patch.yaml
+
+# Replace ACCOUNT_ID and REGION with your AWS account and ECR region
+images:
+  - name: user-service:latest
+    newName: ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/user-service
+    newTag: latest
+
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: user-service

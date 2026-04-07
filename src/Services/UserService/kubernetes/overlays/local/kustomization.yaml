@@ -1,0 +1,23 @@
+# Local Kubernetes (Docker Desktop, minikube, kind).
+# Build image locally: from repo root, cd src && docker build -f Services/UserService/Dockerfile -t user-service:latest .
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: amcart-services
+
+resources:
+  - ../../base
+
+images:
+  - name: user-service:latest
+    newName: user-service
+    newTag: latest
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: IfNotPresent
+    target:
+      kind: Deployment
+      name: user-service

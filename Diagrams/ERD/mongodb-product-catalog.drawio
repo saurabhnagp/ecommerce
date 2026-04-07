@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" modified="2026-01-29T00:00:00.000Z" type="device">
+  <diagram id="mongo-product" name="MongoDB — Product Catalog">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="db_label" value="MongoDB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;strokeColor=#82b366;fillColor=#d5e8d4;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="310" y="-30" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_products" value="products (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="320" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_products_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;productNumber : string [unique]&lt;br&gt;name : string&lt;br&gt;description : string&lt;br&gt;price : Decimal128&lt;br&gt;discountPrice : Decimal128?&lt;br&gt;colour : string&lt;br&gt;size : string&lt;br&gt;stockQuantity : int&lt;br&gt;isInStock : boolean&lt;br&gt;rating : double&lt;br&gt;popularity : int&lt;br&gt;isNew : boolean&lt;br&gt;createdAt : Date&lt;br&gt;updatedAt : Date&lt;br&gt;&lt;b&gt;── embedded documents ──&lt;/b&gt;&lt;br&gt;category : { id, name }&lt;br&gt;subCategory : { id, name }&lt;br&gt;brand : { id, name }&lt;br&gt;images : [{ url, sortOrder }]&lt;br&gt;tags : [ string ]&lt;br&gt;&lt;b&gt;── indexes ──&lt;/b&gt;&lt;br&gt;{ productNumber: 1 } unique&lt;br&gt;{ &amp;quot;category.id&amp;quot;: 1, price: 1 }" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_products">
+          <mxGeometry y="28" width="320" height="392" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_categories" value="categories (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="280" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_categories_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;name : string (Women, Men)&lt;br&gt;sortOrder : int&lt;br&gt;subCategories : [&lt;br&gt;&amp;nbsp;&amp;nbsp;{ _id, name, sortOrder }&lt;br&gt;]&lt;br&gt;&lt;br&gt;Admin CRUD — source of truth" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_categories">
+          <mxGeometry y="28" width="280" height="142" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_brands" value="brands (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="260" width="280" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_brands_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;name : string [unique]&lt;br&gt;&lt;br&gt;Used for filter dropdowns" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_brands">
+          <mxGeometry y="28" width="280" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_tags" value="tags (collection)" style="shape=swimlane;fontStyle=1;align=center;startSize=28;html=1;collapsible=0;rounded=1;shadow=0;strokeColor=#82b366;fillColor=#d5e8d4;swimlaneLine=1;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="420" width="280" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_tags_a" value="&lt;u&gt;_id&lt;/u&gt; : ObjectId&lt;br&gt;name : string [unique]&lt;br&gt;&lt;br&gt;Used for filter dropdowns" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;fontSize=11;" vertex="1" parent="c_tags">
+          <mxGeometry y="28" width="280" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_denorm1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;exitX=1;exitY=0.12;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeColor=#82b366;strokeWidth=1;" edge="1" source="c_products_a" target="c_categories_a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_denorm1_l" value="denormalized" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;fontStyle=2;" vertex="1" connectable="0" parent="r_denorm1">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r_denorm2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeColor=#82b366;strokeWidth=1;" edge="1" source="c_products_a" target="c_brands_a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_denorm2_l" value="denormalized" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;fontStyle=2;" vertex="1" connectable="0" parent="r_denorm2">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="note_pattern" value="&lt;b&gt;Pattern&lt;/b&gt;: category, subCategory, brand,&lt;br&gt;images, and tags are &lt;b&gt;embedded&lt;/b&gt; in each&lt;br&gt;product document for fast single-read.&lt;br&gt;&lt;br&gt;Reference collections (categories, brands,&lt;br&gt;tags) are the source of truth for admin&lt;br&gt;CRUD and filter dropdowns.&lt;br&gt;&lt;br&gt;On admin update, a sync job denormalizes&lt;br&gt;changes into affected product documents." style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=4;strokeColor=#d6b656;fillColor=#fff2cc;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="580" width="280" height="160" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
