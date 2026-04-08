@@ -296,7 +296,7 @@ This project includes extensive documentation covering architecture, design deci
 | [DAR — Polyglot Database](docs/dars/DAR-Ployglot-Database-Selection.docx) | Database architecture selection |
 | [DAR — Self-Hosted Search](docs/dars/DAR-Search-Engine-Selection.docx) | Elasticsearch vs Meilisearch vs PG FTS vs Solr |
 | [DAR — OpenSearch - Not using](docs/dars/DAR-Open-Search-Selection.docx) | Search engine managed service selection |
-| [DAR — AWS Cognito - Not using](docs/dars/DAR-AWSCognito-Selection.docx) | .NET vs Node.js vs Java |
+| [DAR — AWS Cognito - Not using](docs/dars/DAR-AWSCognito-Selection.docx) | .AWS Cognito for user auth |
 
 ### Architecture & High-Level Design Diagrams
 
