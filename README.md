@@ -73,7 +73,7 @@ User → Route 53 → WAF → ALB → Nginx Ingress → Ocelot API Gateway → M
 | **ReviewService** | Product reviews, testimonials | MongoDB (DocumentDB) |
 | **NotificationService** | SQS consumer, SES email dispatch | — |
 
-> See the full architecture diagrams in [`docs/diagrams/`](docs/diagrams/).
+> See the full architecture diagrams in [`docs/diagrams/`](docs/diagrams/) or [`docs/images/architecture/`](docs/images/architecture/).
 
 ---
 
@@ -130,11 +130,12 @@ AmCart/
 │
 ├── docs/                    # Comprehensive documentation
 │   ├── dars/                # docx
-|   |   ├──                  # 3 DAR file (2 invalid becuase of PASS)
+|   |   ├── word docx files  # 3 DAR file (2 invalid becuase of PASS)
 │   └── diagrams/            # System design artifacts
-│       ├──                  # 6 High-Level Design diagrams (.drawio)
-│       └──ERD
-│           ├──              # 6 Database ERD diagrams (.drawio)
+│       ├── draw.io          # 6 High-Level Design diagrams (.drawio)
+│       └── images/
+|            ├──erds/        # 6 Database erd diagrams
+|            └──architecture/# 6 architecture images for above drawio
 ├── infra/ec2/               # Single-EC2 deployment
 │   ├── docker-compose.yml   # Production compose (Postgres, services, Nginx)
 │   ├── nginx/default.conf   # Reverse proxy config
@@ -303,24 +304,23 @@ All diagrams are in `.drawio` format (open with [draw.io](https://app.diagrams.n
 
 | Diagram | Description |
 |---------|------------|
-| [AWS Infrastructure](docs/diagrams/aws-infrastructure.drawio) | Detailed AWS services with official icons |
-| [Network Architecture](docs/diagrams/network-architecture.drawio) | AWS VPC, subnets, EKS, data stores, DR (3 tabs) |
-| [Data Flow](docs/diagrams/data-flow.drawio) | Polyglot persistence and data flow |
-| [CI CD](docs/diagrams/cicd-pipeline.drawio) | CI, CD, HELM and K8s |
-| [Deployment Infrastructure](docs/diagrams/deployment-infrastructure.drawio) | AWS deployment topology |
-| [Services Diagram](docs/diagrams/services-diagram.drawio) | Detailed Backend Service data flow |
-| [System Context](docs/diagrams/system-context.drawio) | C4 Level 1 — system boundary and actors |
+| [AWS Infrastructure](docs/diagrams/aws-infrastructure.drawio) [Image](docs/images/architecture/aws-infrastructure.png) | Detailed AWS services with official icons |
+| [Network Architecture](docs/diagrams/network-architecture.drawio) [Image](docs/images/architecture/network-architecture.png) [Image-DR](docs/images/architecture/network-architecture-disaster-recovery.png) | AWS VPC, subnets, EKS, data stores, DR |
+| [Data Flow](docs/diagrams/data-flow.drawio) [Image](docs/images/architecture/data-flow.png) | Polyglot persistence and data flow |
+| [CI CD](docs/diagrams/cicd-pipeline.drawio) [Image](docs/images/architecture/cicd-pipeline.png)[Image-future ci/cd](docs/images/architecture/cicd-pipeline-future.png) | CI, CD, HELM and K8s |
+| [Deployment Infrastructure](docs/diagrams/deployment-infrastructure.drawio) [Image](docs/images/architecture/deployment-infrastructure.png) | AWS deployment topology |
+| [System Context](docs/diagrams/system-context.drawio) [Image](docs/images/architecture/system-context.png) | system boundary and actors |
 
 ### Database ERDs
 
 | Domain | Diagram |
 |--------|---------|
-| [User Domain (PostgreSQL)](docs/diagrams/ERD/postgresql-user-domain.drawio) | Users, roles, social login |
-| [Order Domain (PostgreSQL)](docs/diagrams/ERD/postgresql-order-domain.drawio) | Orders, line items, addresses |
-| [Product Catalog (MongoDB)](docs/diagrams/ERD/mongodb-product-catalog.drawio) | Products, variants, attributes |
-| [Engagement (MongoDB)](docs/diagrams/ERD/mongodb-engagement.drawio) | Reviews, testimonials, wishlists |
-| [Redis Data Structures](docs/diagrams/ERD/redis-data-structures.drawio) | Cart, sessions, cache, counters |
-| [Elasticsearch Index](docs/diagrams/ERD/elasticsearch-product-index.drawio) | Product search index mapping |
+| [User Domain (PostgreSQL)](docs/images/erds/postgresql-user-domain.png) | Users, roles, social login |
+| [Order Domain (PostgreSQL)](docs/images/erds/postgresql-order-domain.png) | Orders, line items, addresses |
+| [Product Catalog (MongoDB)](docs/images/erds/mongodb-product-catalog.png) | Products, variants, attributes |
+| [Engagement (MongoDB)](docs/images/erds/mongodb-engagement.png) | Reviews, testimonials, wishlists |
+| [Redis Data Structures](docs/images/erds/redis-data-structures.png) | Cart, sessions, cache, counters |
+| [Elasticsearch Index](docs/images/erds/elasticsearch-product-index.png) | Product search index mapping |
 
 
 

@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36">
   <diagram id="system-context" name="System Context (C4 Level 1)">
-    <mxGraphModel dx="1389" dy="877" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1288" dy="823" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,7 +22,7 @@
         <mxCell id="system_title" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontStyle=1;fontColor=#1A73E8;" value="AmCart Platform" vertex="1">
           <mxGeometry height="30" width="220" x="530" y="135" as="geometry" />
         </mxCell>
-        <mxCell id="system_desc" parent="1" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=11;fontColor=#555555;" value="&lt;font style=&quot;font-size:11px&quot;&gt;E-commerce microservices platform&lt;br&gt;for men&#39;s &amp; women&#39;s clothing.&lt;br&gt;&lt;br&gt;9 .NET 8 microservices on EKS&lt;br&gt;with polyglot persistence.&lt;/font&gt;" vertex="1">
+        <mxCell id="system_desc" parent="1" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=11;fontColor=#555555;" value="&lt;font style=&quot;font-size:11px&quot;&gt;E-commerce microservices platform&lt;br&gt;for men&#39;s &amp;amp; women&#39;s clothing.&lt;br&gt;&lt;br&gt;.NET 8 microservices on EKS&lt;br&gt;with polyglot persistence.&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="300" x="490" y="170" as="geometry" />
         </mxCell>
         <mxCell id="svc_list" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;arcSize=12;" value="" vertex="1">
