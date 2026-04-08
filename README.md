@@ -257,7 +257,7 @@ The architecture is designed for AWS EKS deployment with:
 - Multi-AZ deployment across 2 availability zones
 - Pilot Light disaster recovery in a secondary region
 
-> For full AWS setup details, see the [network architecture diagram](docs/diagrams/network-architecture.drawio) and [deployment infrastructure diagram](docs/diagrams/deployment-infrastructure.drawio).
+> For full AWS setup details, see the [network architecture image](docs/images/architecture/network-architecture.png) and [deployment infrastructure image](docs/images/architecture/deployment-infrastructure.png).
 
 ---
 
@@ -304,12 +304,26 @@ All diagrams are in `.drawio` format (open with [draw.io](https://app.diagrams.n
 
 | Diagram | Description |
 |---------|------------|
-| [AWS Infrastructure](docs/diagrams/aws-infrastructure.drawio) [Image](docs/images/architecture/aws-infrastructure.png) | Detailed AWS services with official icons |
-| [Network Architecture](docs/diagrams/network-architecture.drawio) [Image](docs/images/architecture/network-architecture.png) [Image-DR](docs/images/architecture/network-architecture-disaster-recovery.png) | AWS VPC, subnets, EKS, data stores, DR |
-| [Data Flow](docs/diagrams/data-flow.drawio) [Image](docs/images/architecture/data-flow.png) | Polyglot persistence and data flow |
-| [CI CD](docs/diagrams/cicd-pipeline.drawio) [Image](docs/images/architecture/cicd-pipeline.png)[Image-future ci/cd](docs/images/architecture/cicd-pipeline-future.png) | CI, CD, HELM and K8s |
-| [Deployment Infrastructure](docs/diagrams/deployment-infrastructure.drawio) [Image](docs/images/architecture/deployment-infrastructure.png) | AWS deployment topology |
-| [System Context](docs/diagrams/system-context.drawio) [Image](docs/images/architecture/system-context.png) | system boundary and actors |
+| [AWS Infrastructure](docs/diagrams/aws-infrastructure.drawio) | Detailed AWS services with official icons |
+| [Network Architecture](docs/diagrams/network-architecture.drawio) | AWS VPC, subnets, EKS, data stores, DR |
+| [Data Flow](docs/diagrams/data-flow.drawio) | Polyglot persistence and data flow |
+| [CI CD](docs/diagrams/cicd-pipeline.drawio) | CI, CD, HELM and K8s |
+| [Deployment Infrastructure](docs/diagrams/deployment-infrastructure.drawio) | AWS deployment topology |
+| [System Context](docs/diagrams/system-context.drawio) | system boundary and actors |
+
+
+Below are the images for above draw.io diagrams:
+
+| Images | Description |
+|---------|------------|
+| [AWS Infrastructure](docs/images/architecture/aws-infrastructure.png) | Detailed AWS services with official icons |
+| [Network Architecture](docs/images/architecture/network-architecture.png) | AWS VPC, subnets, EKS, data stores, DR |
+| [DR Achitecture](docs/images/architecture/network-architecture-disaster-recovery.png) | AWS VPC, subnets, EKS, data stores, DR |
+| [Data Flow](docs/images/architecture/data-flow.png) | Polyglot persistence and data flow |
+| [CI CD](docs/images/architecture/cicd-pipeline.png) | CI, CD, HELM and K8s |
+| [Future CI CD](docs/images/architecture/cicd-pipeline-future.png) | Blue Green CI, CD |
+| [Deployment Infrastructure](docs/images/architecture/deployment-infrastructure.png) | AWS deployment topology |
+| [System Context](docs/images/architecture/system-context.png) | system boundary and actors |
 
 ### Database ERDs
 
