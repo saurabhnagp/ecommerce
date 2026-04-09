@@ -58,6 +58,7 @@ export function Header({ signedIn, onAuthRefresh }: Props) {
       <div className="top-bar">
         <div className="top-bar__inner">
           <div className="top-bar__left">
+            7a85e16b-df0a-4f51-a713-3dbd51d15c0d
             {signedIn && (() => {
               const user = getStoredUser();
               return (
